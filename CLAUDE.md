@@ -104,6 +104,30 @@
 
 ---
 
+## Interactive Workflow (Preferred Method)
+
+**Use AskUserQuestion tool when**:
+- ✅ User request is ambiguous → Ask for clarification
+- ✅ Multiple valid approaches exist → Present options (2-4 choices)
+- ✅ During /ultra-init → Confirm project type/stack
+- ✅ During /ultra-research → Technology selection decisions
+- ✅ During /ultra-dev → Implementation approach choices
+
+**Key parameters**:
+- 1-4 questions per call
+- 2-4 options per question
+- Use `multiSelect: true` for non-exclusive choices
+- Keep `header` concise (max 12 chars)
+
+**Example triggers**:
+- "Which state management?" → Present Redux/Zustand/Jotai options
+- "API or library project?" → Clarify during init
+- "Test framework?" → Offer Jest/Vitest/Playwright choices
+
+**Official docs**: https://docs.claude.com/tools/ask-user-question
+
+---
+
 ## Project Scenarios (Workflow Routing Context)
 
 Ultra Builder Pro supports different project scenarios with tailored workflows:
