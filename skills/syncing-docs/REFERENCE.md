@@ -299,3 +299,8 @@ npx conventional-changelog -p angular -i CHANGELOG.md -s
 ---
 
 **Complete Documentation Standards**: `~/.claude/guidelines/quality-standards.md`
+
+
+---
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**

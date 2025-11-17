@@ -316,3 +316,8 @@ git push --force-with-lease origin main
 ---
 
 **Remember**: Git safety is about prevention, not just recovery. Always think twice before destructive operations.
+
+
+---
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**

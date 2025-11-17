@@ -46,3 +46,8 @@ git branch -d feat/task-2-user-crud
 
 ---
 
+
+
+---
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**

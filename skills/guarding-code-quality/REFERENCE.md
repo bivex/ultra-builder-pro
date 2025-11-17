@@ -201,3 +201,8 @@ This detection logic is invoked by:
 - User explicitly runs quality check
 
 **Note**: All rule definitions and examples are in `@guidelines/ultra-solid-principles.md`. Do NOT duplicate content here.
+
+
+---
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**

@@ -214,3 +214,8 @@ async function detectProjectState(): ProjectState {
 
 ---
 
+
+
+---
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**

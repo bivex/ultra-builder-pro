@@ -18,3 +18,8 @@
 ---
 
 **Remember**: guiding-workflow is a **navigator**, not a **dictator**. It suggests the optimal path, but you choose the route.
+
+
+---
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**

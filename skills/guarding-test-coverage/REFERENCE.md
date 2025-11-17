@@ -95,3 +95,8 @@ go tool cover -html=coverage.out
 ---
 
 **Complete Testing Standards**: `@guidelines/ultra-quality-standards.md`
+
+
+---
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**

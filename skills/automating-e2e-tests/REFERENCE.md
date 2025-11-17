@@ -696,3 +696,8 @@ await page.waitForSelector('#content');
 ---
 
 **This reference provides comprehensive examples and troubleshooting. Consult as needed for advanced scenarios.**
+
+
+---
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**

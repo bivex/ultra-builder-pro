@@ -175,3 +175,8 @@ FUNCTION route_operation(file, operation_type):
 ---
 
 **For skill implementation details**, see `SKILL.md` (main skill file).
+
+
+---
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**

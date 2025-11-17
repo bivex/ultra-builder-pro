@@ -7,3 +7,8 @@
 ---
 
 **Remember**: Guardian prevents "AI slop", but creativity is yours. Use these guidelines as guardrails, not cages.
+
+
+---
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**

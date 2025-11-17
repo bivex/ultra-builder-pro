@@ -152,3 +152,8 @@ Tasks #5-10: "User management features"
 
 ---
 
+
+
+---
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**

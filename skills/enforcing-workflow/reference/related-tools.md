@@ -12,3 +12,8 @@
 ---
 
 **Remember**: Workflow enforcement is not tyranny, it's **protection**. Production stability depends on disciplined workflows.
+
+
+---
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
