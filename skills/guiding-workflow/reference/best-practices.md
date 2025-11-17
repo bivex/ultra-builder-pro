@@ -1,5 +1,9 @@
 ## Best Practices
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Practice 1: Always Read Latest Research Report
 
 **Why**: Project type determines next-step rationale
@@ -19,19 +23,19 @@ const projectType = await detectProjectType(latestReport);
 
 **Bad** ❌:
 ```
-建议下一步：/ultra-plan
+Suggested next step: /ultra-plan
 ```
 
 **Good** ✅:
 ```
-建议下一步：/ultra-plan
+Suggested next step: /ultra-plan
 
-**原因**：
-规范已 100% 完成（specs/product.md 无 [NEEDS CLARIFICATION] 标记），可以开始将需求拆分为可执行的原子任务。
+**Rationale**:
+Specifications are 100% complete (specs/product.md has no [NEEDS CLARIFICATION] markers). Ready to decompose requirements into executable atomic tasks.
 
-**预计生成**：
-- .ultra/tasks/tasks.json（12-20 个任务）
-- 预计总时长：40-80 小时
+**Expected output**:
+- .ultra/tasks/tasks.json (12-20 tasks)
+- Estimated total duration: 40-80 hours
 ```
 
 **Why**: User understands **why** this is the next step
@@ -44,19 +48,19 @@ const projectType = await detectProjectType(latestReport);
 
 **Wrong behavior** ❌:
 ```
-建议下一步：完成 Round 1 和 Round 4
+Suggested next step: Complete Round 1 and Round 4
 ```
 
 **Correct behavior** ✅:
 ```
-建议下一步：/ultra-plan
+Suggested next step: /ultra-plan
 
-**原因**：
-老项目增量开发（Incremental Feature）已完成核心轮次（Round 2-3），解决方案和技术栈已明确，可直接规划任务。
+**Rationale**:
+Incremental feature development has completed core rounds (Round 2-3). Solution and tech stack are clear. Can proceed directly to task planning.
 
-**跳过轮次**：
-- Round 1（问题发现）：老项目已有背景，无需重复
-- Round 4（风险映射）：增量开发风险可控
+**Skipped rounds**:
+- Round 1 (Problem Discovery): Existing project already has context, no need to repeat
+- Round 4 (Risk Mapping): Incremental development has controlled risks
 ```
 
 **Why**: Don't force workflow, respect user's Scenario B selection
@@ -69,15 +73,15 @@ const projectType = await detectProjectType(latestReport);
 
 **Output**:
 ```
-**建议下一步（2 个选项）**：
+**Suggested next step (2 options)**:
 
-**选项 1**（推荐）：直接进入任务规划
+**Option 1** (recommended): Proceed directly to task planning
 /ultra-plan
 
-**选项 2**：验证技术选择后再规划
-- 创建简单 PoC（1-2 小时）
-- 验证核心技术栈
-- 确认后运行 /ultra-plan
+**Option 2**: Validate technology choice before planning
+- Create simple PoC (1-2 hours)
+- Validate core tech stack
+- Run /ultra-plan after confirmation
 ```
 
 **Why**: User has choice based on confidence level
@@ -88,18 +92,17 @@ const projectType = await detectProjectType(latestReport);
 
 **During development**:
 ```
-**任务进度**：
-- ✅ 已完成：5 个（42%）
-- 🚧 进行中：1 个
-- ⏳ 待开始：6 个（50%）
+**Task progress**:
+- ✅ Completed: 5 tasks (42%)
+- 🚧 In progress: 1 task
+- ⏳ Pending: 6 tasks (50%)
 
-**实际 vs 预计**：
-- 已完成 5 个任务：17h（预计 18h，提前 1h）
-- 剩余 7 个任务：预计 26h
-- 预计总完成日期：2025-11-20
+**Actual vs estimated**:
+- Completed 5 tasks: 17h (estimated 18h, 1h ahead)
+- Remaining 7 tasks: Estimated 26h
+- Estimated total completion date: 2025-11-20
 ```
 
 **Why**: User can track progress and adjust timeline
 
 ---
-

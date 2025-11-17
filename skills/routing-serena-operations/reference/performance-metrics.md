@@ -1,5 +1,9 @@
 ## Performance Metrics
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Token Efficiency
 
 | Operation | Built-in | Serena | Efficiency Gain |

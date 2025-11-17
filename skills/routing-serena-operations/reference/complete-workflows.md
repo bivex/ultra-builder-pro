@@ -1,8 +1,12 @@
 ## Complete Workflows
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Workflow 1: Refactor Large Legacy File
 
-**Scenario**: Refactor a 8,500-line legacy monolith
+**Scenario**: Refactor an 8,500-line legacy monolith
 
 **Step-by-Step**:
 
@@ -79,4 +83,3 @@ Step 6: Record Migration
 ```
 
 ---
-

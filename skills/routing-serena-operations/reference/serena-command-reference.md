@@ -1,5 +1,9 @@
 ## Serena Command Reference
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### get_symbols_overview
 
 **Purpose**: Get file structure without reading full content

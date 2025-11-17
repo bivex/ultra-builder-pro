@@ -1,48 +1,52 @@
-## Output Examples (Chinese)
+## Output Examples
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
 
 ### Example 1: New Component Creation
 
 **Scenario**: User creates `Dashboard.tsx`
 
-**Guardian output** (in Chinese at runtime):
+**Guardian output**:
 ```
-🎨 UI 设计建议 - Dashboard 组件
+🎨 UI Design Suggestions - Dashboard Component
 
-**检测到的潜在问题**：
-1. ⚠️ 未定义设计 token（可能使用硬编码颜色）
-2. ⚠️ 未指定字体（可能使用默认字体）
+**Detected potential issues**:
+1. ⚠️ Design tokens not defined (may use hard-coded colors)
+2. ⚠️ Font not specified (may use default fonts)
 
-**推荐设计方案**：
+**Recommended design approach**:
 
-**1. 设计系统选择**
-   - 推荐：Ant Design（中后台标准）
-   - 备选：MUI (Material Design 3)
-   - 自定义：基于 Radix + Tailwind
+**1. Design System Selection**
+   - Recommended: Ant Design (standard for admin dashboards)
+   - Alternative: MUI (Material Design 3)
+   - Custom: Based on Radix + Tailwind
 
-**2. Typography 系统**
-   - 标题：32px bold（Satoshi）
-   - 卡片标题：16px semibold
-   - 正文：14px regular（IBM Plex Sans）
-   - 数据：24px bold（JetBrains Mono）
+**2. Typography System**
+   - Headings: 32px bold (Satoshi)
+   - Card titles: 16px semibold
+   - Body text: 14px regular (IBM Plex Sans)
+   - Data display: 24px bold (JetBrains Mono)
 
-**3. 颜色系统**
-   主色：深蓝 #1E3A8A（70%）
-   点缀色：橙色 #F59E0B（20%）
-   中性灰：#64748B（背景、边框）
+**3. Color System**
+   Primary: Deep blue #1E3A8A (70%)
+   Accent: Orange #F59E0B (20%)
+   Neutral gray: #64748B (backgrounds, borders)
 
-**4. 布局建议**
-   - Grid: 12 列系统
-   - Spacing: 8px 基准（8, 16, 24, 32）
+**4. Layout Recommendations**
+   - Grid: 12-column system
+   - Spacing: 8px base (8, 16, 24, 32)
    - Breakpoints: 768px, 1024px, 1440px
 
-**5. Motion 设计**
-   - 页面加载：卡片依次 fadeInUp（stagger 100ms）
-   - 数据刷新：淡入淡出（300ms）
-   - 交互：微妙 hover 效果（transform scale 1.02）
+**5. Motion Design**
+   - Page load: Cards fadeInUp sequentially (stagger 100ms)
+   - Data refresh: Fade in/out (300ms)
+   - Interactions: Subtle hover effects (transform scale 1.02)
 
-**实现参考**：
-- 完整代码示例：见 REFERENCE.md
-- 设计系统文档：见 examples/ant-design-dashboard.md
+**Implementation reference**:
+- Complete code examples: See REFERENCE.md
+- Design system documentation: See examples/ant-design-dashboard.md
 ```
 
 ---
@@ -53,22 +57,22 @@
 
 **Guardian output**:
 ```
-❌ 设计债务检测 - 硬编码颜色
+❌ Design Debt Detected - Hard-Coded Colors
 
-**检测到 23 处硬编码颜色**：
-- #3B82F6 (蓝色) - 12 处
-- #8B5CF6 (紫色) - 8 处
-- #FFFFFF (白色) - 3 处
+**Detected 23 hard-coded colors**:
+- #3B82F6 (blue) - 12 locations
+- #8B5CF6 (purple) - 8 locations
+- #FFFFFF (white) - 3 locations
 
-**问题分析**：
-1. 无法统一切换主题
-2. 暗色模式支持困难
-3. 品牌色调整需修改 23 处
-4. 维护成本高（80% 时间浪费）
+**Problem analysis**:
+1. Cannot uniformly switch themes
+2. Dark mode support difficult
+3. Brand color adjustments require modifying 23 locations
+4. High maintenance cost (80% wasted time)
 
-**建议迁移方案**：
+**Suggested migration plan**:
 
-**步骤 1：定义设计 token**
+**Step 1: Define design tokens**
 ```css
 :root {
   /* Primary colors */
@@ -90,7 +94,7 @@
 }
 ```
 
-**步骤 2：替换硬编码值**
+**Step 2: Replace hard-coded values**
 ```css
 /* Before */
 .button {
@@ -105,38 +109,38 @@
 }
 ```
 
-**迁移效果**：
-- ✅ 主题切换：23 处 → 1 处修改
-- ✅ 暗色模式：自动支持
-- ✅ 品牌调整：1 分钟完成
-- ✅ 维护成本：降低 80%
+**Migration impact**:
+- ✅ Theme switching: 23 locations → 1 modification
+- ✅ Dark mode: Automatically supported
+- ✅ Brand adjustment: 1 minute completion
+- ✅ Maintenance cost: Reduced 80%
 
-**自动迁移工具**（可选）：
-运行：`npx @csstools/postcss-design-tokens` 自动转换
+**Auto-migration tool** (optional):
+Run: `npx @csstools/postcss-design-tokens` for automatic conversion
 ```
 
 ---
 
 ### Example 3: Design Discussion
 
-**Scenario**: User asks "如何设计一个现代感的 Landing Page？"
+**Scenario**: User asks "How to design a modern Landing Page?"
 
 **Guardian output**:
 ```
-🎨 Landing Page 现代化设计建议
+🎨 Modern Landing Page Design Recommendations
 
-**核心设计原则**：
+**Core design principles**:
 
-**1. Hero Section（视觉冲击）**
+**1. Hero Section (Visual Impact)**
 
-Typography：
-- 主标题：64px ultra-bold（Fraunces）
-- 副标题：20px light（Space Grotesk）
-- 比例：3.2:1（高对比度）
+Typography:
+- Main headline: 64px ultra-bold (Fraunces)
+- Subheading: 20px light (Space Grotesk)
+- Ratio: 3.2:1 (high contrast)
 
-背景设计：
-- 避免：紫色渐变（陈词滥调）
-- 推荐：微妙光效 + 深色背景
+Background design:
+- Avoid: Purple gradients (cliché)
+- Recommended: Subtle light effects + dark background
 
 ```css
 .hero {
@@ -147,22 +151,22 @@ Typography：
 }
 ```
 
-**2. Color System（品牌识别）**
+**2. Color System (Brand Recognition)**
 
-主色选择：
-- 深蓝：#1E3A8A（信任、专业）
-- 深红：#991B1B（活力、决心）
-- 深绿：#065F46（成长、稳定）
+Primary color selection:
+- Deep blue: #1E3A8A (trust, professionalism)
+- Deep red: #991B1B (energy, determination)
+- Deep green: #065F46 (growth, stability)
 
-点缀色：橙色 #F59E0B（行动召唤）
+Accent color: Orange #F59E0B (call to action)
 
-**3. Motion Design（视觉流程）**
+**3. Motion Design (Visual Flow)**
 
-页面加载顺序：
-1. Hero 标题：fadeInUp（0ms delay）
-2. 副标题：fadeInUp（100ms delay）
-3. CTA 按钮：fadeInUp（200ms delay）
-4. Hero 图片：fadeIn（300ms delay）
+Page load sequence:
+1. Hero headline: fadeInUp (0ms delay)
+2. Subheading: fadeInUp (100ms delay)
+3. CTA button: fadeInUp (200ms delay)
+4. Hero image: fadeIn (300ms delay)
 
 ```css
 @keyframes fadeInUp {
@@ -179,36 +183,35 @@ Typography：
 }
 ```
 
-**4. 组件库推荐**
+**4. Component Library Recommendations**
 
-方案 1（快速）：
+Option 1 (Fast):
 - Chakra UI + Framer Motion
-- 优势：组件丰富，定制灵活
+- Advantage: Rich components, flexible customization
 
-方案 2（专业）：
+Option 2 (Professional):
 - MUI + Material Design 3
-- 优势：成熟稳定，最佳实践
+- Advantage: Mature, stable, best practices
 
-方案 3（定制）：
+Option 3 (Custom):
 - Radix + Tailwind + shadcn/ui
-- 优势：完全控制，无样式约束
+- Advantage: Complete control, no style constraints
 
-**5. 完整示例**
+**5. Complete Examples**
 
-参考实现：
+Reference implementations:
 - examples/landing-page-modern.tsx
 - examples/landing-page-minimal.tsx
 - examples/landing-page-bold.tsx
 
-**6. 性能指标**
+**6. Performance Metrics**
 
-Core Web Vitals 目标：
-- LCP < 2.5s（首屏加载）
-- INP < 200ms（交互响应）
-- CLS < 0.1（布局稳定）
+Core Web Vitals targets:
+- LCP < 2.5s (first screen load)
+- INP < 200ms (interaction response)
+- CLS < 0.1 (layout stability)
 
-测量工具：Lighthouse CLI
+Measurement tool: Lighthouse CLI
 ```
 
 ---
-

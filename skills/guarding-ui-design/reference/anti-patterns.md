@@ -1,28 +1,32 @@
 ## Common Anti-Patterns and Fixes
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Anti-Pattern 1: "Corporate Memphis" Illustrations
 
 **Problem**: Generic flat illustrations with purple/blue colors
 
 **Guardian detection**:
 ```
-⚠️ 检测到 "Corporate Memphis" 风格
+⚠️ Detected "Corporate Memphis" Style
 
-**问题**：
-- 过度使用的插画风格
-- 缺乏品牌个性
-- "AI slop" 特征
+**Issue**:
+- Overused illustration style
+- Lacks brand personality
+- "AI slop" characteristic
 
-**替代方案**：
-1. 真实产品截图（最佳）
-2. 自定义插画（品牌风格）
-3. 抽象几何图形（现代简约）
-4. 3D 渲染（高级感）
+**Alternative approaches**:
+1. Real product screenshots (best)
+2. Custom illustrations (brand style)
+3. Abstract geometric shapes (modern minimalism)
+4. 3D renders (premium feel)
 
-**避免**：
-❌ Undraw 默认配色
-❌ 紫色渐变人物
-❌ 浮动几何形状
+**Avoid**:
+❌ Undraw default color schemes
+❌ Purple gradient figures
+❌ Floating geometric shapes
 ```
 
 ---
@@ -33,33 +37,33 @@
 
 **Guardian suggestion**:
 ```
-⚠️ 检测到通用模板结构
+⚠️ Detected Generic Template Structure
 
-**问题**：
-- 缺乏差异化
-- 信息架构平庸
+**Issue**:
+- Lacks differentiation
+- Mediocre information architecture
 
-**建议优化**：
+**Suggested optimizations**:
 
-1. **打破常规布局**：
-   - 非对称网格
-   - 对角线分割
-   - 意外的滚动体验
+1. **Break conventional layout**:
+   - Asymmetric grid
+   - Diagonal divisions
+   - Unexpected scroll experiences
 
-2. **强化品牌个性**：
-   - 独特的色彩系统
-   - 定制字体配对
-   - 品牌插画风格
+2. **Strengthen brand personality**:
+   - Unique color system
+   - Custom font pairing
+   - Branded illustration style
 
-3. **信息层级创新**：
-   - 数据可视化优先
-   - 社会证明前置
-   - 互动式 Demo
+3. **Information hierarchy innovation**:
+   - Data visualization priority
+   - Social proof upfront
+   - Interactive demos
 
-**参考案例**：
-- Linear.app（简约克制）
-- Stripe.com（数据驱动）
-- Vercel.com（技术美学）
+**Reference cases**:
+- Linear.app (minimal restraint)
+- Stripe.com (data-driven)
+- Vercel.com (technical aesthetics)
 ```
 
 ---
@@ -70,19 +74,19 @@
 
 **Guardian detection**:
 ```
-❌ 检测到不一致间距系统
+❌ Detected Inconsistent Spacing System
 
-**发现的间距值**：
-- 7px, 13px, 19px, 23px, 31px（随机值）
+**Found spacing values**:
+- 7px, 13px, 19px, 23px, 31px (random values)
 
-**问题**：
-- 视觉混乱
-- 难以维护
-- 缺乏系统性
+**Issues**:
+- Visual chaos
+- Difficult to maintain
+- Lacks systematic approach
 
-**建议：8px Grid 系统**
+**Recommendation: 8px Grid System**
 
-/* 定义间距 token */
+/* Define spacing tokens */
 :root {
   --space-1: 8px;    /* 0.5rem */
   --space-2: 16px;   /* 1rem */
@@ -92,21 +96,20 @@
   --space-8: 64px;   /* 4rem */
 }
 
-/* 使用 token */
+/* Use tokens */
 .card {
   padding: var(--space-4);
   margin-bottom: var(--space-3);
 }
 
-**迁移工具**：
-运行：npx @spacing-lint/cli 检测不一致间距
+**Migration tool**:
+Run: npx @spacing-lint/cli to detect inconsistent spacing
 ```
 
 **Auto-fix**:
 ```bash
-# 自动修复间距
+# Automatically fix spacing
 npx @spacing-lint/cli --fix --grid=8
 ```
 
 ---
-

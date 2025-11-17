@@ -1,5 +1,9 @@
 ## Integration with Design Systems
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Material Design 3 (MUI)
 
 **Setup**:
@@ -47,16 +51,16 @@ function App() {
 
 **Guardian approval**:
 ```
-✅ MUI 配置符合设计规范
+✅ MUI Configuration Compliant with Design Standards
 
-**优点**：
-- 避免了默认字体（Roboto）
-- 自定义主色（避免默认蓝色）
-- 使用 8px spacing grid
+**Strengths**:
+- Avoided default font (Roboto)
+- Custom primary color (avoided default blue)
+- Using 8px spacing grid
 
-**建议**：
-- 添加暗色模式支持
-- 定义完整的 spacing 系统（8, 16, 24, 32, 40, 48）
+**Suggestions**:
+- Add dark mode support
+- Define complete spacing system (8, 16, 24, 32, 40, 48)
 ```
 
 ---
@@ -102,16 +106,16 @@ module.exports = {
 
 **Guardian approval**:
 ```
-✅ Tailwind 配置符合设计规范
+✅ Tailwind Configuration Compliant with Design Standards
 
-**优点**：
-- 自定义字体（避免默认 sans-serif）
-- 自定义颜色系统
-- 扩展 spacing（8px grid）
+**Strengths**:
+- Custom fonts (avoided default sans-serif)
+- Custom color system
+- Extended spacing (8px grid)
 
-**建议**：
-- 添加设计 token 文档
-- 定义完整的 typography scale
+**Suggestions**:
+- Add design token documentation
+- Define complete typography scale
 ```
 
 ---
@@ -153,17 +157,16 @@ function App() {
 
 **Guardian approval**:
 ```
-✅ Ant Design 配置符合设计规范
+✅ Ant Design Configuration Compliant with Design Standards
 
-**优点**：
-- 避免了默认蓝色
-- 自定义字体
-- 统一圆角（8px）
+**Strengths**:
+- Avoided default blue
+- Custom font
+- Unified border radius (8px)
 
-**建议**：
-- 定义完整的 design token 系统
-- 添加暗色模式支持
+**Suggestions**:
+- Define complete design token system
+- Add dark mode support
 ```
 
 ---
-

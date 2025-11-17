@@ -1,5 +1,9 @@
 ## Enforced Constraints Examples
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Constraint 1: Default Fonts (BLOCKED)
 
 **Bad code** ❌:
@@ -9,24 +13,24 @@ body {
 }
 ```
 
-**Guardian intervention** (in Chinese):
+**Guardian intervention**:
 ```
-❌ 检测到默认字体：Inter
+❌ Detected Default Font: Inter
 
-**问题**：分布式收敛（所有 AI 生成的 UI 看起来一样）
+**Issue**: Distributional convergence (all AI-generated UIs look the same)
 
-**替代方案**：
+**Alternative options**:
 
-方案 1（专业）：
+Option 1 (Professional):
 font-family: 'Inter Display', 'JetBrains Mono', monospace;
 
-方案 2（现代）：
+Option 2 (Modern):
 font-family: 'Satoshi', 'IBM Plex Mono', monospace;
 
-方案 3（优雅）：
+Option 3 (Elegant):
 font-family: 'Fraunces', 'Space Mono', monospace;
 
-**规则**：显示字体 + 等宽字体配对（高对比度）
+**Rule**: Display font + Monospace font pairing (high contrast)
 ```
 
 **Good code** ✅:
@@ -58,14 +62,14 @@ code, pre {
 
 **Guardian intervention**:
 ```
-❌ 检测到硬编码颜色
+❌ Detected Hard-Coded Colors
 
-**问题**：
-- 无法切换主题
-- 无法支持暗色模式
-- 维护成本高
+**Issues**:
+- Cannot switch themes
+- Cannot support dark mode
+- High maintenance cost
 
-**建议使用设计 token**：
+**Suggested using design tokens**:
 
 /* tokens.css */
 :root {
@@ -112,25 +116,25 @@ code, pre {
 
 **Guardian intervention**:
 ```
-❌ 检测到紫色渐变反模式
+❌ Detected Purple Gradient Anti-Pattern
 
-**问题**：AI 生成 UI 的常见陈词滥调（"AI slop"）
+**Issue**: Common cliché of AI-generated UIs ("AI slop")
 
-**替代方案**：
+**Alternative options**:
 
-方案 1（深度氛围）：
+Option 1 (Deep atmosphere):
 background: linear-gradient(135deg, #1E3A8A 0%, #0F172A 100%);
-/* 深蓝到深灰，专业感 */
+/* Deep blue to deep gray, professional feel */
 
-方案 2（暖色调）：
+Option 2 (Warm tone):
 background: linear-gradient(135deg, #DC2626 0%, #991B1B 100%);
-/* 红色系，活力感 */
+/* Red spectrum, energetic feel */
 
-方案 3（微妙纹理）：
+Option 3 (Subtle texture):
 background: #F8FAFC;
 background-image:
   radial-gradient(circle at 25% 25%, rgba(59,130,246,0.05) 0%, transparent 50%);
-/* 微妙光效，现代感 */
+/* Subtle light effect, modern feel */
 ```
 
 **Good code** ✅:
@@ -147,4 +151,3 @@ background-image:
 ```
 
 ---
-

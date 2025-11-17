@@ -1,5 +1,9 @@
 ## Design Suggestions with Code
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Suggestion 1: Typography (3x Scale)
 
 **Problem**: Weak hierarchy (1.5x scale)
@@ -46,25 +50,25 @@ p {
 }
 ```
 
-**Output to user** (in Chinese):
+**Output to user**:
 ```
-📏 Typography 层级优化
+📏 Typography Hierarchy Optimization
 
-**问题**：当前尺寸跳跃过小（1.5x），层级不明显
+**Issue**: Current size jumps too small (1.5x), hierarchy not obvious
 
-**建议**：3x+ 尺寸跳跃
+**Recommendation**: 3x+ size jumps
 
-h1: 48px (4x 基准)
-h2: 24px (2x 基准)
-p:  16px (1.33x 基准)
-caption: 12px (基准)
+h1: 48px (4x base)
+h2: 24px (2x base)
+p:  16px (1.33x base)
+caption: 12px (base)
 
-**代码示例**：见上方
+**Code example**: See above
 
-**效果**：
-- 视觉层级清晰 +80%
-- 信息扫读速度 +40%
-- 专业度提升
+**Impact**:
+- Visual hierarchy clarity +80%
+- Information scanning speed +40%
+- Professionalism elevated
 ```
 
 ---
@@ -116,23 +120,23 @@ caption: 12px (基准)
 
 **Output to user**:
 ```
-🎨 颜色系统优化
+🎨 Color System Optimization
 
-**问题**：多色平权（无主导色）
+**Issue**: Multi-color equality (no dominant color)
 
-**建议**：1 主色 + 点缀色
+**Recommendation**: 1 primary + accents
 
-**配色比例**：
-- 主色（70%）：深蓝系 #1E3A8A
-- 点缀色（20%）：橙色 #F59E0B
-- 语义色（10%）：成功/错误
+**Color ratio**:
+- Primary (70%): Deep blue #1E3A8A
+- Accent (20%): Orange #F59E0B
+- Semantic (10%): Success/Error
 
-**代码示例**：见上方
+**Code example**: See above
 
-**效果**：
-- 视觉统一性 +90%
-- 品牌识别度提升
-- 信息层级清晰
+**Impact**:
+- Visual unity +90%
+- Brand recognition elevated
+- Information hierarchy clear
 ```
 
 ---
@@ -190,28 +194,27 @@ import { motion } from 'framer-motion';
 
 **Output to user**:
 ```
-✨ Motion 设计优化
+✨ Motion Design Optimization
 
-**问题**：过度依赖 JS 动画库（性能影响）
+**Issue**: Over-reliance on JS animation libraries (performance impact)
 
-**建议**：CSS 优先策略
+**Recommendation**: CSS-first strategy
 
-**页面加载动画**：
-- 编排式揭示（stagger 100ms）
-- fadeInUp 动画（400ms ease-out）
-- 3-5 个元素依次出现
+**Page load animations**:
+- Orchestrated reveal (stagger 100ms)
+- fadeInUp animation (400ms ease-out)
+- 3-5 elements appear sequentially
 
-**交互反馈**：
-- CSS transition（200ms）
-- hover 状态提升（translateY -2px）
-- 阴影加深
+**Interaction feedback**:
+- CSS transitions (200ms)
+- Hover state elevation (translateY -2px)
+- Shadow deepening
 
-**性能指标**：
-- INP < 200ms（Core Web Vitals）
-- 60fps 流畅度
+**Performance metrics**:
+- INP < 200ms (Core Web Vitals)
+- 60fps smoothness
 
-**代码示例**：见上方
+**Code example**: See above
 ```
 
 ---
-

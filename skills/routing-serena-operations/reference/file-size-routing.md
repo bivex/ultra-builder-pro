@@ -1,5 +1,9 @@
 ## File Size Routing
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Detection Logic
 
 ```typescript
@@ -34,6 +38,8 @@ function routeByFileSize(filePath: string): RoutingDecision {
 }
 ```
 
+---
+
 ### Output Examples
 
 #### Scenario 1: Small File (< 5000 lines)
@@ -56,42 +62,42 @@ function routeByFileSize(filePath: string): RoutingDecision {
 
 **Routing Decision**: Suggest Serena MCP
 
-**Output** (in Chinese at runtime):
+**Output**:
 ```
-文件大小检测：src/services/userService.ts 有 6,500 行
+File Size Detection: src/services/userService.ts has 6,500 lines
 
-⚠️ 文件较大，建议使用 Serena MCP 以获得更好的性能（60x 效率提升）
+⚠️ Large file detected. Serena MCP recommended for better performance (60x efficiency improvement)
 
-推荐方案：
+Recommended Approaches:
 
-1️⃣ 获取文件概览（推荐）
+1️⃣ Get File Overview (Recommended)
    mcp__serena__get_symbols_overview({
      relative_path: "src/services/userService.ts"
    })
-   预计 token：~500（vs Read 工具的 28,000）
+   Estimated tokens: ~500 (vs 28,000 with Read tool)
 
-2️⃣ 查找特定符号
+2️⃣ Find Specific Symbol
    mcp__serena__find_symbol({
      name_path: "UserService",
      relative_path: "src/services/userService.ts",
      depth: 1
    })
-   预计 token：~1,200（方法列表 + 签名）
+   Estimated tokens: ~1,200 (method list + signatures)
 
-3️⃣ 读取特定方法
+3️⃣ Read Specific Method
    mcp__serena__find_symbol({
      name_path: "UserService/getUserById",
      relative_path: "src/services/userService.ts",
      include_body: true
    })
-   预计 token：~800（只包含该方法）
+   Estimated tokens: ~800 (only that method)
 
-效率对比：
-- Read 工具：28,000 tokens，可能失败
-- Serena MCP：500-1,200 tokens，100% 成功率
-- 提升：23x-56x
+Efficiency Comparison:
+- Read tool: 28,000 tokens, may fail
+- Serena MCP: 500-1,200 tokens, 100% success rate
+- Improvement: 23x-56x
 
-是否使用 Serena MCP？
+Use Serena MCP?
 ```
 
 ---
@@ -104,32 +110,34 @@ function routeByFileSize(filePath: string): RoutingDecision {
 
 **Routing Decision**: BLOCK Read, ENFORCE Serena
 
-**Output** (in Chinese at runtime):
+**Output**:
 ```
-⚠️ 文件过大警告
+⚠️ File Too Large Warning
 
-检测到：src/legacy/monolith.ts 有 12,000 行
+Detected: src/legacy/monolith.ts has 12,000 lines
 
-❌ 已阻止 Read 工具
-原因：
-- Token 限制：需要 52,000+ tokens
-- 超出上下文窗口（200K 的 26%）
-- 成功率：<40%（频繁超时/错误）
+❌ Read Tool Blocked
 
-✅ 强制使用 Serena MCP
-原因：
-- Token 效率：500-2,000 tokens（仅需要的部分）
-- 成功率：100%
-- 渐进式探索：从概览到细节
+Reasons:
+- Token limit: Requires 52,000+ tokens
+- Context window consumption: 26% of 200K budget
+- Success rate: <40% (frequent timeouts/errors)
 
-必需步骤：
+✅ Serena MCP Enforced
 
-1️⃣ 第一步：获取文件结构
+Reasons:
+- Token efficiency: 500-2,000 tokens (only needed parts)
+- Success rate: 100%
+- Incremental exploration: From overview to details
+
+Required Steps:
+
+1️⃣ Step 1: Get File Structure
    mcp__serena__get_symbols_overview({
      relative_path: "src/legacy/monolith.ts"
    })
 
-   返回示例：
+   Example Return:
    {
      symbols: [
        { name: "LegacyService", kind: "Class", line: 10 },
@@ -139,21 +147,20 @@ function routeByFileSize(filePath: string): RoutingDecision {
      ]
    }
 
-2️⃣ 第二步：选择关键类/函数
-   基于第一步的输出，选择需要深入了解的符号
+2️⃣ Step 2: Select Key Classes/Functions
+   Based on Step 1 output, choose symbols you need to understand
 
-3️⃣ 第三步：读取具体实现
+3️⃣ Step 3: Read Specific Implementation
    mcp__serena__find_symbol({
      name_path: "LegacyService/processData",
      relative_path: "src/legacy/monolith.ts",
      include_body: true
    })
 
-效率：
-- Read 工具：52,000 tokens → 失败
-- Serena 3步法：500 + 1,200 + 800 = 2,500 tokens → 成功
-- 提升：21x 效率 + 避免错误
+Efficiency:
+- Read tool: 52,000 tokens → Failure
+- Serena 3-step: 500 + 1,200 + 800 = 2,500 tokens → Success
+- Improvement: 21x efficiency + error prevention
 ```
 
 ---
-

@@ -1,5 +1,9 @@
 ## Blocking Scenarios
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Scenario 1: AI About to Suggest "Option 1 vs Option 2"
 
 **Trigger**: AI detects user has 31 tasks and considers suggesting workflow options
@@ -18,45 +22,45 @@
 // → INJECT ENFORCEMENT MESSAGE
 ```
 
-**Guardian output** (in Chinese at runtime):
+**Guardian output**:
 
 ```
-🚫 工作流不可协商提醒
+🚫 Workflow Non-Negotiable Reminder
 
-**检测到**：即将建议替代工作流（Option 1 vs Option 2）
+**Detected**: About to suggest alternative workflow (Option 1 vs Option 2)
 
-**Ultra Builder Pro 使用唯一强制工作流**：
+**Ultra Builder Pro uses single mandatory workflow**:
 
-**独立任务分支模式**（不可更改）：
+**Independent Task Branch Pattern** (non-changeable):
 ```
-main (始终活跃，永不冻结)
- ├── feat/task-1-xxx (创建 → 完成 → 合并 → 删除)
- ├── feat/task-2-yyy (创建 → 完成 → 合并 → 删除)
- └── feat/task-3-zzz (创建 → 完成 → 合并 → 删除)
+main (always active, never frozen)
+ ├── feat/task-1-xxx (create → complete → merge → delete)
+ ├── feat/task-2-yyy (create → complete → merge → delete)
+ └── feat/task-3-zzz (create → complete → merge → delete)
 ```
 
-**规则**：
-- 每个任务 = 独立分支（`feat/task-{id}-{description}`）
-- 任务完成 → 立即合并到 main → 删除分支
-- main 分支始终可部署（用于紧急修复）
+**Rules**:
+- Each task = independent branch (`feat/task-{id}-{description}`)
+- Task complete → merge immediately to main → delete branch
+- main branch always deployable (for hotfixes)
 
-**禁止**：
-❌ 统一功能分支（多个任务在一个分支）
-❌ 延迟合并直到"所有任务完成"
-❌ 冻结 main 分支等待批量部署
-❌ 提供"工作流选项"
+**Forbidden**:
+❌ Unified feature branch (multiple tasks in one branch)
+❌ Delayed merge until "all tasks complete"
+❌ Freeze main branch waiting for batch deployment
+❌ Provide "workflow options"
 
-**原因**：
-生产环境要求 main 分支随时可部署。紧急修复不能等待 31 个任务完成。
-独立分支支持并行工作和独立回滚。
+**Rationale**:
+Production environment requires main branch always deployable. Hotfixes cannot wait for 31 tasks to complete.
+Independent branches support parallel work and independent rollback.
 
-**参考**：@guidelines/ultra-git-workflow.md - "CRITICAL: Workflow is Non-Negotiable"
+**Reference**: @guidelines/ultra-git-workflow.md - "CRITICAL: Workflow is Non-Negotiable"
 
-**正确做法（唯一工作流）**：
-1. Task #1: 创建 `feat/task-1-auth` → 完成 → 合并 → 删除
-2. Task #2: 创建 `feat/task-2-dashboard` → 完成 → 合并 → 删除
-3. Task #3: 创建 `feat/task-3-payment` → 完成 → 合并 → 删除
-... (依次处理所有 31 个任务)
+**Correct approach (single workflow)**:
+1. Task #1: Create `feat/task-1-auth` → complete → merge → delete
+2. Task #2: Create `feat/task-2-dashboard` → complete → merge → delete
+3. Task #3: Create `feat/task-3-payment` → complete → merge → delete
+... (process all 31 tasks sequentially)
 ```
 
 ---
@@ -73,242 +77,338 @@ main (始终活跃，永不冻结)
 **Guardian intervention**:
 
 ```
-🚫 工作流违规警告
+🚫 Workflow Violation Warning
 
-**检测到不安全建议**：统一功能分支（31 个任务在一个分支）
+**Detected unsafe suggestion**: Unified feature branch (31 tasks in one branch)
 
-**问题分析**：
+**Problem analysis**:
 
-**场景**：31 个任务在 `feat/user-management` 分支
+**Scenario**: 31 tasks in `feat/user-management` branch
 
-**风险**：
-1. ❌ **紧急修复被阻塞**
-   - 生产环境出现严重 bug
-   - main 分支需要立即修复
-   - 但 feat/user-management 尚未完成（仅 15/31 任务完成）
-   - 必须等待剩余 16 个任务 → 延迟修复 2-3 天
-   - **业务损失：不可接受**
+**Risks**:
+1. ❌ **Hotfixes blocked**
+   - Production critical bug occurs
+   - main branch needs immediate fix
+   - But feat/user-management incomplete (only 15/31 tasks done)
+   - Must wait for remaining 16 tasks → 2-3 day delay
+   - **Business loss: Unacceptable**
 
-2. ❌ **回滚困难**
-   - Task #8 引入 critical bug
-   - 需要回滚 Task #8
-   - 但 Task #8 在 feat/user-management 分支（包含 31 个任务）
-   - 回滚选项：
-     * 回滚整个分支 → 丢失 30 个任务的工作（7 天）
-     * 手动 revert Task #8 → 复杂，容易出错
-   - **回滚成本：7 天工作量**
+2. ❌ **Rollback difficulty**
+   - Task #8 introduces critical bug
+   - Need to rollback Task #8
+   - But Task #8 in feat/user-management (contains 31 tasks)
+   - Rollback options:
+     * Rollback entire branch → lose 30 tasks' work (7 days)
+     * Manual revert Task #8 → complex, error-prone
+   - **Rollback cost: 7 days' work**
 
-3. ❌ **并行工作受限**
-   - 多个开发者无法并行工作
-   - 所有人共享一个分支 → 频繁冲突
-   - 合并冲突解决：每天 1-2 小时 × 3 人 = 3-6 小时浪费
+3. ❌ **Team collaboration blocked**
+   - Developer A working on Task #5
+   - Developer B waiting for Task #10
+   - But both in same branch → conflicts, blocking
+   - **Team efficiency: -60%**
 
-4. ❌ **Code Review 质量低**
-   - PR 包含 31 个任务（3,000+ 行代码）
-   - Reviewer 无法仔细审查（时间 4-6 小时）
-   - 问题遗漏率：30%+
+**Mandatory workflow (only option)**:
 
----
-
-✅ **正确做法：独立任务分支**
-
-**工作流**：
 ```
-main (随时可部署)
- ├── feat/task-1-user-model (120 lines) → PR #1 → 合并 → 删除
- ├── feat/task-2-user-crud (200 lines) → PR #2 → 合并 → 删除
- ├── feat/task-3-auth-jwt (150 lines) → PR #3 → 合并 → 删除
- ... (依次处理所有 31 个任务)
+main (always deployable)
+ ├── feat/task-1-login      → merged ✅
+ ├── feat/task-2-dashboard  → in progress 🚧
+ └── feat/task-3-payment    → pending ⏸️
 ```
 
-**优势**：
-1. ✅ **紧急修复不受阻**
-   - main 始终可部署
-   - 随时可以创建 `hotfix/critical-bug` 分支
-   - 修复、测试、部署：30 分钟
-
-2. ✅ **独立回滚**
-   - Task #8 有问题 → 回滚 Task #8 的 commit
-   - 其他 30 个任务不受影响
-   - 回滚成本：5 分钟
-
-3. ✅ **并行工作高效**
-   - 开发者 A: Task #1
-   - 开发者 B: Task #5（无依赖）
-   - 开发者 C: Task #12（无依赖）
-   - 零冲突，高效协作
-
-4. ✅ **Code Review 质量高**
-   - 每个 PR: 100-200 行
-   - Reviewer 仔细审查：15-20 分钟/PR
-   - 问题发现率：95%+
-
-**结论**：已阻止统一分支建议，强制使用独立任务分支
-
-**参考**：@guidelines/ultra-git-workflow.md
+**Benefits**:
+- ✅ Hotfixes: Can merge to main anytime
+- ✅ Rollback: Delete single branch, 2 minutes
+- ✅ Collaboration: Parallel work, zero conflicts
 ```
 
 ---
 
-### Scenario 3: AI Suggests Delayed Merge
+### Scenario 3: User Asks "Can I Use Unified Branch for Related Tasks?"
 
-**Trigger**: AI suggests "Merge all tasks to main when complete"
+**Trigger**: User: "Tasks 1-5 are all related to authentication, can I put them in one branch?"
 
-**AI attempt** (blocked):
+**AI might say** (blocked):
 ```
-"Complete all 31 tasks in separate branches, then merge them to main together..."
+"Yes, since they're related, you can use feat/auth-system for Tasks 1-5..."
+```
+
+**Guardian enforcement**:
+
+```
+🚫 Workflow Non-Negotiable
+
+**Question detected**: Unified branch for related tasks
+
+**Answer**: No. Ultra Builder Pro uses independent branch pattern regardless of task relationship.
+
+**Why "related tasks" doesn't justify unified branch**:
+
+1. **Hotfix still critical**:
+   - Task 3 (password reset) introduces bug
+   - Production login broken
+   - Need immediate rollback
+   - With unified branch → must rollback all 5 tasks
+   - **Downtime: 2 hours vs 2 minutes**
+
+2. **Task dependency ≠ Branch dependency**:
+   - Task 2 depends on Task 1 (code-level)
+   - But branch dependency is workflow-level
+   - Solution: Merge Task 1 first, then start Task 2
+   - **Independent branches preserve independence**
+
+3. **Partial deployment impossible**:
+   - Tasks 1-3 ready, 4-5 still testing
+   - With unified branch → cannot deploy 1-3
+   - With independent branches → deploy 1-3, continue 4-5
+   - **Deployment flexibility: 100% vs 0%**
+
+**Correct approach**:
+```
+main
+ ├── feat/task-1-login-form       → merged ✅
+ ├── feat/task-2-password-hash    → merged ✅
+ ├── feat/task-3-password-reset   → in progress 🚧
+ ├── feat/task-4-2fa             → pending ⏸️
+ └── feat/task-5-session-mgmt    → pending ⏸️
+```
+
+Each task independent, even if functionally related.
+```
+
+---
+
+### Scenario 4: AI Suggests Batching Tasks Before Merge
+
+**Trigger**: User: "I've completed 5 tasks, should I merge them together?"
+
+**AI might say** (blocked):
+```
+"Yes, you can merge all 5 tasks at once for efficiency..."
 ```
 
 **Guardian intervention**:
 
 ```
-🚫 工作流违规警告
+🚫 Batch Merge Violation
 
-**检测到不安全建议**：批量合并（延迟合并直到所有任务完成）
+**Detected pattern**: Batch merge suggestion (5 tasks together)
 
-**建议的工作流**（❌ 错误）：
-1. 完成 Task #1 → 不合并，保留在 feat/task-1
-2. 完成 Task #2 → 不合并，保留在 feat/task-2
-... (完成所有 31 个任务)
-31. 完成 Task #31 → 然后一次性合并所有分支
+**Problem**: Violates independent branch workflow
 
-**问题分析**：
+**Mandatory rule**: Each task merges immediately after completion
 
-**风险 #1：main 分支过时**
-- 31 个任务预计 6-8 周完成
-- 8 周内 main 分支没有新功能
-- 用户看不到进度（无法验证部分功能）
-- **业务影响**：客户信心下降
+**Why immediate merge is required**:
 
-**风险 #2：集成地狱**
-- 31 个分支独立开发 8 周
-- 合并时发现冲突：200+ 处
-- 解决冲突：2-3 周
-- **延期风险**：项目延期 2-3 周
+1. **Continuous integration**:
+   - Task 1 complete → merge → CI runs → tests pass
+   - Task 2 complete → merge → CI runs → tests pass
+   - Early detection of integration issues
+   - **Bug discovery: Real-time vs delayed**
 
-**风险 #3：测试延迟**
-- 所有功能在第 8 周集成测试
-- 发现 Task #5 和 Task #12 不兼容
-- 修复需要重构 Task #5-#12（1-2 周）
-- **质量风险**：未经增量测试
+2. **Risk isolation**:
+   - Task 3 breaks tests
+   - With immediate merge → easy to identify (only Task 3 changed)
+   - With batch merge → hard to identify (5 tasks changed simultaneously)
+   - **Debug time: 10 min vs 2 hours**
 
----
+3. **main branch currency**:
+   - Waiting 5 tasks → main branch outdated
+   - Merge conflicts accumulate
+   - **Conflict resolution: Simple vs complex**
 
-✅ **正确做法：增量合并**
-
-**工作流**：
+**Correct workflow**:
 ```
-Week 1:
-- Task #1 完成 → 立即合并到 main → 部署 → 用户验证
-- Task #2 完成 → 立即合并到 main → 部署 → 用户验证
-
-Week 2:
-- Task #3 完成 → 立即合并到 main → 部署 → 用户验证
-- Task #4 完成 → 立即合并到 main → 部署 → 用户验证
-
-... (每周 4-5 个任务增量合并)
-
-Week 8:
-- Task #31 完成 → 合并 → 部署
-- 所有 31 个任务已逐步集成和验证
+Timeline:
+Day 1, 10:00 - Task 1 complete → merge immediately ✅
+Day 1, 14:00 - Task 2 complete → merge immediately ✅
+Day 2, 11:00 - Task 3 complete → merge immediately ✅
+Day 2, 16:00 - Task 4 complete → merge immediately ✅
+Day 3, 10:00 - Task 5 complete → merge immediately ✅
 ```
 
-**优势**：
-1. ✅ **增量交付**
-   - 每周新功能上线
-   - 用户早期反馈
-   - 风险分散
-
-2. ✅ **早期集成**
-   - 每个任务立即集成到 main
-   - 冲突早发现、早解决（每周解决小冲突）
-   - 避免最后集成地狱
-
-3. ✅ **持续验证**
-   - 每个功能上线后立即测试
-   - 问题早发现（Task #5 问题在第 2 周发现，而非第 8 周）
-   - 修复成本低（1 天 vs 1-2 周）
-
-**结论**：已阻止批量合并建议，强制使用增量合并
-
-**参考**：持续集成（CI）和持续部署（CD）最佳实践
+Never wait. Never batch. Merge immediately.
 ```
 
 ---
 
-### Scenario 4: AI Suggests Freezing Main Branch
+### Scenario 5: User Mentions "Feature Branch"
 
-**Trigger**: AI suggests "Freeze main during feature development"
+**Trigger**: User: "I'll create a feature branch for the payment system"
 
-**AI attempt** (blocked):
+**AI interpretation** (requires validation):
 ```
-"Freeze main branch while developing these features, then deploy all together..."
-```
-
-**Guardian intervention**:
-
-```
-🚫 工作流违规警告
-
-**检测到不安全建议**：冻结 main 分支（等待批量部署）
-
-**建议的工作流**（❌ 错误）：
-1. 冻结 main 分支（禁止合并）
-2. 在 feat/* 分支开发 31 个任务（6-8 周）
-3. 所有任务完成后，一次性合并到 main
-4. 批量部署
-
-**真实场景模拟**：
-
-**Week 3（main 已冻结 3 周）**：
-- 💥 **生产环境紧急情况**
-  - 支付系统出现严重 bug（用户无法支付）
-  - 影响：每小时损失 $50,000
-  - 需要立即修复并部署
-
-- ❌ **无法立即修复**
-  - main 分支已冻结
-  - 选项 1: 解冻 main，合并修复 → 但会破坏"批量部署"计划
-  - 选项 2: 等待 31 个任务全部完成（还需 4-5 周）→ 业务损失 $8.4M
-  - 选项 3: 创建紧急分支，绕过 main → 违反 Git 策略，引入技术债
-
-- **结果**：紧急修复被阻塞，业务严重损失
-
----
-
-✅ **正确做法：main 始终活跃**
-
-**工作流**：
-```
-main (永不冻结，随时可部署)
- ├── feat/task-1 → 合并 → 部署（Week 1）
- ├── feat/task-2 → 合并 → 部署（Week 1）
- ├── hotfix/payment-bug → 合并 → 紧急部署（Week 3，30 分钟）
- ├── feat/task-3 → 合并 → 部署（Week 3）
- ... (继续开发其他任务)
+// Does user mean:
+// A) One branch for one task (correct)
+// B) One branch for multiple payment tasks (incorrect)
 ```
 
-**优势**：
-1. ✅ **紧急修复无阻**
-   - main 始终可用
-   - 创建 `hotfix/payment-bug` → 修复 → 测试 → 合并 → 部署
-   - 总耗时：30 分钟
-   - 业务损失：$25,000（vs $8.4M）
+**Guardian clarification**:
 
-2. ✅ **持续部署**
-   - 每个任务完成后立即部署
-   - 用户持续获得新功能
-   - 反馈循环短（1 周 vs 8 周）
+```
+⚠️ Terminology Clarification Needed
 
-3. ✅ **风险分散**
-   - 小批量部署（每次 1-2 个功能）
-   - 问题影响范围小
-   - 回滚容易（回滚 1 个 commit vs 31 个）
+**Term detected**: "feature branch"
 
-**结论**：已阻止 main 冻结建议，强制 main 始终活跃
+**In Ultra Builder Pro context**:
+- ✅ "Feature branch" = One branch for ONE task
+- ❌ "Feature branch" ≠ One branch for multiple tasks
 
-**参考**：生产环境最佳实践（main = production-ready）
+**Example clarification**:
+
+User: "I'll create a feature branch for the payment system"
+
+**If user means** (31 payment-related tasks):
+❌ WRONG: `feat/payment-system` containing 31 tasks
+✅ CORRECT: 31 independent branches:
+  - `feat/task-1-stripe-integration`
+  - `feat/task-2-payment-form`
+  - `feat/task-3-refund-logic`
+  - ... (28 more)
+
+**Recommended response**:
+"I see you're working on payment system. How many tasks does this include?
+If multiple tasks, please create one branch per task following the independent branch pattern."
+
+**Never assume**: Always clarify to prevent unified branch pattern.
 ```
 
 ---
 
+### Scenario 6: Complex Project with 100+ Tasks
+
+**Trigger**: User: "I have 100 tasks, independent branches seems impractical"
+
+**AI might think** (blocked):
+```
+"User has a point, maybe for 100 tasks we can allow unified branches..."
+```
+
+**Guardian enforcement**:
+
+```
+🚫 Scale Does Not Change Workflow
+
+**Detected**: Suggestion to modify workflow based on task count
+
+**Answer**: Independent branch pattern scales to ANY task count
+
+**Why 100+ tasks still uses independent branches**:
+
+1. **Real-world example**:
+   - Linux kernel: 100,000+ commits/year
+   - Each feature: Independent branch
+   - Scale: Proves the pattern works
+   - **Evidence: 30 years of success**
+
+2. **Automation handles scale**:
+   - Branch creation: `git checkout -b feat/task-{id}` (5 seconds)
+   - Merge: CI/CD automated (30 seconds)
+   - Per task overhead: 35 seconds
+   - 100 tasks overhead: 58 minutes total
+   - **Acceptable cost for risk elimination**
+
+3. **Benefits scale linearly**:
+   - 10 tasks: 10× rollback ease
+   - 100 tasks: 100× rollback ease
+   - More tasks = MORE need for independent branches
+   - **Scale increases value, not reduces it**
+
+**Correct approach for 100 tasks**:
+```
+# Use task management tool
+# Auto-generate branch names
+# Automate merge workflow
+# Let CI/CD handle integration
+
+Example automation:
+$ ultra-dev 47  # Auto creates feat/task-47-xxx
+$ git push      # Auto triggers CI/CD
+# On success: Auto merges to main
+# On failure: Auto notifies, blocks merge
+```
+
+**Tooling solves scale**, not workflow compromise.
+```
+
+---
+
+### Scenario 7: User Requests "Development Branch"
+
+**Trigger**: User: "Can we use a development branch for staging before merging to main?"
+
+**AI might say** (blocked):
+```
+"Yes, you can create a dev branch as intermediary..."
+```
+
+**Guardian analysis**:
+
+```
+⚠️ Development Branch Pattern Review
+
+**Request**: Intermediary development branch
+
+**Analysis**:
+
+**Compatible pattern** (allowed):
+```
+main (production)
+ ↑
+dev (staging)
+ ↑
+feat/task-{id} (independent task branches)
+```
+
+**Key requirement**: Task branches must still be independent
+
+**Correct workflow**:
+1. Task 1: `feat/task-1` → merge to `dev` → test → merge to `main`
+2. Task 2: `feat/task-2` → merge to `dev` → test → merge to `main`
+3. Each task merges independently
+
+**Forbidden pattern**:
+```
+❌ WRONG:
+feat/mega-feature (10 tasks) → dev → main
+```
+
+**Allowed pattern**:
+```
+✅ CORRECT:
+feat/task-1 → dev → main
+feat/task-2 → dev → main
+feat/task-3 → dev → main
+```
+
+**Note**: dev branch adds complexity. Only use if truly needed for staging environment.
+Simple projects: Direct to main is preferred.
+```
+
+---
+
+## Summary: Common Blocking Patterns
+
+**Guardian blocks when detecting**:
+
+1. Keywords: "Option 1", "Option 2", "workflow choices"
+2. Patterns: "unified branch", "batch merge", "delay merge"
+3. Justifications: "related tasks", "too many tasks", "efficiency"
+4. Proposals: Alternative workflows, workflow modifications
+
+**Guardian enforces**:
+
+- Independent branch pattern (only workflow)
+- Immediate merge (no batching)
+- One task per branch (no exceptions)
+- main always deployable (no freezing)
+
+**Zero tolerance for**:
+
+- Workflow alternatives
+- Workflow "options"
+- Scale-based exceptions
+- Efficiency-based compromises
+
+**Remember**: Workflow is constitutional, not configurable.

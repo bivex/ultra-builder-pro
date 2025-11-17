@@ -1,5 +1,9 @@
 # Context Compressor - Complete Reference
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ## Overview
 The Context Compressor Skill prevents context overflow by proactively compressing accumulated information during long development sessions, enabling 20-30 tasks per session instead of 10-15.
 
@@ -272,12 +276,12 @@ async function beforeMajorOperation(operation: string) {
   const required = estimateOperationTokens(operation);
 
   if (tokens + required > 170000) {
-    // Output in Chinese at runtime per Language Protocol
-    console.log(`⚠️ ${operation} requires ${required.toLocaleString()} tokens`);
-    console.log(`Currently used ${tokens.toLocaleString()} tokens`);
-    console.log(`Recommend compressing context before executing ${operation}`);
-
-    await suggestCompression();
+    // Output example (Chinese at runtime per Language Protocol)
+    await suggestCompression({
+      operation,
+      tokensRequired: required,
+      tokensUsed: tokens
+    });
   }
 }
 ```
@@ -418,11 +422,10 @@ ls -lt .ultra/context-archive/
 # 2. Read latest
 Read(".ultra/context-archive/[latest].md")
 
-# 3. Generate session continuation summary
-"基于上一session归档，以下是项目状态:
-[Extract key information from archive]
-
-现在可以继续开发。"
+# 3. Generate session continuation summary (Chinese at runtime)
+# Example output: "Based on previous session archive, project status:
+# [Extract key information from archive]
+# Ready to continue development."
 ```
 
 ## Performance Benchmarks

@@ -1,5 +1,9 @@
 ## Migration from Old Skills
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 This skill replaces:
 
 ### From ultra-file-router

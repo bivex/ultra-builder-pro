@@ -1,5 +1,9 @@
 ## Safety Enforcement
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### BLOCK Scenarios
 
 #### 1. Cross-File Rename (>5 files)

@@ -1,5 +1,9 @@
 ## Integration with ultra-research
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### How guiding-workflow Uses Research Output
 
 **Step 1**: After `/ultra-research` completes, it saves report to `.ultra/docs/research/`
@@ -23,10 +27,10 @@ const projectType = detectProjectType(reportContent);
 
 | Project Type | Detected Rounds | Next Step Timing | Suggestion |
 |--------------|----------------|------------------|------------|
-| New Project | Round 1-4 | After all 4 rounds complete | "研究完成（4 轮），建议 /ultra-plan" |
-| Incremental Feature | Round 2-3 | After Round 2-3 complete | "解决方案明确，建议 /ultra-plan" |
-| Tech Decision | Round 3 | After Round 3 complete | "技术栈确定，验证后可 /ultra-plan" |
-| Custom Flow | User-selected | After user confirms satisfaction | "自定义流程完成，建议 /ultra-plan" |
+| New Project | Round 1-4 | After all 4 rounds complete | "Research complete (4 rounds), suggest /ultra-plan" |
+| Incremental Feature | Round 2-3 | After Round 2-3 complete | "Solution clear, suggest /ultra-plan" |
+| Tech Decision | Round 3 | After Round 3 complete | "Tech stack determined, validate then /ultra-plan" |
+| Custom Flow | User-selected | After user confirms satisfaction | "Custom workflow complete, suggest /ultra-plan" |
 
 ---
 
@@ -67,18 +71,18 @@ const specsComplete = true;  // specs/ files complete
 
 **guiding-workflow output**:
 ```
-📋 当前项目状态
+📋 Current Project Status
 
-**阶段**：需求研究完成（New Project 流程）
+**Phase**: Requirements research complete (New Project workflow)
 
-**已完成**：
-✅ 4 轮完整研究（70 分钟）
-✅ specs/product.md 100% 完成
-✅ specs/architecture.md 100% 完成
+**Completed**:
+✅ 4 complete research rounds (70 minutes)
+✅ specs/product.md 100% complete
+✅ specs/architecture.md 100% complete
 
-**建议下一步**：/ultra-plan
+**Suggested next step**: /ultra-plan
 
-**原因**：新项目的完整研究已完成，所有需求和技术决策已明确，可以开始任务拆分。
+**Rationale**: Complete research for new project finished. All requirements and technical decisions clear. Ready to start task breakdown.
 ```
 
 ---
@@ -93,3 +97,58 @@ const specsComplete = true;  // specs/ files complete
 **Duration**: 15 minutes
 **Rounds Completed**: 1 (Round 3 only)
 
+## Round 3: Technology Selection
+
+### Options Evaluated
+1. Redux Toolkit
+2. Zustand
+3. Jotai
+
+### Decision Matrix (6 dimensions)
+- Technical Excellence: Zustand (9/10)
+- Team Familiarity: Redux (8/10)
+- Ecosystem Maturity: Redux (10/10)
+- Learning Curve: Zustand (9/10)
+- Bundle Size: Zustand (10/10)
+- Strategic Alignment: Zustand (8/10)
+
+### Final Decision
+**Selected**: Zustand
+
+**Rationale**:
+- Simpler API, easier onboarding
+- Smaller bundle size (3kb vs 15kb)
+- Sufficient ecosystem for our needs
+```
+
+**guiding-workflow detection**:
+```typescript
+const projectType = "Tech Decision";  // Detected from metadata
+const roundsCompleted = 1;  // Only Round 3
+const architectureUpdated = true;  // specs/architecture.md updated
+```
+
+**guiding-workflow output**:
+```
+📋 Current Project Status
+
+**Phase**: Technology selection complete (Tech Decision workflow)
+
+**Completed**:
+✅ Round 3: Technology Selection (15 minutes)
+✅ specs/architecture.md updated with Zustand decision
+
+**Suggested next step (2 options)**:
+
+**Option 1** (recommended): Proceed directly to task planning
+/ultra-plan
+
+**Option 2**: Validate technology choice before planning
+- Create simple PoC with Zustand (1-2 hours)
+- Validate state management patterns
+- Run /ultra-plan after confirmation
+
+**Rationale**: Tech stack determined. If team is confident with Zustand, can proceed directly to planning. If first time using Zustand, recommend brief PoC validation.
+```
+
+---

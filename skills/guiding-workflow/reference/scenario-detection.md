@@ -1,5 +1,9 @@
 ## Scenario B Project Type Detection
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Detection from Research Report
 
 **Process**:
@@ -11,12 +15,12 @@
 
 ### Project Type Keywords
 
-| Project Type | Keywords (English) | Keywords (Chinese) | Indicators |
-|--------------|-------------------|-------------------|------------|
-| **New Project** | "New Project", "from scratch", "greenfield" | "新项目", "从零开始" | All 4 rounds executed, no existing codebase |
-| **Incremental Feature** | "Incremental Feature", "add to existing", "enhancement" | "老项目增量", "现有系统", "功能增强" | Round 2-3 executed, existing codebase mentioned |
-| **Tech Decision** | "Tech Decision", "technology choice", "stack selection" | "技术选型", "技术决策", "选择技术栈" | Only Round 3 executed, comparison analysis |
-| **Custom Flow** | "Custom", "specific rounds" | "自定义", "自选轮次" | User manually selected rounds |
+| Project Type | Keywords (English) | Indicators |
+|--------------|-------------------|------------|
+| **New Project** | "New Project", "from scratch", "greenfield" | All 4 rounds executed, no existing codebase |
+| **Incremental Feature** | "Incremental Feature", "add to existing", "enhancement" | Round 2-3 executed, existing codebase mentioned |
+| **Tech Decision** | "Tech Decision", "technology choice", "stack selection" | Only Round 3 executed, comparison analysis |
+| **Custom Flow** | "Custom", "specific rounds" | User manually selected rounds |
 
 ---
 
@@ -33,19 +37,19 @@ async function detectProjectType(researchFilePath: string): string | null {
   }
 
   // Check for keywords
-  if (content.match(/New Project|新项目|from scratch|greenfield/i)) {
+  if (content.match(/New Project|from scratch|greenfield/i)) {
     return "New Project";
   }
 
-  if (content.match(/Incremental Feature|老项目增量|add to existing/i)) {
+  if (content.match(/Incremental Feature|add to existing/i)) {
     return "Incremental Feature";
   }
 
-  if (content.match(/Tech Decision|技术选型|technology choice/i)) {
+  if (content.match(/Tech Decision|technology choice/i)) {
     return "Tech Decision";
   }
 
-  if (content.match(/Custom|自定义/i)) {
+  if (content.match(/Custom/i)) {
     return "Custom Flow";
   }
 
@@ -63,12 +67,11 @@ async function detectProjectType(researchFilePath: string): string | null {
 
 ### Project Type Routing Table
 
-| Project Type | Detected From | Research Rounds | Next Step After Research | Rationale (Chinese) |
-|--------------|---------------|----------------|-------------------------|---------------------|
-| **New Project** | "New Project" keywords OR 4 rounds completed | Round 1-4 (All) | `/ultra-plan` after all rounds | 全新项目需要完整的需求和技术调研 |
-| **Incremental Feature** | "Incremental Feature" keywords | Round 2-3 (Solution + Tech) | `/ultra-plan` after Round 2-3 | 老项目已有背景，跳过问题发现，聚焦解决方案 |
-| **Tech Decision** | "Tech Decision" keywords OR only Round 3 | Round 3 (Tech only) | Validate choice OR `/ultra-plan` | 技术栈已明确，验证选择后可直接规划 |
-| **Custom Flow** | "Custom" keywords | User-selected rounds | Based on completed rounds | 用户自定义流程，根据已完成轮次灵活建议 |
+| Project Type | Detected From | Research Rounds | Next Step After Research | Rationale |
+|--------------|---------------|----------------|-------------------------|-----------|
+| **New Project** | "New Project" keywords OR 4 rounds completed | Round 1-4 (All) | `/ultra-plan` after all rounds | New project requires complete requirements and technical research |
+| **Incremental Feature** | "Incremental Feature" keywords | Round 2-3 (Solution + Tech) | `/ultra-plan` after Round 2-3 | Existing project already has context, skip problem discovery, focus on solution |
+| **Tech Decision** | "Tech Decision" keywords OR only Round 3 | Round 3 (Tech only) | Validate choice OR `/ultra-plan` | Tech stack determined, validate choice then can proceed directly to planning |
+| **Custom Flow** | "Custom" keywords | User-selected rounds | Based on completed rounds | User-defined workflow, flexible suggestions based on completed rounds |
 
 ---
-

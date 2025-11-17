@@ -1,52 +1,56 @@
 ## FAQ
 
-### Q1: 我必须使用特定的设计系统吗？
-
-**A**: 不。Guardian **不强制**特定设计系统（Material Design, Tailwind 等都可以）。
-
-Guardian **强制**的是：
-- ❌ 避免默认字体（Inter, Roboto, Open Sans）
-- ❌ 避免硬编码颜色
-- ❌ 避免紫色渐变陈词滥调
-
-Guardian **建议**的是：
-- ✅ Typography 层级（3x+ 尺寸跳跃）
-- ✅ 颜色系统（1 主色 + 点缀色）
-- ✅ 使用成熟的组件库
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
 
 ---
 
-### Q2: 如果项目已经使用了 Inter 字体怎么办？
+### Q1: Must I use a specific design system?
 
-**A**: Guardian 会建议迁移，但不会阻止你继续使用。
+**A**: No. Guardian does **not enforce** specific design systems (Material Design, Tailwind, etc. are all acceptable).
 
-**建议迁移路径**：
-1. **评估影响**：字体切换是否影响品牌识别？
-2. **渐进迁移**：先在新组件使用新字体，观察效果
-3. **品牌一致性**：如果 Inter 是品牌指南的一部分，可以保留（添加例外说明）
+Guardian **enforces**:
+- ❌ Avoid default fonts (Inter, Roboto, Open Sans)
+- ❌ Avoid hard-coded colors
+- ❌ Avoid purple gradient clichés
 
-**例外处理**：
+Guardian **suggests**:
+- ✅ Typography hierarchy (3x+ size jumps)
+- ✅ Color system (1 primary + accents)
+- ✅ Use mature component libraries
+
+---
+
+### Q2: What if project already uses Inter font?
+
+**A**: Guardian will suggest migration, but won't block continued use.
+
+**Suggested migration path**:
+1. **Assess impact**: Does font change affect brand recognition?
+2. **Gradual migration**: Use new font in new components first, observe effects
+3. **Brand consistency**: If Inter is part of brand guidelines, can keep (add exception documentation)
+
+**Exception handling**:
 ```css
-/* 如果 Inter 是品牌字体，添加注释说明 */
+/* If Inter is brand font, add comment explanation */
 :root {
   /* Brand guideline: Inter is our corporate font */
   --font-brand: 'Inter', sans-serif;
 }
 ```
 
-Guardian 会识别注释并停止警告。
+Guardian will recognize the comment and stop warnings.
 
 ---
 
-### Q3: 如何处理客户要求使用特定颜色（如企业蓝）？
+### Q3: How to handle client requirements for specific colors (like corporate blue)?
 
-**A**: Guardian 支持自定义主色，但会检查是否使用设计 token。
+**A**: Guardian supports custom primary colors, but will check if design tokens are used.
 
-**正确做法**：
+**Correct approach**:
 ```css
 :root {
   /* Client brand color: Enterprise Blue */
-  --color-primary: #0052CC;  /* 企业蓝 */
+  --color-primary: #0052CC;  /* Enterprise blue */
 }
 
 .button-primary {
@@ -54,75 +58,75 @@ Guardian 会识别注释并停止警告。
 }
 ```
 
-Guardian 会批准这种做法（使用了设计 token）。
+Guardian will approve this approach (uses design tokens).
 
-**错误做法**：
+**Wrong approach**:
 ```css
 .button-primary {
-  background-color: #0052CC;  /* ❌ 硬编码 */
+  background-color: #0052CC;  /* ❌ Hard-coded */
 }
 ```
 
-Guardian 会警告并建议使用 token。
+Guardian will warn and suggest using tokens.
 
 ---
 
-### Q4: 暗色模式是强制的吗？
+### Q4: Is dark mode mandatory?
 
-**A**: 不强制，但**强烈建议**使用设计 token 以便未来支持。
+**A**: Not mandatory, but **strongly recommended** to use design tokens for future support.
 
-**最佳实践**：
+**Best practice**:
 ```css
-/* 1. 定义 light mode（默认） */
+/* 1. Define light mode (default) */
 :root {
   --color-bg: #FFFFFF;
   --color-text: #0F172A;
 }
 
-/* 2. 定义 dark mode（可选） */
+/* 2. Define dark mode (optional) */
 [data-theme="dark"] {
   --color-bg: #0F172A;
   --color-text: #F8FAFC;
 }
 
-/* 3. 使用 token */
+/* 3. Use tokens */
 body {
   background-color: var(--color-bg);
   color: var(--color-text);
 }
 ```
 
-**好处**：
-- 未来支持暗色模式：1 分钟完成
-- 主题切换：用户偏好设置
-- 可访问性：减少眼睛疲劳
+**Benefits**:
+- Future dark mode support: 1 minute completion
+- Theme switching: User preference settings
+- Accessibility: Reduced eye strain
 
 ---
 
-### Q5: 如何知道我的设计是否"现代"？
+### Q5: How do I know if my design is "modern"?
 
-**A**: Guardian 不评判"现代"（主观），而是检查：
+**A**: Guardian doesn't judge "modern" (subjective), but checks:
 
-**客观指标**：
-1. ✅ 避免通用模式（默认字体、紫色渐变）
-2. ✅ 系统化设计（设计 token、间距 grid）
-3. ✅ 性能指标（Core Web Vitals）
-4. ✅ 可访问性（WCAG 2.1 AA）
+**Objective metrics**:
+1. ✅ Avoid generic patterns (default fonts, purple gradients)
+2. ✅ Systematic design (design tokens, spacing grid)
+3. ✅ Performance metrics (Core Web Vitals)
+4. ✅ Accessibility (WCAG 2.1 AA)
 
-**主观评估**（由你决定）：
-- 品牌个性表达
-- 视觉独特性
-- 用户体验创新
+**Subjective assessment** (you decide):
+- Brand personality expression
+- Visual uniqueness
+- User experience innovation
 
-Guardian 确保你避开"AI slop"，但**创意由你主导**。
+Guardian ensures you avoid "AI slop", but **creativity is your domain**.
 
 ---
 
-### Q6: Guardian 会检查响应式设计吗？
+### Q6: Does Guardian check responsive design?
 
-**A**: Guardian **不直接检查**响应式断点，但会**建议**使用标准断点。
+**A**: Guardian does **not directly check** responsive breakpoints, but **suggests** using standard breakpoints.
 
-**推荐断点**（基于统计数据）：
+**Recommended breakpoints** (based on statistics):
 ```css
 /* Mobile-first */
 @media (min-width: 768px) {  /* Tablet */
@@ -138,27 +142,27 @@ Guardian 确保你避开"AI slop"，但**创意由你主导**。
 }
 ```
 
-**组件库默认**：
+**Component library defaults**:
 - MUI: 600px, 960px, 1280px
 - Tailwind: 640px, 768px, 1024px, 1280px, 1536px
 - Ant Design: 576px, 768px, 992px, 1200px, 1600px
 
-Guardian 会建议使用组件库的标准断点（一致性）。
+Guardian will suggest using component library standard breakpoints (consistency).
 
 ---
 
-### Q7: 如何处理第三方组件的默认样式？
+### Q7: How to handle third-party component default styles?
 
-**A**: Guardian 建议**覆盖**第三方组件的默认样式。
+**A**: Guardian suggests **overriding** third-party component default styles.
 
-**示例：MUI Button**
+**Example: MUI Button**
 ```tsx
 import { Button } from '@mui/material';
 
-// ❌ 使用默认样式
+// ❌ Use default styles
 <Button>Click me</Button>
 
-// ✅ 覆盖默认样式
+// ✅ Override default styles
 <Button
   sx={{
     fontFamily: 'var(--font-display)',
@@ -172,7 +176,7 @@ import { Button } from '@mui/material';
 </Button>
 ```
 
-**或使用主题覆盖**：
+**Or use theme overrides**:
 ```tsx
 const theme = createTheme({
   components: {
@@ -180,7 +184,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           fontFamily: 'var(--font-display)',
-          textTransform: 'none',  // 移除默认大写
+          textTransform: 'none',  // Remove default uppercase
         },
       },
     },
@@ -189,4 +193,3 @@ const theme = createTheme({
 ```
 
 ---
-

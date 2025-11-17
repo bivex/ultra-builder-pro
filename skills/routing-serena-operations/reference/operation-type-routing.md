@@ -1,5 +1,9 @@
 ## Operation Type Routing
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Cross-File Rename
 
 **Trigger Keywords**: "rename across", "rename in multiple files", "change name globally"
@@ -23,47 +27,49 @@ function detectCrossFileRename(userInput: string): boolean {
    - If affected files > 5: BLOCK Grep+Edit, ENFORCE Serena
    - If affected files ≤ 5: SUGGEST Serena, allow built-in
 
-**Example Output** (for >5 files, in Chinese):
+**Example Output** (for >5 files):
 ```
-场景：将 getUserById 重命名为 fetchUserById
+Scenario: Rename getUserById to fetchUserById
 
-检测结果：
-- 引用次数：78 个
-- 涉及文件：23 个
-- 风险评估：高（多文件操作）
+Detection Results:
+- References: 78
+- Files affected: 23
+- Risk assessment: High (multi-file operation)
 
-❌ 内置工具方法（Grep + Edit）：
-步骤：
-1. Grep("getUserById")  # 返回 300 个匹配
-2. 手动过滤（排除注释、字符串）
-3. 逐个文件 Edit
+❌ Built-in Tools Method (Grep + Edit):
 
-问题：
-- 误报率：~30%（包括注释、字符串、同名变量）
-- 无法区分不同作用域的同名符号
-- 需要手动编辑 23 个文件
-- 预计错误：6-8 处遗漏或误改
-- 耗时：2.5 小时
+Steps:
+1. Grep("getUserById")  # Returns 300 matches
+2. Manual filtering (exclude comments, strings)
+3. Edit files one by one
 
-✅ Serena 语义方法（推荐）：
+Problems:
+- False positive rate: ~30% (includes comments, strings, same-name variables)
+- Cannot distinguish same-name symbols in different scopes
+- Requires manual editing of 23 files
+- Expected errors: 6-8 missed or incorrect changes
+- Time required: 2.5 hours
+
+✅ Serena Semantic Method (Recommended):
+
 mcp__serena__rename_symbol({
   name_path: "getUserById",
   relative_path: "src/services/userService.ts",
   new_name: "fetchUserById"
 })
 
-优势：
-- 理解作用域：只改相关符号
-- 自动跳过：注释、字符串、文档
-- 跨文件更新：自动处理所有 78 个引用
-- 错误率：0%（语义理解）
-- 耗时：5 分钟
+Advantages:
+- Scope understanding: Only changes related symbols
+- Auto-skips: Comments, strings, documentation
+- Cross-file updates: Automatically handles all 78 references
+- Error rate: 0% (semantic understanding)
+- Time required: 5 minutes
 
-结果：
-78 个引用自动更新，23 个文件同步修改，0 错误
-预计节省：2.4 小时 + 避免 6-8 个错误
+Result:
+78 references automatically updated, 23 files synchronized, 0 errors
+Estimated savings: 2.4 hours + avoiding 6-8 errors
 
-是否使用 Serena rename_symbol？
+Use Serena rename_symbol?
 ```
 
 ---
@@ -91,64 +97,68 @@ mcp__serena__rename_symbol({
    → Returns: Where this symbol is used
 ```
 
-**Example Output** (in Chinese):
+**Example Output**:
 ```
-检测到架构理解需求：
-"理解支付处理流程"
+Detected Architecture Understanding Need:
+"Understand payment processing flow"
 
-推荐 Serena 渐进式探索：
+Recommended Serena Incremental Exploration:
 
-📋 第一步：获取支付模块结构（5分钟）
+📋 Step 1: Get Payment Module Structure (5 minutes)
+
 mcp__serena__get_symbols_overview({
   relative_path: "src/services/paymentService.ts"
 })
 
-预期返回：
-- PaymentService 类（主类）
-- processPayment 方法（核心流程）
-- validateCard 方法（验证逻辑）
-- recordTransaction 方法（记录）
-- handleError 方法（错误处理）
+Expected Return:
+- PaymentService class (main class)
+- processPayment method (core flow)
+- validateCard method (validation logic)
+- recordTransaction method (recording)
+- handleError method (error handling)
 
-🔍 第二步：查看核心流程方法签名（5分钟）
+🔍 Step 2: View Core Method Signatures (5 minutes)
+
 mcp__serena__find_symbol({
   name_path: "PaymentService",
   relative_path: "src/services/paymentService.ts",
-  depth: 1  // 只看方法列表，不包含实现
+  depth: 1  // Only method list, no implementation
 })
 
-预期返回：
+Expected Return:
 - processPayment(amount, card): Promise<Receipt>
 - validateCard(card): boolean
 - recordTransaction(receipt): void
 - handleError(error): ErrorResponse
 
-💡 第三步：深入关键方法（10分钟）
+💡 Step 3: Deep Dive into Key Method (10 minutes)
+
 mcp__serena__find_symbol({
   name_path: "PaymentService/processPayment",
   relative_path: "src/services/paymentService.ts",
-  include_body: true  // 包含完整实现
+  include_body: true  // Include full implementation
 })
 
-预期返回：
-- 完整方法代码
-- 调用的其他方法
-- 错误处理逻辑
+Expected Return:
+- Complete method code
+- Called methods
+- Error handling logic
 
-🔗 第四步：追踪调用关系（可选，5分钟）
+🔗 Step 4: Trace Call Relationships (Optional, 5 minutes)
+
 mcp__serena__find_referencing_symbols({
   name_path: "processPayment",
   relative_path: "src/services/paymentService.ts"
 })
 
-预期返回：
-- checkout.ts 调用（第 145 行）
-- subscription.ts 调用（第 78 行）
-- 代码上下文片段
+Expected Return:
+- checkout.ts calls it (line 145)
+- subscription.ts calls it (line 78)
+- Code context snippets
 
-总耗时：20-25 分钟
-Token 消耗：~3,000（vs Read 整个文件的 15,000）
-提升：5x 效率 + 结构化理解
+Total Time: 20-25 minutes
+Token Consumption: ~3,000 (vs 15,000 for reading entire file with Read)
+Improvement: 5x efficiency + structured understanding
 ```
 
 ---
@@ -157,42 +167,44 @@ Token 消耗：~3,000（vs Read 整个文件的 15,000）
 
 **Trigger Keywords**: "find all", "where is used", "references", "usages", "who calls"
 
-**Comparison Output** (in Chinese):
+**Comparison Output**:
 ```
-场景：查找 processPayment 方法的所有调用
+Scenario: Find all calls to processPayment method
 
-方案对比：
+Method Comparison:
 
-❌ Grep 方法：
+❌ Grep Method:
+
 Grep("processPayment", { output_mode: "content" })
 
-返回：45 个匹配
+Returns: 45 matches
 
-问题：
-- 包括注释中的提及（15 个误报）
-- 包括字符串中的提及（8 个误报）
-- 包括文档中的说明（6 个误报）
-- 无法区分不同类的同名方法
-- 无代码上下文（需要逐个打开文件查看）
-- 实际调用：16 个
-- 误报率：64%
+Problems:
+- Includes mentions in comments (15 false positives)
+- Includes mentions in strings (8 false positives)
+- Includes mentions in documentation (6 false positives)
+- Cannot distinguish same-name methods in different classes
+- No code context (need to open each file individually)
+- Actual calls: 16
+- False positive rate: 64%
 
-✅ Serena 方法：
+✅ Serena Method:
+
 mcp__serena__find_referencing_symbols({
   name_path: "processPayment",
   relative_path: "src/services/paymentService.ts"
 })
 
-返回：16 个精确引用
+Returns: 16 precise references
 
-优势：
-- 理解作用域：只返回实际代码调用
-- 自动排除：注释、字符串、文档
-- 提供上下文：每个引用的代码片段
-- 跨文件追踪：准确定位所有调用位置
-- 误报率：0%
+Advantages:
+- Scope understanding: Only returns actual code calls
+- Auto-excludes: Comments, strings, documentation
+- Provides context: Code snippet for each reference
+- Cross-file tracking: Accurately locates all call sites
+- False positive rate: 0%
 
-返回示例：
+Example Return:
 [
   {
     file: "src/pages/checkout.ts",
@@ -219,11 +231,10 @@ mcp__serena__find_referencing_symbols({
   ... (14 more)
 ]
 
-效率对比：
-- Grep：45 个匹配 → 人工过滤 → 16 个实际 → 耗时 45 分钟
-- Serena：直接 16 个精确 → 耗时 2 分钟
-- 提升：22x 时间节省 + 0% 误报
+Efficiency Comparison:
+- Grep: 45 matches → Manual filtering → 16 actual → 45 minutes
+- Serena: Direct 16 precise → 2 minutes
+- Improvement: 22x time savings + 0% false positives
 ```
 
 ---
-

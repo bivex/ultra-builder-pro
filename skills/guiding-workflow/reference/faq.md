@@ -1,5 +1,9 @@
 ## FAQ
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Q1: What if research report doesn't have project type metadata?
 
 **A**: guiding-workflow will **infer** from keywords or rounds completed:
@@ -20,21 +24,21 @@
 
 **Output**:
 ```
-⚠️ 规范未完成
+⚠️ Specifications Incomplete
 
-**检测到 [NEEDS CLARIFICATION] 标记**：
-- specs/product.md: 3 处
-- specs/architecture.md: 1 处
+**Detected [NEEDS CLARIFICATION] markers**:
+- specs/product.md: 3 locations
+- specs/architecture.md: 1 location
 
-**问题**：
-/ultra-plan 需要 100% 完整的规范才能生成准确的任务拆分。
+**Issue**:
+/ultra-plan requires 100% complete specifications to generate accurate task breakdown.
 
-**建议**：先完成研究
+**Suggestion**: Complete research first
 
-**执行命令**：
+**Execute command**:
 /ultra-research
 
-**预计耗时**：20-30 分钟（填补空缺部分）
+**Estimated duration**: 20-30 minutes (to fill gaps)
 ```
 
 **Why**: Prevent garbage-in-garbage-out (incomplete specs → bad tasks)
@@ -47,17 +51,17 @@
 
 **Output**:
 ```
-**下一个任务**：
-Task #1: 实现用户认证（JWT）
-- 复杂度：Medium
-- 预计时长：4 小时
-- 依赖：无（可立即开始）
+**Next task**:
+Task #1: Implement user authentication (JWT)
+- Complexity: Medium
+- Estimated duration: 4 hours
+- Dependencies: None (can start immediately)
 
-**建议下一步**：
-/ultra-dev   # 自动选择 Task #1
+**Suggested next step**:
+/ultra-dev   # Automatically selects Task #1
 
-**或指定任务**：
-/ultra-dev 3  # 如果 Task #3 无依赖，可并行开发
+**Or specify task**:
+/ultra-dev 3  # If Task #3 has no dependencies, can develop in parallel
 ```
 
 **Why**: Flexibility for parallel development (if no dependencies)
@@ -95,14 +99,14 @@ Task #1: 实现用户认证（JWT）
 
 **Output**:
 ```
-**当前阶段**：Phase 2 - Beta Features
+**Current phase**: Phase 2 - Beta Features
 
-**Phase 2 进度**：
-- ✅ 已完成：3/8 任务（38%）
-- 🚧 进行中：Task #4
-- ⏳ 待开始：4 任务
+**Phase 2 progress**:
+- ✅ Completed: 3/8 tasks (38%)
+- 🚧 In progress: Task #4
+- ⏳ Pending: 4 tasks
 
-**建议下一步**：/ultra-dev 4
+**Suggested next step**: /ultra-dev 4
 ```
 
 **Why**: Focus on current work, not future phases
@@ -120,15 +124,15 @@ Task #1: 实现用户认证（JWT）
 
 **Output** (old format):
 ```
-**已完成**：
-✅ .ultra/docs/prd.md 100% 完成
-✅ .ultra/docs/tech.md 100% 完成
+**Completed**:
+✅ .ultra/docs/prd.md 100% complete
+✅ .ultra/docs/tech.md 100% complete
 
-**建议**：考虑迁移到新格式（specs/）
+**Suggestion**: Consider migrating to new format (specs/)
 - specs/product.md (instead of prd.md)
 - specs/architecture.md (instead of tech.md)
 
-**迁移命令**：
+**Migration commands**:
 mv .ultra/docs/prd.md specs/product.md
 mv .ultra/docs/tech.md specs/architecture.md
 ```
@@ -145,20 +149,19 @@ mv .ultra/docs/tech.md specs/architecture.md
 
 **Output**:
 ```
-**查看详细进度**：/ultra-status
+**View detailed progress**: /ultra-status
 
-/ultra-status 提供：
-- 任务完成百分比
-- 当前阶段分析
-- 风险预警
-- 下一步建议
+/ultra-status provides:
+- Task completion percentage
+- Current phase analysis
+- Risk warnings
+- Next step suggestions
 
-**快速概览**（当前）：
-- 5/12 任务完成（42%）
-- 预计剩余时间：24 小时
+**Quick overview** (current):
+- 5/12 tasks complete (42%)
+- Estimated remaining time: 24 hours
 ```
 
 **Why**: Complement guiding-workflow with detailed status
 
 ---
-

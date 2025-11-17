@@ -1,4 +1,8 @@
-## Output Examples (Chinese)
+## Output Examples
+
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
 
 ### Example 1: After /ultra-init (No Research Yet)
 
@@ -9,24 +13,24 @@
 
 **Output**:
 ```
-📋 当前项目状态
+📋 Current Project Status
 
-**阶段**：项目已初始化，等待需求研究
+**Phase**: Project initialized, awaiting requirements research
 
-**已完成**：
-✅ 项目结构初始化（.ultra/ 目录）
+**Completed**:
+✅ Project structure initialized (.ultra/ directory)
 
-**待完成**：
-⏳ 需求和技术调研（specs/ 文件缺失）
+**Pending**:
+⏳ Requirements and technical research (specs/ files missing)
 
-**建议下一步**：/ultra-research
+**Suggested next step**: /ultra-research
 
-**原因**：
-规范文件（specs/product.md, specs/architecture.md）不存在，需要通过研究流程生成完整规范。
+**Rationale**:
+Specification files (specs/product.md, specs/architecture.md) do not exist. Complete specifications need to be generated through the research process.
 
-**预计时长**：50-70 分钟（4 轮交互式发现）
+**Estimated duration**: 50-70 minutes (4-round interactive discovery)
 
-**ROI**：70 分钟投资可节省 10+ 小时返工（8.3x 回报）
+**ROI**: 70-minute investment saves 10+ hours of rework (8.3x return)
 ```
 
 ---
@@ -41,34 +45,34 @@
 
 **Output**:
 ```
-📋 当前项目状态
+📋 Current Project Status
 
-**阶段**：需求研究完成（New Project 流程）
+**Phase**: Requirements research complete (New Project workflow)
 
-**已完成**：
-✅ 4 轮完整研究（70 分钟）
-  - Round 1: 问题发现（20 分钟）
-  - Round 2: 解决方案探索（20 分钟）
-  - Round 3: 技术选型（15 分钟）
-  - Round 4: 风险与约束（15 分钟）
-✅ specs/product.md 100% 完成（无 [NEEDS CLARIFICATION] 标记）
-✅ specs/architecture.md 100% 完成（技术栈已确定）
+**Completed**:
+✅ 4 complete research rounds (70 minutes)
+  - Round 1: Problem Discovery (20 minutes)
+  - Round 2: Solution Exploration (20 minutes)
+  - Round 3: Technology Selection (15 minutes)
+  - Round 4: Risk & Constraints (15 minutes)
+✅ specs/product.md 100% complete (no [NEEDS CLARIFICATION] markers)
+✅ specs/architecture.md 100% complete (tech stack determined)
 
-**待完成**：
-⏳ 任务拆分和依赖分析
+**Pending**:
+⏳ Task breakdown and dependency analysis
 
-**建议下一步**：/ultra-plan
+**Suggested next step**: /ultra-plan
 
-**原因**：
-规范已 100% 完成，可以开始将需求拆分为可执行的原子任务。
+**Rationale**:
+Specifications are 100% complete. Ready to decompose requirements into executable atomic tasks.
 
-**预计生成**：
-- .ultra/tasks/tasks.json（任务列表 + 依赖关系）
-- 任务数量：预计 12-20 个（根据项目规模）
-- 预计总时长：预计 40-80 小时开发
+**Expected output**:
+- .ultra/tasks/tasks.json (task list + dependencies)
+- Task count: Estimated 12-20 tasks (based on project scale)
+- Estimated total duration: 40-80 hours development
 
-**下一阶段准备**：
-确保已理解 specs/ 文件内容，/ultra-plan 将基于规范生成详细任务分解。
+**Next phase preparation**:
+Ensure you understand specs/ file contents. /ultra-plan will generate detailed task breakdown based on specifications.
 ```
 
 ---
@@ -82,39 +86,39 @@
 
 **Output**:
 ```
-📋 当前项目状态
+📋 Current Project Status
 
-**阶段**：技术选型完成（Tech Decision 流程）
+**Phase**: Technology selection complete (Tech Decision workflow)
 
-**已完成**：
-✅ Round 3: 技术选型（15 分钟）
-  - 6 维度对比矩阵
-  - 技术栈确定：Next.js 14 + TypeScript + Tailwind
-  - 决策理由记录到 specs/architecture.md
-✅ specs/architecture.md 已更新
+**Completed**:
+✅ Round 3: Technology Selection (15 minutes)
+  - 6-dimensional comparison matrix
+  - Tech stack determined: Next.js 14 + TypeScript + Tailwind
+  - Decision rationale recorded to specs/architecture.md
+✅ specs/architecture.md updated
 
-**待完成**：
-⏳ 验证技术选择（可选）
-⏳ 任务规划
+**Pending**:
+⏳ Validate tech choice (optional)
+⏳ Task planning
 
-**建议下一步（2 个选项）**：
+**Suggested next step (2 options)**:
 
-**选项 1**（推荐）：直接进入任务规划
+**Option 1** (recommended): Proceed directly to task planning
 ```bash
 /ultra-plan
 ```
-**适用场景**：技术选型确信无疑，可直接拆分任务
+**Use case**: Technology choice is confident, can directly decompose tasks
 
-**选项 2**：验证技术选择后再规划
-- 创建简单 PoC（Proof of Concept）
-- 验证核心技术栈可行性
-- 确认后运行 /ultra-plan
+**Option 2**: Validate technology choice before planning
+- Create simple PoC (Proof of Concept)
+- Validate core tech stack feasibility
+- Run /ultra-plan after confirmation
 
-**适用场景**：首次使用该技术栈，需要验证
+**Use case**: First time using this tech stack, need validation
 
-**建议**：
-如果是熟悉的技术栈（Next.js + TypeScript），直接选择选项 1。
-如果是新技术栈，建议选项 2（1-2 小时 PoC 验证）。
+**Recommendation**:
+If familiar with the tech stack (Next.js + TypeScript), directly choose Option 1.
+If new tech stack, recommend Option 2 (1-2 hour PoC validation).
 ```
 
 ---
@@ -128,42 +132,42 @@
 
 **Output**:
 ```
-📋 当前项目状态
+📋 Current Project Status
 
-**阶段**：任务规划完成，准备开发
+**Phase**: Task planning complete, ready for development
 
-**已完成**：
-✅ 任务拆分完成（12 个原子任务）
-✅ 依赖关系分析完成
-✅ 复杂度评估完成（3 个 Complex，5 个 Medium，4 个 Simple）
-✅ 预计总时长：48 小时
+**Completed**:
+✅ Task breakdown complete (12 atomic tasks)
+✅ Dependency analysis complete
+✅ Complexity assessment complete (3 Complex, 5 Medium, 4 Simple)
+✅ Estimated total duration: 48 hours
 
-**任务概览**：
-- 待开始：12 个（100%）
-- 进行中：0 个
-- 已完成：0 个
+**Task overview**:
+- Pending: 12 tasks (100%)
+- In progress: 0 tasks
+- Completed: 0 tasks
 
-**下一个任务**：
-Task #1: 实现用户认证（JWT）
-- 复杂度：Medium
-- 预计时长：4 小时
-- 依赖：无（可立即开始）
+**Next task**:
+Task #1: Implement user authentication (JWT)
+- Complexity: Medium
+- Estimated duration: 4 hours
+- Dependencies: None (can start immediately)
 
-**建议下一步**：/ultra-dev
+**Suggested next step**: /ultra-dev
 
-**TDD 流程提示**：
-/ultra-dev 将自动执行以下流程：
-1. 🔴 RED: 编写失败的测试（6 维度覆盖）
-2. 🟢 GREEN: 实现最小代码使测试通过
-3. 🔵 REFACTOR: 优化代码质量（SOLID/DRY/KISS/YAGNI）
-4. ✅ 质量门检查：测试全部通过 + 代码审查
-5. 🔀 合并到 main 并删除分支
+**TDD workflow reminder**:
+/ultra-dev will automatically execute the following workflow:
+1. 🔴 RED: Write failing tests (6-dimensional coverage)
+2. 🟢 GREEN: Implement minimal code to pass tests
+3. 🔵 REFACTOR: Optimize code quality (SOLID/DRY/KISS/YAGNI)
+4. ✅ Quality gate check: All tests passing + code review
+5. 🔀 Merge to main and delete branch
 
-**执行命令**：
+**Execute command**:
 ```bash
-/ultra-dev   # 自动选择 Task #1
-# 或
-/ultra-dev 3  # 指定 Task #3（如果无依赖）
+/ultra-dev   # Automatically selects Task #1
+# or
+/ultra-dev 3  # Specify Task #3 (if no dependencies, can develop in parallel)
 ```
 ```
 
@@ -177,50 +181,50 @@ Task #1: 实现用户认证（JWT）
 
 **Output**:
 ```
-📋 当前项目状态
+📋 Current Project Status
 
-**阶段**：开发进行中
+**Phase**: Development in progress
 
-**任务进度**：
-- ✅ 已完成：5 个（42%）
-- 🚧 进行中：1 个（Task #6: 创建用户 Dashboard）
-- ⏳ 待开始：6 个（50%）
+**Task progress**:
+- ✅ Completed: 5 tasks (42%)
+- 🚧 In progress: 1 task (Task #6: Create user Dashboard)
+- ⏳ Pending: 6 tasks (50%)
 
-**已完成任务回顾**：
-1. ✅ Task #1: 用户认证（JWT）- 4h（预计 4h）
-2. ✅ Task #2: 用户注册 API - 3h（预计 3h）
-3. ✅ Task #3: 密码重置功能 - 2.5h（预计 3h，提前完成）
-4. ✅ Task #4: 邮件服务集成 - 4h（预计 4h）
-5. ✅ Task #5: 用户资料 CRUD - 3.5h（预计 4h，提前完成）
+**Completed tasks review**:
+1. ✅ Task #1: User authentication (JWT) - 4h (estimated 4h)
+2. ✅ Task #2: User registration API - 3h (estimated 3h)
+3. ✅ Task #3: Password reset functionality - 2.5h (estimated 3h, completed early)
+4. ✅ Task #4: Email service integration - 4h (estimated 4h)
+5. ✅ Task #5: User profile CRUD - 3.5h (estimated 4h, completed early)
 
-**当前任务**：
-🚧 Task #6: 创建用户 Dashboard
-- 复杂度：Medium
-- 预计时长：5 小时
-- 进度：估计 60% 完成（基于 git diff）
+**Current task**:
+🚧 Task #6: Create user Dashboard
+- Complexity: Medium
+- Estimated duration: 5 hours
+- Progress: Estimated 60% complete (based on git diff)
 
-**建议下一步**（2 个选项）：
+**Suggested next step (2 options)**:
 
-**选项 1**：继续当前任务
+**Option 1**: Continue current task
 ```bash
-/ultra-dev 6  # 继续 Task #6
+/ultra-dev 6  # Continue Task #6
 ```
 
-**选项 2**：完成当前任务后进入下一个
-- 完成 Task #6 的 TDD 流程
-- 通过质量门检查
-- 自动建议 Task #7
+**Option 2**: Complete current task then proceed to next
+- Finish Task #6 TDD workflow
+- Pass quality gate checks
+- Auto-suggest Task #7
 
-**预计完成时间**：
-- 当前任务剩余：~2 小时
-- 剩余 6 个任务：~22 小时
-- 总剩余时间：~24 小时
-- 预计完成日期：2025-11-20（基于每天 8 小时工作）
+**Estimated completion time**:
+- Current task remaining: ~2 hours
+- Remaining 6 tasks: ~22 hours
+- Total remaining time: ~24 hours
+- Estimated completion date: 2025-11-20 (based on 8 hours/day)
 
-**质量指标**：
-- 测试覆盖率：87%（目标 ≥80%）✅
-- 代码质量：A 级（SOLID/DRY 合规）✅
-- 提交规范：100% Conventional Commits ✅
+**Quality metrics**:
+- Test coverage: 87% (target ≥80%) ✅
+- Code quality: A grade (SOLID/DRY compliant) ✅
+- Commit convention: 100% Conventional Commits ✅
 ```
 
 ---
@@ -234,46 +238,46 @@ Task #1: 实现用户认证（JWT）
 
 **Output**:
 ```
-📋 当前项目状态
+📋 Current Project Status
 
-**阶段**：开发完成，准备测试
+**Phase**: Development complete, ready for testing
 
-**任务完成情况**：
-✅ 12/12 任务全部完成（100%）
+**Task completion status**:
+✅ 12/12 tasks all complete (100%)
 
-**实际耗时 vs 预计**：
-- 预计总时长：48 小时
-- 实际总时长：44 小时
-- 效率：109%（提前 4 小时完成）🎉
+**Actual vs estimated time**:
+- Estimated total duration: 48 hours
+- Actual total duration: 44 hours
+- Efficiency: 109% (completed 4 hours early) 🎉
 
-**代码质量**：
-- Commits: 37 个（平均 3 个/任务）
-- 分支: 12 个已合并并删除
-- 代码行数：+3,200 行（代码），+1,800 行（测试）
-- 测试/代码比：56%（健康）
+**Code quality**:
+- Commits: 37 commits (average 3 per task)
+- Branches: 12 merged and deleted
+- Lines of code: +3,200 lines (code), +1,800 lines (tests)
+- Test/code ratio: 56% (healthy)
 
-**建议下一步**：/ultra-test
+**Suggested next step**: /ultra-test
 
-**测试范围**（6 维度）：
-1. ✅ Functional: 核心业务逻辑
-2. ✅ Boundary: 边界条件（空值、最大值）
-3. ✅ Exception: 错误处理（网络失败、超时）
-4. ✅ Performance: 性能测试（负载、响应时间）
-5. ✅ Security: 安全测试（SQL 注入、XSS）
-6. ✅ Compatibility: 兼容性（浏览器、平台）
+**Test scope (6 dimensions)**:
+1. ✅ Functional: Core business logic
+2. ✅ Boundary: Edge cases (null, max values)
+3. ✅ Exception: Error handling (network failure, timeout)
+4. ✅ Performance: Performance tests (load, response time)
+5. ✅ Security: Security tests (SQL injection, XSS)
+6. ✅ Compatibility: Compatibility (browsers, platforms)
 
-**前端项目额外检查**：
+**Frontend project additional checks**:
 - Core Web Vitals:
-  * LCP < 2.5s（Largest Contentful Paint）
-  * INP < 200ms（Interaction to Next Paint）
-  * CLS < 0.1（Cumulative Layout Shift）
+  * LCP < 2.5s (Largest Contentful Paint)
+  * INP < 200ms (Interaction to Next Paint)
+  * CLS < 0.1 (Cumulative Layout Shift)
 
-**执行命令**：
+**Execute command**:
 ```bash
 /ultra-test
 ```
 
-**预计耗时**：15-30 分钟（包括 Core Web Vitals 测量）
+**Estimated duration**: 15-30 minutes (including Core Web Vitals measurement)
 ```
 
 ---
@@ -287,12 +291,12 @@ Task #1: 实现用户认证（JWT）
 
 **Output**:
 ```
-📋 当前项目状态
+📋 Current Project Status
 
-**阶段**：测试完成，准备交付
+**Phase**: Testing complete, ready for delivery
 
-**测试结果**：
-✅ 6 维度测试全部通过
+**Test results**:
+✅ All 6 dimensions tests passing
 - Functional: 124 tests passed
 - Boundary: 45 tests passed
 - Exception: 38 tests passed
@@ -300,47 +304,46 @@ Task #1: 实现用户认证（JWT）
 - Security: 18 tests passed
 - Compatibility: 15 tests passed
 
-**覆盖率**：
-- 总体覆盖率：87%（目标 ≥80%）✅
-- 关键路径：100%（认证、支付）✅
-- 分支覆盖率：82%（目标 ≥75%）✅
+**Coverage**:
+- Overall coverage: 87% (target ≥80%) ✅
+- Critical paths: 100% (authentication, payment) ✅
+- Branch coverage: 82% (target ≥75%) ✅
 
-**Core Web Vitals**（前端项目）：
+**Core Web Vitals** (frontend project):
 - LCP: 2.1s < 2.5s ✅
 - INP: 180ms < 200ms ✅
 - CLS: 0.08 < 0.1 ✅
 
-**建议下一步**：/ultra-deliver
+**Suggested next step**: /ultra-deliver
 
-**交付优化包括**：
-1. 🚀 性能优化
-   - Bundle 体积分析
+**Delivery optimization includes**:
+1. 🚀 Performance optimization
+   - Bundle size analysis
    - Code splitting
-   - 图片优化
+   - Image optimization
 
-2. 🔒 安全审计
-   - 依赖漏洞扫描（npm audit）
-   - 代码审查（SQL 注入、XSS）
-   - 基础设施检查（HTTPS、CORS、Rate limiting）
+2. 🔒 Security audit
+   - Dependency vulnerability scan (npm audit)
+   - Code review (SQL injection, XSS)
+   - Infrastructure checks (HTTPS, CORS, rate limiting)
 
-3. 📚 文档更新
+3. 📚 Documentation update
    - README.md
    - CHANGELOG.md
-   - API 文档
-   - 架构决策记录（ADRs）
+   - API documentation
+   - Architecture Decision Records (ADRs)
 
-4. 📦 部署准备
-   - 环境变量检查清单
-   - 数据库迁移准备
-   - 回滚计划
+4. 📦 Deployment preparation
+   - Environment variable checklist
+   - Database migration preparation
+   - Rollback plan
 
-**执行命令**：
+**Execute command**:
 ```bash
 /ultra-deliver
 ```
 
-**预计耗时**：1-2 小时
+**Estimated duration**: 1-2 hours
 ```
 
 ---
-

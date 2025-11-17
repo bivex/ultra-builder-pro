@@ -1,5 +1,9 @@
 ## Trigger Scenarios
 
+**OUTPUT: All examples show English templates. User messages output in Chinese at runtime; keep this file English-only.**
+
+---
+
 ### Scenario 1: Creating New Component
 
 **User action**: Creating `Button.tsx`
@@ -8,23 +12,23 @@
 
 **Guardian activates**: Check for default fonts, hard-coded colors, clichéd patterns
 
-**Example output** (in Chinese at runtime):
+**Example output**:
 ```
-🎨 UI 设计建议
+🎨 UI Design Suggestions
 
-检测到新组件创建：Button.tsx
+Detected new component creation: Button.tsx
 
-**避免的反模式**：
-❌ 不要使用默认字体（Inter, Roboto, Open Sans）
-❌ 不要硬编码颜色值
-❌ 不要使用孤立的紫色渐变
+**Anti-patterns to avoid**:
+❌ Don't use default fonts (Inter, Roboto, Open Sans)
+❌ Don't hard-code color values
+❌ Don't use isolated purple gradients
 
-**推荐设计模式**：
-✅ 使用设计 token 系统（CSS 变量）
-✅ 采用成熟的组件库（MUI, Ant Design, Chakra）
-✅ 保持一致的间距系统（8px grid）
+**Recommended design patterns**:
+✅ Use design token system (CSS variables)
+✅ Adopt mature component libraries (MUI, Ant Design, Chakra)
+✅ Maintain consistent spacing system (8px grid)
 
-详见完整建议...
+See complete suggestions...
 ```
 
 ---
@@ -39,34 +43,34 @@
 
 **Example output**:
 ```
-⚠️ 设计债务警告
+⚠️ Design Debt Warning
 
-检测到硬编码颜色：
-- `color: #3B82F6` (17 处)
-- `background: #8B5CF6` (8 处)
+Detected hard-coded colors:
+- `color: #3B82F6` (17 locations)
+- `background: #8B5CF6` (8 locations)
 
-**问题**：
-- 无法统一切换主题
-- 维护成本高（需逐个修改）
-- 无法支持暗色模式
+**Issues**:
+- Cannot uniformly switch themes
+- High maintenance cost (need to modify individually)
+- Cannot support dark mode
 
-**建议迁移到设计 token**：
+**Suggested migration to design tokens**:
 
-/* 1. 定义 CSS 变量 */
+/* 1. Define CSS variables */
 :root {
   --color-primary: #3B82F6;
   --color-accent: #8B5CF6;
 }
 
-/* 2. 使用 token */
+/* 2. Use tokens */
 .button {
   color: var(--color-primary);
 }
 
-**迁移效果**：
-- 主题切换：1 秒（修改变量定义）
-- 暗色模式：自动支持（定义暗色变量）
-- 维护成本：降低 80%
+**Migration impact**:
+- Theme switching: 1 second (modify variable definition)
+- Dark mode: Automatic support (define dark variables)
+- Maintenance cost: Reduced 80%
 ```
 
 ---
@@ -81,35 +85,34 @@
 
 **Example output**:
 ```
-🎨 Dashboard 设计建议
+🎨 Dashboard Design Recommendations
 
-**Typography（3x 层级跳跃）**：
-- 标题：48px (bold)
-- 副标题：16px (medium)
-- 正文：12px (regular)
-- 比例：4:1.33:1 (高对比度)
+**Typography (3x hierarchy jumps)**:
+- Headings: 48px (bold)
+- Subheadings: 16px (medium)
+- Body: 12px (regular)
+- Ratio: 4:1.33:1 (high contrast)
 
-**字体配对建议**：
-方案 1（专业）：Inter Display + JetBrains Mono
-方案 2（现代）：Satoshi + IBM Plex Mono
-方案 3（优雅）：Fraunces + Space Mono
+**Font pairing suggestions**:
+Option 1 (Professional): Inter Display + JetBrains Mono
+Option 2 (Modern): Satoshi + IBM Plex Mono
+Option 3 (Elegant): Fraunces + Space Mono
 
-**颜色系统**：
-主色：选择 1 个主导色（不要紫色渐变）
-示例：深蓝系（#1E3A8A）+ 中性灰（#64748B）
+**Color system**:
+Primary: Choose 1 dominant color (not purple gradients)
+Example: Deep blue (#1E3A8A) + Neutral gray (#64748B)
 
-**组件库推荐**：
-- MUI (Material Design 3) - 最成熟
-- Ant Design - 中后台标准
-- Chakra UI - 灵活定制
+**Component library recommendations**:
+- MUI (Material Design 3) - Most mature
+- Ant Design - Admin dashboard standard
+- Chakra UI - Flexible customization
 
-**Motion 设计**：
-- 页面加载：编排式揭示动画（stagger 100ms）
-- 交互反馈：CSS transition（200ms ease-out）
-- 避免：随意的微交互
+**Motion design**:
+- Page load: Orchestrated reveal animations (stagger 100ms)
+- Interaction feedback: CSS transitions (200ms ease-out)
+- Avoid: Random micro-interactions
 
-详细实现见下文...
+Detailed implementation below...
 ```
 
 ---
-
