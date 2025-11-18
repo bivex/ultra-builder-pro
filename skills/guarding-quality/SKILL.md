@@ -1,5 +1,5 @@
 ---
-name: quality-guardian
+name: guarding-quality
 description: "Code quality, test coverage, and UI design enforcement. TRIGGERS when editing code/UI files (*.ts, *.js, *.tsx, *.jsx, *.py, *.vue, *.css, *.scss), discussing quality/refactoring/testing/coverage, or running tests. Loads detailed guidelines on-demand."
 allowed-tools: Read, Grep
 ---

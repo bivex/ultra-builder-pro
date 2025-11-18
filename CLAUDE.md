@@ -229,11 +229,11 @@ main (always active, never frozen)
 - Claude invokes based on description matching
 - Hooks system provides additional precision matching via `skill-rules.json`
 
-**Available Skills**:
+**Available Skills** (100% gerund naming compliance):
 
 **Guardrail Skills** (2):
-1. **quality-guardian** - Code quality + test coverage + UI design (merged from 3 skills)
-2. **git-guardian** - Git safety + workflow enforcement (merged from 2 skills)
+1. **guarding-quality** - Code quality + test coverage + UI design (merged from 3 skills)
+2. **guarding-git-workflow** - Git safety + workflow enforcement (merged from 2 skills)
 
 **Functional Skills** (4):
 3. **syncing-docs** - Auto-sync docs (specs/architecture.md)
@@ -241,10 +241,11 @@ main (always active, never frozen)
 5. **compressing-context** - Proactive context compression (20-30 tasks/session)
 6. **guiding-workflow** - Next-step suggestions based on project state
 
-**Merged Skills** (NEW in 4.1.1):
-- **quality-guardian** (~200 tokens): guarding-code-quality + guarding-test-coverage + guarding-ui-design (was 450 tokens)
-- **git-guardian** (~150 tokens): guarding-git-safety + enforcing-workflow (was 290 tokens)
-- **Total savings**: 390 tokens (-53%)
+**Phase 3 Consolidation** (NEW in 4.1.1):
+- **guarding-quality** (~150 tokens): Merged guarding-code-quality + guarding-test-coverage + guarding-ui-design, deleted originals
+- **guarding-git-workflow** (~150 tokens): Merged guarding-git-safety + enforcing-workflow, deleted originals
+- **Gerund naming**: 100% compliance with official best practices (all Skills use verb + -ing)
+- **Token savings**: ~1,050 tokens (-45% from 11 Skills → 6 Skills)
 
 **Skills Documentation Mode**: **Slim Mode** (recommended)
 - All Skills use minimal SKILL.md (<500 lines, average 79-284 lines)
