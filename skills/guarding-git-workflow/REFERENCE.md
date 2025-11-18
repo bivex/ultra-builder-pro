@@ -260,7 +260,7 @@ git commit -m "fix: resolve merge conflict"
 
 ## Git Hooks
 
-Git hooks enforced by **git-workflow-guardian** skill:
+Git hooks enforced by **guarding-git-workflow** skill:
 - **Pre-commit**: Run linter, quick tests, check sensitive data
 - **Pre-push**: Run full test suite, check coverage, verify no direct push to main
 

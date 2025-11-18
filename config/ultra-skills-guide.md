@@ -40,7 +40,7 @@ allowed-tools: Tool1, Tool2   # Optional: restrict tool access
 
 ---
 
-## Available Skills (10 total)
+## Available Skills (9 total)
 
 ### 1. guarding-code-quality
 
@@ -207,30 +207,7 @@ allowed-tools: Tool1, Tool2   # Optional: restrict tool access
 
 ---
 
-### 7. routing-serena-operations
-
-**Description**: "Intelligent router to Serena MCP based on file size, operation type, and task analysis. TRIGGERS: Before Read/Edit/Write operations on large files, or when discussing code understanding/refactoring. ACTIONS: Route to Serena MCP for optimal efficiency. BLOCKS: Unsafe text-based operations on large files."
-
-**Purpose**:
-- Route operations to optimal tools (Serena MCP vs built-in) based on file size and task type
-- Prevent token overflow and errors on large files (>5000 lines)
-- Provide explicit Serena MCP command examples
-
-**Auto-triggers when**:
-- About to use Read/Edit/Write tools on files >5000 lines
-- Discussing cross-file refactoring or symbol-level operations
-- Large codebase exploration tasks
-
-**Key routing**:
-- File size: <5K lines (Read) | 5-8K lines (suggest Serena) | >8K lines (enforce Serena)
-- Operation type: Cross-file rename (enforce Serena) | Architecture understanding (suggest Serena)
-- Project scale: >100 files (suggest Serena for exploration)
-
-**Location**: `~/.claude/skills/routing-serena-operations/SKILL.md`
-
----
-
-### 8. compressing-context
+### 7. compressing-context
 
 **Description**: "Proactively compresses context to prevent overflow. TRIGGERS: After 5+ tasks, OR token usage >120K. ACTIONS: Summarize completed tasks (15K→500 tokens), archive to .ultra/context-archive/. BLOCKS: ultra-dev if >170K without compression."
 
@@ -250,7 +227,7 @@ allowed-tools: Tool1, Tool2   # Optional: restrict tool access
 
 ---
 
-### 9. guiding-workflow
+### 8. guiding-workflow
 
 **Description**: "Guides next steps based on project state and Scenario B routing. TRIGGERS: After phase completion or user asks 'what's next'. ACTIONS: Detect research/plan/dev/test status via filesystem, detect Scenario B project type from ultra-research output, suggest the next /ultra-* command. OUTPUT: User messages in Chinese at runtime; keep this file English-only."
 
@@ -343,7 +320,7 @@ Rationale: Tech stack determined, can plan implementation tasks
 
 ---
 
-### 10. enforcing-workflow
+### 9. enforcing-workflow
 
 **Description**: "Enforces mandatory independent-branch workflow. TRIGGERS when discussing git branches, workflow strategy, or task management. BLOCKS any suggestion of unified/long-lived branches or workflow 'options'. ENFORCES one-task-one-branch-merge-delete cycle. OUTPUT: User messages in Chinese at runtime; keep this file English-only."
 
@@ -514,11 +491,11 @@ Based on official best practices:
 
 ```
 ~/.claude/skills/
-├── code-quality-guardian/
+├── guarding-code-quality/
 │   ├── SKILL.md              # Main skill file (<500 lines)
 │   ├── reference.md          # Detailed reference (optional)
 │   └── examples.md           # Code examples (optional)
-├── git-workflow-guardian/
+├── guarding-git-workflow/
 │   └── SKILL.md
 └── [... 7 more skills]
 ```

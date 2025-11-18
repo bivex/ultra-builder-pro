@@ -179,9 +179,9 @@ After:
 **Technique 3: Skills Output Deduplication**
 ```
 Before:
-• code-quality-guardian report Task #1
-• code-quality-guardian report Task #2
-• code-quality-guardian report Task #3
+• guarding-quality report Task #1
+• guarding-quality report Task #2
+• guarding-quality report Task #3
 [Each 2,000 tokens]
 
 After:
