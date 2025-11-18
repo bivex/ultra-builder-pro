@@ -4,5 +4,5 @@
 
 cd "$(dirname "$0")"
 
-# Run TypeScript hook
-ts-node skill-activation-prompt.ts
+# Run TypeScript hook (use npx to find ts-node from local node_modules)
+npx ts-node skill-activation-prompt.ts

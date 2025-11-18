@@ -19,8 +19,6 @@
 /ultra-session-reset                  # Archive and reset session
 ```
 
-**Complete workflow guide**: @workflows/ultra-development-workflow.md
-
 ---
 
 ## Language Protocol
@@ -44,7 +42,7 @@
 4. **Paths** - All project paths (tasks, specs, docs, archives)
 
 **Runtime behavior**:
-- Skills (compressing-context, guarding-test-coverage, guarding-code-quality) load thresholds from config at runtime
+- Skills (compressing-context, quality-guardian) load thresholds from config at runtime
 - Documentation may show example values (e.g., "≥80%"), but actual values come from config
 - Project templates in `.ultra-template/` include default config.json
 
@@ -67,8 +65,6 @@
 - Easy to adapt to future Claude versions (e.g., 500K token limit)
 - Project-specific customization without modifying Skills
 - Team alignment on quality standards
-
-**Complete config reference**: See `.ultra-template/config.json` for all available settings.
 
 ---
 
@@ -94,8 +90,6 @@
 - **TDD mandatory**: Write test first (RED), implement (GREEN), refactor (REFACTOR)
 - **Independent branches**: Each task gets its own `feat/task-{id}` branch, merged immediately after completion
 - **Quality gates**: All tests pass, ≥80% coverage, SOLID principles enforced before completion
-
-**Detailed workflow guide**: @workflows/ultra-development-workflow.md
 
 ---
 
@@ -167,7 +161,7 @@ Ultra Builder Pro supports different project scenarios with tailored workflows:
 
 ## Core Development Principles
 
-**SOLID** (mandatory, enforced by guarding-code-quality):
+**SOLID** (mandatory, enforced by quality-guardian):
 - **S**: Single Responsibility - Functions <50 lines
 - **O**: Open-Closed - Extend through abstraction
 - **L**: Liskov Substitution - Subtypes substitutable
@@ -178,7 +172,7 @@ Ultra Builder Pro supports different project scenarios with tailored workflows:
 
 **Philosophy**: User Value > Technical Showoff, Code Quality > Development Speed
 
-**Complete guide**: @guidelines/ultra-solid-principles.md
+**Note**: Detailed SOLID examples and enforcement rules loaded by quality-guardian skill when triggered.
 
 ---
 
@@ -193,7 +187,15 @@ Ultra Builder Pro supports different project scenarios with tailored workflows:
 - ✅ Avoid default fonts (Inter/Roboto/Open Sans), use design tokens, prefer established UI libraries
 - ✅ Core Web Vitals: LCP<2.5s, INP<200ms, CLS<0.1
 
-**Complete standards**: @guidelines/ultra-quality-standards.md
+**Six-Dimensional Test Coverage** (enforced by quality-guardian):
+1. **Functional** - Core business logic, happy paths
+2. **Boundary** - Edge cases (empty/max/min), null/undefined
+3. **Exception** - Error handling, invalid input
+4. **Performance** - Load tests, response time
+5. **Security** - Input validation, SQL/XSS prevention
+6. **Compatibility** - Cross-browser, cross-platform
+
+**Note**: Complete quality standards, UI design constraints, and test strategy loaded by quality-guardian skill when triggered.
 
 ---
 
@@ -203,40 +205,52 @@ Ultra Builder Pro supports different project scenarios with tailored workflows:
 
 **Commit format**: Conventional Commits with co-authorship attribution
 
-**Safety rules** (guarding-git-safety enforced):
+**Safety rules** (quality-guardian enforced):
 - ❌ Never force push to main/master
 - ✅ Always review changes before commit
+- ✅ Independent branches: Each task = one branch → merge → delete
 
-**Complete guide**: @guidelines/ultra-git-workflow.md
+**Workflow (mandatory)**:
+```
+main (always active, never frozen)
+ ├── feat/task-1-xxx (create → complete → merge → delete)
+ ├── feat/task-2-yyy (create → complete → merge → delete)
+ └── feat/task-3-zzz (create → complete → merge → delete)
+```
+
+**Note**: Complete git workflow details, dangerous operation detection, and tiered risk management loaded by quality-guardian skill when triggered.
 
 ---
 
-## Skills System (9 Auto-Loaded)
+## Skills System (6 Auto-Loaded)
 
 **How it works** (official Claude Code):
-- All 9 skills in `~/.claude/skills/` auto-loaded
+- All 6 skills in `~/.claude/skills/` auto-loaded
 - Claude invokes based on description matching
-- No manual activation/deactivation
+- Hooks system provides additional precision matching via `skill-rules.json`
 
 **Available Skills**:
-1. `guarding-code-quality` - SOLID/DRY/KISS/YAGNI detection
-2. `guarding-test-coverage` - 6-dimensional coverage validation
-3. `guarding-git-safety` - Dangerous operation prevention
-4. `guarding-ui-design` - UI anti-patterns prevention + design guidance
-5. `syncing-docs` - Auto-sync docs (specs/architecture.md)
-6. `automating-e2e-tests` - E2E test code generation + browser automation
-7. `compressing-context` - Proactive context compression (20-30 tasks/session)
-8. `guiding-workflow` - Next-step suggestions based on project state
-9. `enforcing-workflow` - Enforces independent-branch workflow
+
+**Guardrail Skills** (2):
+1. **quality-guardian** - Code quality + test coverage + UI design (merged from 3 skills)
+2. **git-guardian** - Git safety + workflow enforcement (merged from 2 skills)
+
+**Functional Skills** (4):
+3. **syncing-docs** - Auto-sync docs (specs/architecture.md)
+4. **automating-e2e-tests** - E2E test code generation + browser automation
+5. **compressing-context** - Proactive context compression (20-30 tasks/session)
+6. **guiding-workflow** - Next-step suggestions based on project state
+
+**Merged Skills** (NEW in 4.1.1):
+- **quality-guardian** (~200 tokens): guarding-code-quality + guarding-test-coverage + guarding-ui-design (was 450 tokens)
+- **git-guardian** (~150 tokens): guarding-git-safety + enforcing-workflow (was 290 tokens)
+- **Total savings**: 390 tokens (-53%)
 
 **Skills Documentation Mode**: **Slim Mode** (recommended)
 - All Skills use minimal SKILL.md (<500 lines, average 79-284 lines)
 - Detailed documentation in separate `guidelines/` files
 - Progressive disclosure: Load main file first, reference detailed docs only when needed
 - Token efficiency: ~60% better than verbose mode
-- **See**: @config/ultra-skills-modes.md for complete mode comparison
-
-**Complete guide**: @config/ultra-skills-guide.md
 
 ---
 
@@ -253,7 +267,7 @@ Ultra Builder Pro supports different project scenarios with tailored workflows:
 - **context7**: Official library documentation - Primary choice for API docs
 - **exa**: AI semantic search - Intelligent code context + web search (supports Chinese)
 
-**Complete guide**: @config/ultra-mcp-guide.md
+**Note**: Complete MCP decision tree, tool selection guide, and usage patterns loaded by skills when needed.
 
 ---
 
@@ -272,8 +286,6 @@ Ultra Builder Pro supports different project scenarios with tailored workflows:
 - Delegate to agents (ultra-research-agent, ultra-architect-agent)
 - Summarize after tasks (concise summaries for future reference)
 - Trust compressing-context suggestions (40-60% token savings)
-
-**Complete guide**: @workflows/ultra-context-management.md
 
 ---
 
@@ -352,25 +364,19 @@ Ultra Builder Pro supports different project scenarios with tailored workflows:
 
 **Temporary override**: `MAX_THINKING_TOKENS=30000 claude`
 
-**See**: `~/.claude/THINKING_TOKENS_GUIDE.md` for complete guide
+---
+
+## Documentation Access
+
+**All detailed documentation is loaded on-demand by Skills**:
+- **quality-guardian** loads: `guidelines/ultra-solid-principles.md`, `guidelines/ultra-quality-standards.md` (code quality, testing, UI design)
+- **git-guardian** loads: `guidelines/ultra-git-workflow.md` (git safety, workflow enforcement)
+- **MCP usage** reference: `config/ultra-mcp-guide.md` (when needed)
+- **Skills development** reference: `config/ultra-skills-guide.md`, `config/ultra-skills-modes.md` (when creating/modifying Skills)
+- **Workflow details** reference: `workflows/ultra-development-workflow.md`, `workflows/ultra-context-management.md` (when needed)
+
+**Rationale**: Token efficiency - Load ~2,600 tokens at startup instead of 30,210 tokens. Detailed docs loaded only when Skills are triggered (60-80% of sessions don't need all documentation).
 
 ---
 
-## Detailed Documentation Index
-
-**Guidelines** (principles and standards):
-- @guidelines/ultra-solid-principles.md - SOLID/DRY/KISS/YAGNI with examples
-- @guidelines/ultra-quality-standards.md - Complete quality baselines
-- @guidelines/ultra-git-workflow.md - Branch naming, commits, safety rules
-
-**Configuration** (tools and systems):
-- @config/ultra-skills-guide.md - All 9 skills detailed reference
-- @config/ultra-mcp-guide.md - MCP decision tree + usage patterns
-
-**Workflows** (processes and efficiency):
-- @workflows/ultra-development-workflow.md - Complete 7-phase workflow
-- @workflows/ultra-context-management.md - Token optimization strategies
-
----
-
-**Remember**: This modular structure optimizes token usage while preserving full system capabilities. Core workflow is front-and-center, details are one @import away.
+**Remember**: This streamlined structure optimizes token usage while preserving full system capabilities. Core configuration is always available, detailed documentation loads on-demand.

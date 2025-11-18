@@ -348,6 +348,93 @@
         ]
       },
       "blockMessage": "⚠️ WORKFLOW NON-NEGOTIABLE\n\n🚫 BLOCKED: Alternative workflow suggestion detected\n\nUltra Builder Pro uses MANDATORY workflow:\n- Each task = independent branch (feat/task-{id})\n- Complete → merge → delete\n- Main always deployable (for hotfixes)\n\n❌ FORBIDDEN:\n- Unified feature branches\n- Delay merges until complete\n- Freeze main branch\n\n📖 Reference: @guidelines/ultra-git-workflow.md\n\n使用 Skill 'enforcing-workflow' 了解详情"
+    },
+    "quality-guardian": {
+      "type": "guardrail",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "Unified quality enforcement (code quality + test coverage + UI design)",
+      "promptTriggers": {
+        "keywords": [
+          "code quality",
+          "SOLID",
+          "DRY",
+          "KISS",
+          "YAGNI",
+          "refactor",
+          "refactoring",
+          "clean code",
+          "code smell",
+          "test",
+          "testing",
+          "test coverage",
+          "coverage",
+          "unit test",
+          "six-dimensional",
+          "component",
+          "UI",
+          "frontend",
+          "styling",
+          "design",
+          "CSS"
+        ],
+        "intentPatterns": [
+          "(check|review|improve).*?(code quality|SOLID|DRY|KISS|test|coverage|UI|design)",
+          "(refactor|clean|improve).*?code",
+          "(write|add|create).*?test",
+          "(create|style).*?(component|UI)"
+        ]
+      },
+      "fileTriggers": {
+        "pathPatterns": [
+          "**/*.ts",
+          "**/*.js",
+          "**/*.tsx",
+          "**/*.jsx",
+          "**/*.py",
+          "**/*.vue",
+          "**/*.css",
+          "**/*.scss",
+          "**/*.test.*",
+          "**/*.spec.*"
+        ],
+        "pathExclusions": [
+          "**/node_modules/**",
+          "**/dist/**",
+          "**/build/**"
+        ]
+      }
+    },
+    "git-guardian": {
+      "type": "guardrail",
+      "enforcement": "block",
+      "priority": "critical",
+      "description": "Git safety + workflow enforcement (prevents dangerous git operations)",
+      "promptTriggers": {
+        "keywords": [
+          "git push --force",
+          "git push -f",
+          "force push",
+          "git reset --hard",
+          "hard reset",
+          "git rebase",
+          "delete branch",
+          "git workflow",
+          "branch strategy",
+          "unified branch",
+          "batch merge",
+          "freeze main"
+        ],
+        "intentPatterns": [
+          "git.*(force|--force|-f)",
+          "git.*reset.*(--hard|-h)",
+          "git.*rebase",
+          "(unified|single).*?branch.*?multiple",
+          "(delay|wait).*?merge",
+          "freeze.*?main"
+        ]
+      },
+      "blockMessage": "🔴 GIT GUARDIAN ALERT\n\n⚠️ Dangerous git operation or workflow violation detected!\n\n📋 REQUIRED ACTION:\nUse Skill 'git-guardian' to:\n1. Review tiered risk management\n2. Verify operation safety\n3. Check workflow compliance\n\n💡 TIP: git-guardian handles both safety and workflow enforcement"
     }
   },
   "notes": {
