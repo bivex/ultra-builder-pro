@@ -2,200 +2,6 @@
   "version": "1.0",
   "description": "Ultra Builder Pro 4.1 - Skill activation rules for automatic skill suggestions",
   "skills": {
-    "guarding-code-quality": {
-      "type": "guardrail",
-      "enforcement": "suggest",
-      "priority": "high",
-      "description": "SOLID/DRY/KISS/YAGNI principles enforcement",
-      "promptTriggers": {
-        "keywords": [
-          "code quality",
-          "SOLID",
-          "DRY",
-          "KISS",
-          "YAGNI",
-          "refactor",
-          "refactoring",
-          "clean code",
-          "code smell",
-          "best practices",
-          "design pattern",
-          "function too long",
-          "god class",
-          "duplicate code"
-        ],
-        "intentPatterns": [
-          "(check|review|improve|assess).*?(code quality|SOLID|DRY|KISS)",
-          "(refactor|clean|improve|optimize).*?code",
-          "(how to|best practice).*?(refactor|clean code|design)",
-          "function.*?(too long|too complex)",
-          "code.*?(smell|duplicate|repeated)"
-        ]
-      },
-      "fileTriggers": {
-        "pathPatterns": [
-          "**/*.ts",
-          "**/*.js",
-          "**/*.tsx",
-          "**/*.jsx",
-          "**/*.py",
-          "**/*.java",
-          "**/*.go",
-          "**/*.rs",
-          "**/*.rb",
-          "**/*.php",
-          "**/*.c",
-          "**/*.cpp"
-        ],
-        "pathExclusions": [
-          "**/*.test.*",
-          "**/*.spec.*",
-          "**/node_modules/**",
-          "**/dist/**",
-          "**/build/**"
-        ],
-        "contentPatterns": [
-          "function .{200,}",
-          "class .{500,}",
-          "export.*function",
-          "export.*class"
-        ]
-      }
-    },
-    "guarding-test-coverage": {
-      "type": "guardrail",
-      "enforcement": "suggest",
-      "priority": "high",
-      "description": "Six-dimensional test coverage enforcement",
-      "promptTriggers": {
-        "keywords": [
-          "test",
-          "testing",
-          "test coverage",
-          "coverage",
-          "unit test",
-          "integration test",
-          "e2e test",
-          "test strategy",
-          "six-dimensional",
-          "functional test",
-          "boundary test",
-          "exception test",
-          "performance test",
-          "security test",
-          "compatibility test"
-        ],
-        "intentPatterns": [
-          "(write|add|create|implement).*?test",
-          "(check|verify|measure|improve).*?(coverage|test)",
-          "(how to|best practice).*?test",
-          "test.*?(functional|boundary|exception|performance|security|compatibility)"
-        ]
-      },
-      "fileTriggers": {
-        "pathPatterns": [
-          "**/*.test.ts",
-          "**/*.test.js",
-          "**/*.spec.ts",
-          "**/*.spec.js",
-          "**/*.test.tsx",
-          "**/*.spec.tsx",
-          "**/test/**",
-          "**/tests/**",
-          "**/__tests__/**"
-        ]
-      }
-    },
-    "guarding-git-safety": {
-      "type": "guardrail",
-      "enforcement": "block",
-      "priority": "critical",
-      "description": "Prevents dangerous git operations with tiered risk management",
-      "promptTriggers": {
-        "keywords": [
-          "git push --force",
-          "git push -f",
-          "force push",
-          "git reset --hard",
-          "hard reset",
-          "git rebase",
-          "rebase",
-          "git clean -fd",
-          "delete branch",
-          "git branch -D",
-          "destructive git"
-        ],
-        "intentPatterns": [
-          "git.*(force|--force|-f)",
-          "git.*reset.*(--hard|-h)",
-          "git.*rebase",
-          "git.*(clean|delete|remove).*branch",
-          "(force push|hard reset).*main"
-        ]
-      },
-      "blockMessage": "🔴 CRITICAL GIT OPERATION DETECTED\n\n⚠️ This operation may cause data loss!\n\n📋 REQUIRED ACTION:\n1. Use Skill tool: 'guarding-git-safety'\n2. Review tiered risk management guidelines\n3. Verify operation safety before proceeding\n\n💡 TIP: Check if branch is merged, shared, or protected"
-    },
-    "guarding-ui-design": {
-      "type": "guardrail",
-      "enforcement": "suggest",
-      "priority": "high",
-      "description": "UI anti-patterns prevention and design guidance",
-      "promptTriggers": {
-        "keywords": [
-          "component",
-          "react component",
-          "UI",
-          "user interface",
-          "frontend",
-          "styling",
-          "design",
-          "layout",
-          "CSS",
-          "typography",
-          "color",
-          "spacing",
-          "design system",
-          "MUI",
-          "Material-UI",
-          "Ant Design",
-          "Chakra",
-          "Tailwind"
-        ],
-        "intentPatterns": [
-          "(create|add|build|implement).*?(component|UI|page|modal|dialog|form)",
-          "(style|design|layout).*?(component|UI|page)",
-          "(how to|best practice).*?(component|UI|design|styling)"
-        ]
-      },
-      "fileTriggers": {
-        "pathPatterns": [
-          "**/*.tsx",
-          "**/*.jsx",
-          "**/*.vue",
-          "**/*.css",
-          "**/*.scss",
-          "**/*.sass",
-          "**/*.less",
-          "**/components/**",
-          "**/pages/**",
-          "**/views/**"
-        ],
-        "pathExclusions": [
-          "**/*.test.tsx",
-          "**/*.test.jsx",
-          "**/*.spec.tsx",
-          "**/*.spec.jsx"
-        ],
-        "contentPatterns": [
-          "import.*React",
-          "export.*component",
-          "className=",
-          "styled\\(",
-          "@mui",
-          "chakra-ui"
-        ]
-      }
-    },
     "syncing-docs": {
       "type": "domain",
       "enforcement": "suggest",
@@ -320,36 +126,7 @@
         ]
       }
     },
-    "enforcing-workflow": {
-      "type": "guardrail",
-      "enforcement": "block",
-      "priority": "critical",
-      "description": "Enforces mandatory independent-branch workflow",
-      "promptTriggers": {
-        "keywords": [
-          "git workflow",
-          "branch strategy",
-          "workflow strategy",
-          "unified branch",
-          "feature branch",
-          "batch merge",
-          "merge timing",
-          "workflow alternatives",
-          "workflow options",
-          "delay merge",
-          "freeze main"
-        ],
-        "intentPatterns": [
-          "(unified|single|one).*?branch.*?multiple.*?task",
-          "(delay|wait).*?merge.*?(until|complete)",
-          "batch.*?(merge|deployment)",
-          "workflow.*(option|alternative|choice)",
-          "freeze.*?main.*?branch"
-        ]
-      },
-      "blockMessage": "⚠️ WORKFLOW NON-NEGOTIABLE\n\n🚫 BLOCKED: Alternative workflow suggestion detected\n\nUltra Builder Pro uses MANDATORY workflow:\n- Each task = independent branch (feat/task-{id})\n- Complete → merge → delete\n- Main always deployable (for hotfixes)\n\n❌ FORBIDDEN:\n- Unified feature branches\n- Delay merges until complete\n- Freeze main branch\n\n📖 Reference: @guidelines/ultra-git-workflow.md\n\n使用 Skill 'enforcing-workflow' 了解详情"
-    },
-    "quality-guardian": {
+    "guarding-quality": {
       "type": "guardrail",
       "enforcement": "suggest",
       "priority": "high",
@@ -405,7 +182,7 @@
         ]
       }
     },
-    "git-guardian": {
+    "guarding-git-workflow": {
       "type": "guardrail",
       "enforcement": "block",
       "priority": "critical",
@@ -434,7 +211,7 @@
           "freeze.*?main"
         ]
       },
-      "blockMessage": "🔴 GIT GUARDIAN ALERT\n\n⚠️ Dangerous git operation or workflow violation detected!\n\n📋 REQUIRED ACTION:\nUse Skill 'git-guardian' to:\n1. Review tiered risk management\n2. Verify operation safety\n3. Check workflow compliance\n\n💡 TIP: git-guardian handles both safety and workflow enforcement"
+      "blockMessage": "🔴 GIT WORKFLOW GUARDIAN ALERT\n\n⚠️ Dangerous git operation or workflow violation detected!\n\n📋 REQUIRED ACTION:\nUse Skill 'guarding-git-workflow' to:\n1. Review tiered risk management\n2. Verify operation safety\n3. Check workflow compliance\n\n💡 TIP: guarding-git-workflow handles both safety and workflow enforcement"
     }
   },
   "notes": {
