@@ -15,7 +15,7 @@
 
 **Additional Commands**:
 ```bash
-/ultra-think <problem>                # Deep analytical thinking
+/max-think <problem>                  # Deep analytical thinking
 /ultra-session-reset                  # Archive and reset session
 ```
 

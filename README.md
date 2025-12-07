@@ -179,7 +179,7 @@ Ultra Builder Pro 4.1.1
 │   ├── ultra-test.md                  # /ultra-test
 │   ├── ultra-deliver.md               # /ultra-deliver
 │   ├── ultra-status.md                # /ultra-status
-│   ├── ultra-think.md                 # /ultra-think
+│   ├── max-think.md                   # /max-think
 │   └── ultra-session-reset.md         # /ultra-session-reset
 │
 └── .ultra-template/                   # Project template

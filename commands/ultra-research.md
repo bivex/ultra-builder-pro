@@ -45,7 +45,7 @@ Ultra-Research is **the most critical phase** in the development workflow. It tr
 
 ```
 Step 1: Requirement Clarification (AskUserQuestion)
-Step 2: Deep Analysis (ultra-think with 6D framework)
+Step 2: Deep Analysis (max-think with 6D framework)
 Step 3: Analysis Validation (AskUserQuestion - show summary, check satisfaction)
 Step 4: Iteration Decision (If unsatisfied → collect feedback → back to Step 2)
 Step 5: Generate Spec Content (Write to specs/)
@@ -98,10 +98,10 @@ Use AskUserQuestion tool for each core question.
 
 #### Step 2: Deep Analysis (MUST DO SECOND)
 
-Invoke `/ultra-think` with user input from Step 1:
+Invoke `/max-think` with user input from Step 1:
 
 ```
-SlashCommand: /ultra-think "Analyze problem for [project_name] with context:
+SlashCommand: /max-think "Analyze problem for [project_name] with context:
 - Target users: [from_step1]
 - Pain points: [from_step1]
 - Success criteria: [from_step1]
@@ -109,7 +109,7 @@ SlashCommand: /ultra-think "Analyze problem for [project_name] with context:
 Perform 6D analysis (Technical, Business, Team, Ecosystem, Strategic, Meta)"
 ```
 
-**DO NOT proceed to Step 3 until /ultra-think completes and returns structured analysis.**
+**DO NOT proceed to Step 3 until /max-think completes and returns structured analysis.**
 
 #### Step 3: Analysis Validation (MUST DO THIRD)
 
@@ -203,10 +203,10 @@ Use AskUserQuestion tool for each core question.
 
 #### Step 2: Deep Analysis (MUST DO SECOND)
 
-Invoke `/ultra-think` with user input + Round 1 context:
+Invoke `/max-think` with user input + Round 1 context:
 
 ```
-SlashCommand: /ultra-think "Generate user stories for [project_name] based on:
+SlashCommand: /max-think "Generate user stories for [project_name] based on:
 - MVP features: [from_step1]
 - Key scenarios: [from_step1]
 - NFRs: [from_step1]
@@ -215,7 +215,7 @@ SlashCommand: /ultra-think "Generate user stories for [project_name] based on:
 Perform 6D solution analysis and generate prioritized user stories"
 ```
 
-**DO NOT proceed to Step 3 until /ultra-think completes.**
+**DO NOT proceed to Step 3 until /max-think completes.**
 
 #### Step 3: Analysis Validation (MUST DO THIRD)
 
@@ -294,10 +294,10 @@ Use AskUserQuestion tool for each core question.
 
 #### Step 2: Deep Analysis (MUST DO SECOND)
 
-Invoke `/ultra-think` with MCP tool usage:
+Invoke `/max-think` with MCP tool usage:
 
 ```
-SlashCommand: /ultra-think "Evaluate technology stack for [project_name]:
+SlashCommand: /max-think "Evaluate technology stack for [project_name]:
 - Requirements from Round 1-2
 - Tech constraints: [from_step1]
 - Team skills: [from_step1]
@@ -307,7 +307,7 @@ Use Context7 MCP for official docs, Exa MCP for code examples.
 Perform 6D tech comparison (pros/cons/trade-offs)"
 ```
 
-**DO NOT proceed to Step 3 until /ultra-think completes.**
+**DO NOT proceed to Step 3 until /max-think completes.**
 
 #### Step 3: Analysis Validation (MUST DO THIRD)
 
@@ -385,10 +385,10 @@ Use AskUserQuestion tool for each core question.
 
 #### Step 2: Deep Analysis (MUST DO SECOND)
 
-Invoke `/ultra-think` with full project context:
+Invoke `/max-think` with full project context:
 
 ```
-SlashCommand: /ultra-think "Identify risks and constraints for [project_name]:
+SlashCommand: /max-think "Identify risks and constraints for [project_name]:
 - User concerns: [from_step1]
 - Hard constraints: [from_step1]
 - Complete context from Round 1-3
@@ -396,7 +396,7 @@ SlashCommand: /ultra-think "Identify risks and constraints for [project_name]:
 Perform 6D risk analysis with mitigation strategies"
 ```
 
-**DO NOT proceed to Step 3 until /ultra-think completes.**
+**DO NOT proceed to Step 3 until /max-think completes.**
 
 #### Step 3: Analysis Validation (MUST DO THIRD)
 
@@ -490,7 +490,7 @@ Route to Rounds (based on project type: New/Incremental/Tech/Custom)
 │   └─ Set analysis scope                     │
 │         ↓                                    │
 │ Step 2: Deep Analysis                       │
-│   ├─ Invoke /ultra-think with user context  │
+│   ├─ Invoke /max-think with user context     │
 │   ├─ 6D analysis framework                  │
 │   └─ Generate structured output             │
 │         ↓                                    │
@@ -561,7 +561,7 @@ Trigger guiding-workflow → Suggest /ultra-plan
 
 ## Integration with Ultra-Think
 
-**Auto-invocation**: Every research round automatically invokes /ultra-think for deep analysis.
+**Auto-invocation**: Every research round automatically invokes /max-think for deep analysis.
 
 **Think configuration**:
 - Problem Discovery: 6D problem analysis (Technical, Business, Team, Ecosystem, Strategic, Meta)
@@ -569,7 +569,7 @@ Trigger guiding-workflow → Suggest /ultra-plan
 - Technology Selection: 6D tech comparison with auto-research (Context7, Exa MCP)
 - Risk Assessment: 6D risk identification with mitigation strategies
 
-**Output format**: /ultra-think returns structured analysis in Chinese (user-facing)
+**Output format**: /max-think returns structured analysis in Chinese (user-facing)
 
 **Integration point**: Research command processes think output and generates spec sections
 

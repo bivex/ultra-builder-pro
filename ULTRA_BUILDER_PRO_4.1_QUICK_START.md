@@ -155,18 +155,18 @@
 
 ```
 Round 1 (20min): 问题发现
-  ↓ ultra-think 6维问题分析（Technical/Business/Team/Ecosystem/Strategic/Meta）
+  ↓ max-think 6维问题分析（Technical/Business/Team/Ecosystem/Strategic/Meta）
   ↓ 交互式提问验证假设
   ↓ 生成 specs/product.md 第1-2节（问题陈述、目标用户）
 
 Round 2 (20min): 方案探索
-  ↓ ultra-think 6维方案分析
+  ↓ max-think 6维方案分析
   ↓ 自动生成用户故事（来自6D框架）
   ↓ 交互式refinement（批准/修改/添加/优先级）
   ↓ 生成 specs/product.md 第3-5节（用户故事、功能需求、非功能需求）
 
 Round 3 (15min): 技术选型
-  ↓ ultra-think 6维技术评估
+  ↓ max-think 6维技术评估
   ↓ 自动调研（Context7、Exa MCP）
   ↓ 生成6维对比矩阵
   ↓ 用户确认或请求替代方案
@@ -174,7 +174,7 @@ Round 3 (15min): 技术选型
   ↓ 保存研究报告到 .ultra/docs/research/
 
 Round 4 (15min): 风险约束
-  ↓ ultra-think 6维风险评估
+  ↓ max-think 6维风险评估
   ↓ 交互式风险审查（验证/添加/优先级）
   ↓ 约束文档（技术/业务/资源/外部）
   ↓ 完成所有规范文件
@@ -246,7 +246,7 @@ Round 4 (15min): 风险约束
 **监控命令**：`/ultra-status` - 任何时候查看进度 + 风险预警
 
 **额外命令**：
-- `/ultra-think <问题描述>` - 深度分析思考（扩展推理）
+- `/max-think <问题描述>` - 深度分析思考（扩展推理）
 - `/ultra-session-reset` - 手动归档并重置会话
 
 **代码重构**: 使用内置工具（Read/Edit/Grep/Glob）或 built-in tools（大型项目）进行重构，详见 `@config/ultra-mcp-guide.md`
@@ -806,7 +806,7 @@ grep -E "@(guidelines|workflows|config)" ~/.claude/CLAUDE.md
 - `ultra-test.md` - 六维测试 + Core Web Vitals
 - `ultra-deliver.md` - 部署优化 + 安全审计
 - `ultra-status.md` - 进度监控 + 风险预警
-- `ultra-think.md` - 深度分析思考
+- `max-think.md` - 深度分析思考
 - `ultra-session-reset.md` - 会话归档重置
 
 ---
@@ -867,7 +867,7 @@ grep -E "@(guidelines|workflows|config)" ~/.claude/CLAUDE.md
 - ✅ 理解 MCP 工具高效使用（built-in tools 大型代码库重构）
 
 **关键里程碑**：
-1. 设计并实施微服务架构（使用 `/ultra-think` 深度分析）
+1. 设计并实施微服务架构（使用 `/max-think` 深度分析）
 2. 使用 built-in tools 重构 >10,000 行代码库
 3. 性能优化使响应时间降低 50%+
 

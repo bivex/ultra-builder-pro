@@ -4,7 +4,7 @@ argument-hint: <problem-description>
 allowed-tools: Read, Grep, Glob, Bash, Task, WebFetch, WebSearch, TodoWrite
 ---
 
-# /ultra-think - Deep Analytical Thinking
+# /max-think - Deep Analytical Thinking
 
 ## Purpose
 
@@ -15,9 +15,9 @@ Activate extended thinking mode for comprehensive multi-dimensional analysis of 
 ## Quick Start
 
 ```bash
-/ultra-think "Complex problem description"
-/ultra-think "Should we migrate from Redux to Zustand?"
-/ultra-think "Design distributed cache invalidation strategy"
+/max-think "Complex problem description"
+/max-think "Should we migrate from Redux to Zustand?"
+/max-think "Design distributed cache invalidation strategy"
 ```
 
 ---
@@ -216,7 +216,7 @@ At runtime, Claude will output this structure in Chinese with proper formatting 
 ### Example 1: Architecture Decision
 
 ```bash
-/ultra-think "Should we adopt microservices or keep monolithic architecture?"
+/max-think "Should we adopt microservices or keep monolithic architecture?"
 ```
 
 **Expected analysis**:
@@ -232,7 +232,7 @@ At runtime, Claude will output this structure in Chinese with proper formatting 
 ### Example 2: Technology Selection
 
 ```bash
-/ultra-think "React Server Components vs traditional SSR with hydration?"
+/max-think "React Server Components vs traditional SSR with hydration?"
 ```
 
 **Expected analysis**:
@@ -249,7 +249,7 @@ At runtime, Claude will output this structure in Chinese with proper formatting 
 ### Example 3: Strategic Decision
 
 ```bash
-/ultra-think "Build custom authentication vs use Auth0/Clerk?"
+/max-think "Build custom authentication vs use Auth0/Clerk?"
 ```
 
 **Expected analysis**:
@@ -276,7 +276,7 @@ At runtime, Claude will output this structure in Chinese with proper formatting 
 
 ## Integration with Ultra Builder Pro
 
-**After /ultra-think**:
+**After /max-think**:
 - If recommendation is clear → `/ultra-plan` to create task breakdown
 - If research needed → `/ultra-research` for systematic investigation
 - If prototyping needed → `/ultra-dev` to build proof-of-concept
@@ -291,7 +291,7 @@ This command benefits from extended thinking tokens. If you need even deeper ana
 
 ```bash
 # Temporarily increase thinking capacity
-MAX_THINKING_TOKENS=30000 /ultra-think "your complex problem"
+MAX_THINKING_TOKENS=30000 /max-think "your complex problem"
 ```
 
 See `~/.claude/THINKING_TOKENS_GUIDE.md` for configuration details.
@@ -308,4 +308,4 @@ See `~/.claude/THINKING_TOKENS_GUIDE.md` for configuration details.
 
 **Command icon**: 🤔
 
-**Note**: ultra-think has custom output structure (6-dimensional analysis) as described in Output Format section above.
+**Note**: max-think has custom output structure (6-dimensional analysis) as described in Output Format section above.

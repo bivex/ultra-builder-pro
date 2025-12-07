@@ -21,7 +21,7 @@ function round_N_name(context?: RoundContext): RoundOutput {
    * @returns Structured output for specs/product.md or specs/architecture.md
    */
 
-  // Step 1: Auto-invoke /ultra-think for 6D analysis
+  // Step 1: Auto-invoke /max-think for 6D analysis
   // Step 2: Interactive questioning with AskUserQuestion
   // Step 3: Generate structured output
   // Step 4: Save to specs/ files
@@ -101,12 +101,12 @@ Based on project type selection (Phase 0), execute only required rounds:
 
 **Objective**: Understand "WHY" and "WHAT" through 6-dimensional analysis
 
-**Step 1: Auto-invoke ultra-think for initial analysis**
+**Step 1: Auto-invoke max-think for initial analysis**
 
 ```typescript
 // Internal execution (automatic)
 const initialAnalysis = await Task({
-  subagent_type: "ultra-think",
+  subagent_type: "max-think",
   prompt: `Analyze project from 6 dimensions:
 
   Project: ${projectName}
@@ -216,7 +216,7 @@ AskUserQuestion({
 
 **Retry mechanism**: If user chooses "Not satisfied, regenerate":
 1. Ask what specifically needs improvement
-2. Re-invoke ultra-think with refined focus
+2. Re-invoke max-think with refined focus
 3. Regenerate specs sections
 4. Check satisfaction again (loop until satisfied or user exits)
 
@@ -230,7 +230,7 @@ AskUserQuestion({
 
 ```typescript
 const solutionAnalysis = await Task({
-  subagent_type: "ultra-think",
+  subagent_type: "max-think",
   prompt: `Based on problem analysis:
   ${round1Results}
 
@@ -338,7 +338,7 @@ AskUserQuestion({
 
 ```typescript
 const techAnalysis = await Task({
-  subagent_type: "ultra-think",
+  subagent_type: "max-think",
   prompt: `Technology selection for:
   ${projectSummary}
 
@@ -465,7 +465,7 @@ AskUserQuestion({
 
 ```typescript
 const riskAnalysis = await Task({
-  subagent_type: "ultra-think",
+  subagent_type: "max-think",
   prompt: `Risk assessment for:
   ${projectSummary}
 
