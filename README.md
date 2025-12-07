@@ -2,13 +2,13 @@
 
 <div align="center">
 
-**Version 4.1.1 (Production Ready)**
+**Version 4.1.2 (Production Ready)**
 
 *Production-Grade AI-Powered Development System for Claude Code*
 
 ---
 
-[![Version](https://img.shields.io/badge/version-4.1.1-blue)](docs/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-4.1.2-blue)](docs/CHANGELOG.md)
 [![Status](https://img.shields.io/badge/status-production--ready-green)](tests/verify-documentation-consistency.sh)
 [![Skills](https://img.shields.io/badge/skills-6-orange)](config/ultra-skills-guide.md)
 [![Official Compliance](https://img.shields.io/badge/official-compliant-brightgreen)](https://docs.claude.com/claude-code)
@@ -37,61 +37,38 @@ claude
 
 ---
 
-## What's New in 4.1.1
+## What's New in 4.1.2
 
-### 1. Official Compliance Migration
+### 1. Enhanced Security with permissions.deny
 
-- **`permissions.allow`**: Migrated from undocumented `alwaysAllowTools` to official format
-- **Settings Schema**: 100% compliant with Claude Code official documentation
+- **Sensitive File Protection**: Auto-block reading `.env`, `secrets/`, `credentials*` files
+- **Pattern Matching**: Glob-style rules for comprehensive coverage
+- **Zero Configuration**: Works out-of-the-box after installation
 
-### 2. Skills Consolidation (11 → 6)
+### 2. @import Modular References
 
-| Before (4.1.0) | After (4.1.1) |
-|----------------|---------------|
-| guarding-code-quality | **guarding-quality** (merged) |
-| guarding-test-coverage | ↑ |
-| guarding-ui-design | ↑ |
-| guarding-git-safety | **guarding-git-workflow** (merged) |
-| enforcing-workflow | ↑ |
-| syncing-docs | syncing-docs |
-| automating-e2e-tests | automating-e2e-tests |
-| compressing-context | compressing-context |
-| guiding-workflow | guiding-workflow |
-| routing-serena-operations | (removed) |
+- **CLAUDE.md Enhancement**: Added `@path/to/file` imports for modular loading
+- **Referenced Modules**: Skills guide, MCP guide, Quality standards, Git workflow, SOLID principles
+- **Benefit**: Clearer organization while maintaining full content
 
-**Token Savings**: ~1,050 tokens (-45%)
+### 3. UI Design Guidelines Enhanced
 
-### 3. Skills Trigger Logging (NEW)
+- **Recommended Component Libraries**: shadcn/ui, Galaxy UI, React Bits (primary)
+- **Design Thinking**: Purpose → Tone → Differentiation workflow
+- **Anti-Patterns**: Enhanced enforcement (default fonts, hard-coded colors, cookie-cutter layouts)
+- **Best Practices**: Typography, color systems, motion, spatial composition, backgrounds
 
-- **Log Location**: `~/.claude/logs/skill-triggers.jsonl`
-- **Format**: JSONL (one JSON object per line)
-- **Auto-rotation**: Archives when >1MB
-- **Use Case**: Debug and optimize trigger rules
+### 4. Sandbox Mode (Optional)
 
-**Log Entry Example**:
-```json
-{
-  "timestamp": "2025-11-28T04:21:00.000Z",
-  "skill": "guarding-quality",
-  "matchReason": "keyword+intent",
-  "enforcement": "suggest",
-  "priority": "high",
-  "promptPreview": "Help me refactor this code..."
-}
-```
+- **Isolation Support**: File system and network isolation for bash execution
+- **Configuration**: Set `sandbox.enabled: true` in settings.json
+- **Use Case**: High-security environments requiring containerized execution
 
-### 4. Research Config Consolidation
+### 5. CLAUDE.local.md Template
 
-- **Before**: 7 files (~2,870 lines)
-- **After**: 4 files (~2,090 lines)
-- **Reduction**: 27% fewer lines, 43% fewer files
-
-| Kept | Purpose |
-|------|---------|
-| `interaction-points-core.md` | Core questions (Hybrid Model) |
-| `mode-1-discovery.md` | Full Mode 1 workflow |
-| `metadata-schema.md` | Quality metrics schema |
-| `research-quick-reference.md` | Quick reference (merged) |
+- **Personal Preferences**: Template for project-local personal settings
+- **Git-ignored**: Auto-added to .gitignore, not shared with team
+- **Location**: `.ultra-template/CLAUDE.local.md`
 
 ---
 
@@ -124,12 +101,14 @@ Ultra Builder Pro 4.1 is a **complete AI-powered development workflow system** d
 ## System Architecture
 
 ```
-Ultra Builder Pro 4.1.1
+Ultra Builder Pro 4.1.2
 │
-├── CLAUDE.md                          # Main config (~16KB)
+├── CLAUDE.md                          # Main config with @import references
 │
 ├── settings.json                      # Claude Code settings (in .gitignore)
-│   └── permissions.allow              # Official tool permissions
+│   ├── permissions.allow              # Official tool permissions
+│   ├── permissions.deny               # Sensitive file protection
+│   └── sandbox                        # Optional isolation mode
 │
 ├── guidelines/                        # Development guidelines
 │   ├── ultra-solid-principles.md      # SOLID/DRY/KISS/YAGNI
@@ -307,7 +286,15 @@ Need specialized capabilities?
       "Read", "Write", "Edit", "NotebookEdit", "Task",
       "Skill", "SlashCommand", "TodoWrite", "AskUserQuestion",
       "BashOutput", "KillShell", "ExitPlanMode", "mcp__*"
+    ],
+    "deny": [
+      "Read(./.env)", "Read(./.env.*)", "Read(./secrets/**)",
+      "Read(./**/credentials*)", "Read(./**/*secret*)"
     ]
+  },
+  "sandbox": {
+    "enabled": false,
+    "_comment": "Set to true for sandboxed bash execution"
   },
   "hooks": {
     "UserPromptSubmit": [...],
@@ -367,6 +354,14 @@ claude
 ---
 
 ## Version History
+
+### v4.1.2 (2025-12-07) - Security & Design Enhancement
+
+- **Security**: `permissions.deny` for sensitive file protection
+- **Modular**: `@import` syntax in CLAUDE.md for clearer organization
+- **UI Design**: Enhanced guidelines with shadcn/Galaxy/React Bits recommendations
+- **Sandbox**: Optional containerized bash execution support
+- **Templates**: CLAUDE.local.md for personal project preferences
 
 ### v4.1.1 (2025-11-28) - Optimization Release
 
@@ -441,7 +436,7 @@ cat ~/.claude/logs/skill-triggers.jsonl | jq -r '.skill' | sort | uniq -c
 
 <div align="center">
 
-**Ultra Builder Pro 4.1.1** - Production-Grade Claude Code Development System
+**Ultra Builder Pro 4.1.2** - Production-Grade Claude Code Development System
 
 *Every line of code, rigorously crafted*
 
