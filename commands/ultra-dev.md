@@ -191,6 +191,40 @@ git push origin --delete feat/task-{id}-{slug}
 
 **Mark task as "completed"** in `.ultra/tasks/tasks.json`
 
+### 6.3. Update Feature Status (NEW)
+
+**After task completion**, record feature status:
+
+```typescript
+// Read existing feature status
+const statusPath = ".ultra/docs/feature-status.json";
+const status = JSON.parse(await Read(statusPath)) || { version: "1.0", features: [] };
+
+// Create feature entry (pending verification by /ultra-test)
+const featureEntry = {
+  id: `feat-${task.id}`,
+  name: task.title,
+  status: "pending",  // Will be updated to "pass"/"fail" by /ultra-test
+  taskId: task.id,
+  implementedAt: new Date().toISOString(),
+  commit: getCurrentCommitHash(),
+  branch: `feat/task-${task.id}-${slug}`
+};
+
+// Add to features list
+status.features.push(featureEntry);
+
+// Write back
+await Write(statusPath, JSON.stringify(status, null, 2));
+```
+
+**Output** (Chinese):
+```
+✅ 功能状态已记录
+   - 功能ID: feat-{id}
+   - 状态: pending (待 /ultra-test 验证)
+```
+
 **Output** (Example structure - output in Chinese at runtime per Language Protocol):
 ```
 🎉 Task #{id} Completed!

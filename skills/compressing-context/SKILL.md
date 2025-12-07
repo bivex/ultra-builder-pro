@@ -1,6 +1,6 @@
 ---
 name: compressing-context
-description: "Proactively compresses context to prevent overflow and enable 20-30 tasks/session. TRIGGERS: After completing 5+ tasks in /ultra-dev, token usage >120K/140K/170K, before /ultra-test or /ultra-deliver in long sessions. ACTIONS: Summarize completed tasks (15K→500 tokens), archive to .ultra/context-archive/, free 50-100K tokens. BLOCKS: /ultra-dev execution if token usage >170K without compression. DO NOT TRIGGER: Single task sessions, token usage <100K, documentation-only work."
+description: "Compresses context to prevent overflow. Archives completed tasks, enables 20-30 tasks/session."
 allowed-tools: Read, Write, TodoWrite
 ---
 
@@ -143,10 +143,57 @@ Keep uncompressed:
 # Save to archive (path from config.context.compression.archive_path)
 Write("{archive_path}/session-{timestamp}.md", summary)
 
+# Update session-index.json for quick recovery
+Read("{archive_path}/session-index.json")
+# Append new session entry:
+{
+  "id": "session-{timestamp}",
+  "timestamp": "{ISO8601}",
+  "tasksCompleted": [1, 2, 3, ...],
+  "tokensCompressed": {amount},
+  "keyDecisions": ["decision1", "decision2"],
+  "nextTask": {nextTaskId},
+  "resumeContext": "Continue Task #{nextTaskId}: {taskTitle}"
+}
+Write("{archive_path}/session-index.json", updatedIndex)
+
 # Update conversation context with compressed summary
 # Output in Chinese at runtime
 # Include: completed tasks summary, archive location, remaining capacity
 ```
+
+### Session Index Update
+
+**Always update `session-index.json` when archiving**:
+
+```typescript
+// Read existing index
+const indexPath = `${archivePath}/session-index.json`;
+const index = JSON.parse(await Read(indexPath)) || { version: "1.0", sessions: [] };
+
+// Create new session entry
+const newSession = {
+  id: `session-${timestamp}`,
+  timestamp: new Date().toISOString(),
+  tasksCompleted: completedTaskIds,      // from tasks.json
+  tokensCompressed: compressedTokens,
+  keyDecisions: extractKeyDecisions(),   // from archived content
+  nextTask: getNextPendingTaskId(),      // from tasks.json
+  resumeContext: `Continue Task #${nextTaskId}: ${nextTaskTitle}`
+};
+
+// Update index
+index.lastSession = newSession.id;
+index.sessions.push(newSession);
+
+// Write back
+await Write(indexPath, JSON.stringify(index, null, 2));
+```
+
+**Benefits**:
+- Quick session recovery via `lastSession` pointer
+- Historical context browsing
+- Resume context for seamless continuation
 
 ### Compression Techniques
 

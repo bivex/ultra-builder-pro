@@ -154,6 +154,51 @@ Write(".ultra/docs/test-coverage-gaps.md", gapReport);
 
 Iterate until all tests pass and metrics meet baselines.
 
+### 5. Update Feature Status (NEW)
+
+**After all tests pass**, update feature status for tracking:
+
+```typescript
+// Read existing feature status
+const statusPath = ".ultra/docs/feature-status.json";
+const status = JSON.parse(await Read(statusPath)) || { version: "1.0", features: [] };
+
+// Get completed task info from tasks.json
+const task = getTaskFromTasksJson(taskId);
+
+// Create/update feature entry
+const featureEntry = {
+  id: `feat-${task.id}`,
+  name: task.title,
+  status: allTestsPassed ? "pass" : "fail",
+  taskId: task.id,
+  testedAt: new Date().toISOString(),
+  commit: getCurrentCommitHash(),
+  coverage: coveragePercentage,  // from test run
+  coreWebVitals: {              // if frontend
+    lcp: lcpValue,
+    inp: inpValue,
+    cls: clsValue
+  }
+};
+
+// Update or add feature
+const existingIdx = status.features.findIndex(f => f.taskId === task.id);
+if (existingIdx >= 0) {
+  status.features[existingIdx] = featureEntry;
+} else {
+  status.features.push(featureEntry);
+}
+
+// Write back
+await Write(statusPath, JSON.stringify(status, null, 2));
+```
+
+**Benefits**:
+- Track pass/fail status per feature
+- Historical verification records
+- Commit traceability for debugging
+
 ## Quality Gates (All Must Pass)
 
 - ✅ Unit coverage ≥80%

@@ -1,6 +1,6 @@
 ---
 name: guarding-git-workflow
-description: "Git safety and workflow enforcement. TRIGGERS when performing git operations (commit, push, branch, merge, rebase, reset), discussing git/workflow/branch strategy, or about to execute dangerous git commands. Blocks critical risks, enforces independent-branch workflow."
+description: "Enforces git safety and independent-branch workflow. Blocks dangerous operations."
 allowed-tools: Read, Grep
 ---
 

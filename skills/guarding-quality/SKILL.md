@@ -1,6 +1,6 @@
 ---
 name: guarding-quality
-description: "Code quality, test coverage, and UI design enforcement. TRIGGERS when editing code/UI files (*.ts, *.js, *.tsx, *.jsx, *.py, *.vue, *.css, *.scss), discussing quality/refactoring/testing/coverage, or running tests. Loads detailed guidelines on-demand."
+description: "Enforces code quality (SOLID), test coverage, and UI design standards."
 allowed-tools: Read, Grep
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: syncing-docs
-description: "Syncs documentation and manages knowledge archival. TRIGGERS: After /ultra-research completion, feature completion, architecture changes, running /ultra-deliver, detecting [NEEDS CLARIFICATION] markers filled, major technology decisions. ACTIONS: Suggest update specs/product.md or specs/architecture.md, propose ADR creation in docs/decisions/, detect spec-code drift. DO NOT TRIGGER: Minor code changes, formatting edits, test-only changes, git operations without code impact."
+description: "Syncs documentation with code changes. Updates specs/, proposes ADRs, detects spec-code drift."
 allowed-tools: Read, Write, Glob, Grep
 ---
 

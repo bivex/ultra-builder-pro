@@ -1,6 +1,6 @@
 ---
 name: guiding-workflow
-description: "Guides next workflow steps based on project state and Scenario B routing. TRIGGERS: After phase completion (/ultra-init, /ultra-research, /ultra-plan, /ultra-dev, /ultra-test, /ultra-deliver), user asks 'what's next' or seems uncertain, detecting incomplete specs with [NEEDS CLARIFICATION]. ACTIONS: Detect filesystem state (specs/, tasks.json, git status), detect Scenario B project type (New Project/Incremental Feature/Tech Decision), suggest optimal next command with rationale. DO NOT TRIGGER: Mid-task execution, during active coding, user has clear next step."
+description: "Guides next workflow steps based on project state. Suggests optimal commands with rationale."
 allowed-tools: Read, Glob
 ---
 
@@ -16,6 +16,63 @@ Suggest the next logical command using filesystem signals and Scenario B intelli
 - After /ultra-init or /ultra-research completes (detect project type for tailored suggestions)
 
 ## Do
+
+### 0. Session Recovery Check (NEW - Phase 0)
+
+**First action on any project interaction**:
+
+```typescript
+// Check for session-index.json
+const indexPath = ".ultra/context-archive/session-index.json";
+const indexExists = await fileExists(indexPath);
+
+if (indexExists) {
+  const index = JSON.parse(await Read(indexPath));
+
+  if (index.lastSession) {
+    const lastSession = index.sessions.find(s => s.id === index.lastSession);
+
+    // Display recovery prompt (Chinese output at runtime)
+    // Format:
+    // ===========================
+    // Session Recovery Detected
+    // ===========================
+    // Last session: {timestamp}
+    // Completed tasks: {count} tasks
+    // Key decisions: {decisions}
+    //
+    // Resume point: {resumeContext}
+    //
+    // Suggested: Continue with Task #{nextTask}
+    // ===========================
+  }
+}
+```
+
+**Recovery Flow**:
+1. Detect `session-index.json` exists
+2. Read `lastSession` pointer
+3. Display session summary with key decisions
+4. Suggest resume point (next pending task)
+5. Offer options: Resume / Start Fresh / View History
+
+**Output template** (Chinese at runtime):
+```
+========================================
+检测到上次会话记录
+========================================
+上次会话: 2025-12-07 10:30:00
+已完成任务: 5 个
+关键决策: JWT认证, PostgreSQL数据库
+压缩Token: 75,000
+
+恢复点: 继续 Task #6: 支付集成
+========================================
+
+建议: 运行 /ultra-dev 继续 Task #6
+或者: 运行 /ultra-status 查看完整状态
+========================================
+```
 
 ### 1. Detect Project State via Filesystem
 

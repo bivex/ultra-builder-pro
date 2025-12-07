@@ -285,16 +285,95 @@ At runtime, Claude will output this structure in Chinese with proper formatting 
 
 ---
 
-## Extended Thinking Configuration
+## Dynamic Token Allocation (NEW)
 
-This command benefits from extended thinking tokens. If you need even deeper analysis:
+Token allocation based on problem complexity:
 
+| Complexity | Tokens | Use Case |
+|------------|--------|----------|
+| **Simple** | 8K | Single-dimension analysis, quick decisions |
+| **Medium** | 16K | Standard 6D analysis (default) |
+| **Complex** | 24K | Multi-scenario planning, architecture decisions |
+| **Critical** | 32K | Strategic pivots, major refactoring |
+
+**Auto-detection**:
+```typescript
+// Complexity indicators
+const complexityScore = {
+  multiDomain: +2,        // Cross-cutting concerns
+  multiScenario: +2,      // 3+ alternatives
+  longTerm: +1,           // Strategic impact
+  highRisk: +1,           // Significant consequences
+  dataIntensive: +1       // Research required
+};
+
+// Score → Token allocation
+// 0-2: Simple (8K)
+// 3-4: Medium (16K)
+// 5-6: Complex (24K)
+// 7+:  Critical (32K)
+```
+
+**Manual override**:
 ```bash
-# Temporarily increase thinking capacity
 MAX_THINKING_TOKENS=30000 /max-think "your complex problem"
 ```
 
-See `~/.claude/THINKING_TOKENS_GUIDE.md` for configuration details.
+---
+
+## Session Archival (NEW)
+
+**Archive thinking sessions for future reference**:
+
+After completing deep analysis, save to `.ultra/thinking-sessions/`:
+
+```typescript
+// Auto-archive for high-impact decisions
+if (decision.confidence >= 0.9 || decision.impact === 'critical') {
+  const session = {
+    id: `session-${timestamp}-${topic-slug}`,
+    timestamp: new Date().toISOString(),
+    topic: problemDescription,
+    complexity: detectedComplexity,
+    tokensUsed: actualTokensUsed,
+    dimensions: analysisResults,
+    decision: finalRecommendation,
+    confidence: confidenceLevel,
+    alternatives: consideredAlternatives
+  };
+
+  // Update session index
+  const index = await Read(".ultra/thinking-sessions/session-index.json");
+  index.sessions.push(session.id);
+  await Write(".ultra/thinking-sessions/session-index.json", index);
+
+  // Write session file
+  await Write(`.ultra/thinking-sessions/${session.id}.md`, formatSession(session));
+}
+```
+
+**Decision Audit Integration**:
+```typescript
+// Record to decision-audit.json for traceability
+const auditEntry = {
+  id: `decision-${timestamp}`,
+  decision: finalRecommendation,
+  alternatives: consideredAlternatives,
+  reasoning: keyInsights,
+  confidence: confidenceLevel,
+  source: `thinking-sessions/${session.id}.md`,
+  timestamp: new Date().toISOString()
+};
+
+const audit = await Read(".ultra/docs/decision-audit.json");
+audit.decisions.push(auditEntry);
+await Write(".ultra/docs/decision-audit.json", audit);
+```
+
+**Benefits**:
+- Traceable decision history
+- Reusable analysis for similar problems
+- Team knowledge preservation
 
 ---
 
