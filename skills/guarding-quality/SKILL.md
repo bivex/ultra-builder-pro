@@ -39,12 +39,12 @@ Enforces quality across three dimensions:
 - ❌ Magic numbers → Named constants
 - ❌ SOLID violations
 
-**Output** (Chinese):
+**Output** (Chinese at runtime):
 ```
-⚠️ 代码质量问题：
-1. getUserById() 超过 50 行（78 行）→ 拆分
-2. 重复代码 3 处 → 提取 handleApiError()
-参考：REFERENCE.md (Part 1: SOLID Principles)
+Code quality warning including:
+- Specific violations (function name, line count, issue type)
+- Actionable fix recommendations
+- Reference to REFERENCE.md section
 ```
 
 ### 2. Test Coverage Validation
@@ -56,11 +56,12 @@ Enforces quality across three dimensions:
 
 **Requirements**: Overall ≥80%, Critical paths 100%, Branch ≥75%
 
-**Output** (Chinese):
+**Output** (Chinese at runtime):
 ```
-⚠️ 测试覆盖率不足（73%，目标 ≥80%）：
-缺失: Performance 测试、Security SQL 注入验证
-参考：REFERENCE.md (Part 2: Testing Quality Baseline)
+Test coverage warning including:
+- Current coverage vs target (e.g., 73% vs ≥80%)
+- Missing test dimensions
+- Reference to REFERENCE.md section
 ```
 
 ### 3. UI Design Constraints
@@ -83,13 +84,13 @@ Enforces quality across three dimensions:
 - ✅ Orchestrated motion, scroll-triggered animations
 - ✅ Atmospheric backgrounds (gradients, textures, overlays)
 
-**Output** (Chinese):
+**Output** (Chinese at runtime):
 ```
-⚠️ UI 设计约束：
-1. 硬编码颜色 '#3b82f6' → theme.colors.primary
-2. 默认字体 'Inter' → 使用个性化字体
-3. 推荐组件库：shadcn/ui, Galaxy UI, React Bits
-参考：REFERENCE.md (Part 2: Frontend Quality Baseline)
+UI design constraint warning including:
+- Hard-coded values detected → design token alternatives
+- Default fonts detected → personalized font recommendations
+- Component library suggestions
+- Reference to REFERENCE.md section
 ```
 
 ## Don't
@@ -99,7 +100,9 @@ Enforces quality across three dimensions:
 
 ## Outputs
 
-Format (Chinese): ⚠️ + brief summary + actionable recommendations + guideline reference
+**OUTPUT: User messages in Chinese at runtime; keep this file English-only.**
+
+Format: ⚠️ + brief summary + actionable recommendations + guideline reference
 
 ---
 

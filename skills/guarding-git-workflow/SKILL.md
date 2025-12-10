@@ -46,18 +46,13 @@ Enforces git safety and workflow across two dimensions:
 - Normal commit/push
 - Local branch operations
 
-**Output** (Chinese):
+**Output** (Chinese at runtime):
 ```
-🔴 危险操作检测！
-
-命令: git push --force origin main
-风险: Critical - 可能覆盖团队代码
-
-建议:
-❌ 不要强制推送到 main
-✅ 推送到功能分支: git push origin feat/task-123
-
-参考: REFERENCE.md (Git Safety Rules)
+Dangerous operation detected message including:
+- Risk level indicator (🔴/🟡/🟢)
+- Command detected and risk description
+- Recommended alternative action
+- Reference to REFERENCE.md section
 ```
 
 ### 2. Workflow Enforcement
@@ -83,22 +78,13 @@ main (always active, never frozen)
 - Each task independently reversible
 - Main always deployable
 
-**Output** (Chinese):
+**Output** (Chinese at runtime):
 ```
-⚠️ 工作流违规检测！
-
-建议: 创建统一 feat/user-auth 分支处理多任务
-
-❌ 违反强制工作流:
-- 每任务独立分支
-- 完成立即合并
-- main 保持可部署
-
-✅ 正确做法:
-feat/task-1 → merge → delete
-feat/task-2 → merge → delete
-
-参考: REFERENCE.md (Workflow is Non-Negotiable)
+Workflow violation detected message including:
+- Violation description
+- Mandatory workflow rules (independent branches, immediate merge, deployable main)
+- Correct approach pattern
+- Reference to REFERENCE.md section
 ```
 
 ## Don't
@@ -109,7 +95,9 @@ feat/task-2 → merge → delete
 
 ## Outputs
 
-**Format** (Chinese):
+**OUTPUT: User messages in Chinese at runtime; keep this file English-only.**
+
+**Format**:
 - Risk level emoji (🔴/🟡/🟢)
 - Brief violation summary
 - Specific command/proposal detected

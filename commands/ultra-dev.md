@@ -191,39 +191,65 @@ git push origin --delete feat/task-{id}-{slug}
 
 **Mark task as "completed"** in `.ultra/tasks/tasks.json`
 
-### 6.3. Update Feature Status (NEW)
+### 6.3. Update Feature Status (MANDATORY)
 
-**After task completion**, record feature status:
+**⚠️ CRITICAL: This step is NON-OPTIONAL. Do NOT skip under any circumstances.**
 
-```typescript
-// Read existing feature status
-const statusPath = ".ultra/docs/feature-status.json";
-const status = JSON.parse(await Read(statusPath)) || { version: "1.0", features: [] };
+**Before displaying "Task Completed" message**, you MUST execute these steps:
 
-// Create feature entry (pending verification by /ultra-test)
-const featureEntry = {
-  id: `feat-${task.id}`,
-  name: task.title,
-  status: "pending",  // Will be updated to "pass"/"fail" by /ultra-test
-  taskId: task.id,
-  implementedAt: new Date().toISOString(),
-  commit: getCurrentCommitHash(),
-  branch: `feat/task-${task.id}-${slug}`
-};
-
-// Add to features list
-status.features.push(featureEntry);
-
-// Write back
-await Write(statusPath, JSON.stringify(status, null, 2));
+**Step 1: Read current feature status**
+```bash
+cat .ultra/docs/feature-status.json
 ```
 
-**Output** (Chinese):
+**Step 2: Check if entry exists for current task**
+- If entry with matching `taskId` exists → Skip creation (already recorded)
+- If NO entry exists → Proceed to Step 3
+
+**Step 3: Create new entry** (execute, not just describe)
+```bash
+# Get task info from context
+TASK_ID="${current_task_id}"
+TASK_TITLE="${current_task_title}"
+COMMIT=$(git rev-parse HEAD 2>/dev/null || echo "no-commit")
+BRANCH=$(git branch --show-current 2>/dev/null || echo "main")
+TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+# Create the feature entry JSON
+NEW_ENTRY='{
+  "id": "feat-'$TASK_ID'",
+  "name": "'$TASK_TITLE'",
+  "status": "pending",
+  "taskId": "'$TASK_ID'",
+  "implementedAt": "'$TIMESTAMP'",
+  "commit": "'$COMMIT'",
+  "branch": "'$BRANCH'"
+}'
+
+# Update feature-status.json (add new entry to features array)
 ```
-✅ 功能状态已记录
-   - 功能ID: feat-{id}
-   - 状态: pending (待 /ultra-test 验证)
+
+**Step 4: Verify update succeeded**
+```bash
+cat .ultra/docs/feature-status.json | grep "feat-${TASK_ID}"
+# Must show the newly created entry
 ```
+
+**Output Format** (Chinese at runtime):
+```
+Task #{id} completed message including:
+   - Commit hash
+   - Branch merge status: feat/task-{id} → main
+   - Feature status recorded: pending (awaiting /ultra-test)
+   - Project progress: {completed}/{total} tasks
+```
+
+**Failure Handling**:
+If feature-status.json update fails:
+1. Display warning (Chinese at runtime)
+2. Log error to .ultra/docs/status-sync.log (if available)
+3. Continue with task completion (do NOT block)
+4. syncing-status Skill will auto-fix on next trigger
 
 **Output** (Example structure - output in Chinese at runtime per Language Protocol):
 ```

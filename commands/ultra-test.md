@@ -154,45 +154,61 @@ Write(".ultra/docs/test-coverage-gaps.md", gapReport);
 
 Iterate until all tests pass and metrics meet baselines.
 
-### 5. Update Feature Status (NEW)
+### 5. Update Feature Status (MANDATORY)
 
-**After all tests pass**, update feature status for tracking:
+**⚠️ CRITICAL: This step is NON-OPTIONAL. Execute AFTER all test results are collected.**
 
-```typescript
-// Read existing feature status
-const statusPath = ".ultra/docs/feature-status.json";
-const status = JSON.parse(await Read(statusPath)) || { version: "1.0", features: [] };
+**Status Mapping**:
+| Condition | Status |
+|-----------|--------|
+| All tests pass AND coverage ≥80% | "pass" |
+| Any test fails OR coverage <80% | "fail" |
 
-// Get completed task info from tasks.json
-const task = getTaskFromTasksJson(taskId);
-
-// Create/update feature entry
-const featureEntry = {
-  id: `feat-${task.id}`,
-  name: task.title,
-  status: allTestsPassed ? "pass" : "fail",
-  taskId: task.id,
-  testedAt: new Date().toISOString(),
-  commit: getCurrentCommitHash(),
-  coverage: coveragePercentage,  // from test run
-  coreWebVitals: {              // if frontend
-    lcp: lcpValue,
-    inp: inpValue,
-    cls: clsValue
-  }
-};
-
-// Update or add feature
-const existingIdx = status.features.findIndex(f => f.taskId === task.id);
-if (existingIdx >= 0) {
-  status.features[existingIdx] = featureEntry;
-} else {
-  status.features.push(featureEntry);
-}
-
-// Write back
-await Write(statusPath, JSON.stringify(status, null, 2));
+**Step 1: Identify tested tasks**
+Read completed tasks from tasks.json that need status update:
+```bash
+cat .ultra/tasks/tasks.json | jq '.tasks[] | select(.status == "completed")'
 ```
+
+**Step 2: Read existing feature status**
+```bash
+cat .ultra/docs/feature-status.json
+```
+
+**Step 3: Update each task's feature status** (execute, not just describe)
+For each completed task:
+1. Find entry in feature-status.json by taskId
+2. If found → Update existing entry:
+   - `status`: "pass" or "fail" (based on test results)
+   - `testedAt`: current ISO timestamp
+   - `coverage`: percentage from test run
+   - `coreWebVitals`: {lcp, inp, cls} (frontend only)
+3. If NOT found → Create new entry with test results
+
+**Step 4: Write updated feature-status.json**
+
+**Step 5: Verify update succeeded**
+```bash
+cat .ultra/docs/feature-status.json | grep "testedAt"
+# Must show updated timestamps
+```
+
+**Output Format** (Chinese at runtime):
+```
+Test completion message including:
+   - Feature status updates: feat-{id} ({name}): pass/fail (coverage: X%)
+   - Test summary: Unit tests X/Y passed, E2E tests X/Y passed
+   - Total coverage: X%
+   - Core Web Vitals: LCP, INP, CLS values
+   - Issues to fix (if any): Coverage below 80%
+```
+
+**Failure Handling**:
+If feature-status.json update fails:
+1. Display warning (Chinese at runtime)
+2. Log error to .ultra/docs/status-sync.log
+3. Continue with test report (do NOT block)
+4. syncing-status Skill will auto-fix on next trigger
 
 **Benefits**:
 - Track pass/fail status per feature

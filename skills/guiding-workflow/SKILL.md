@@ -58,20 +58,13 @@ if (indexExists) {
 
 **Output template** (Chinese at runtime):
 ```
-========================================
-检测到上次会话记录
-========================================
-上次会话: 2025-12-07 10:30:00
-已完成任务: 5 个
-关键决策: JWT认证, PostgreSQL数据库
-压缩Token: 75,000
-
-恢复点: 继续 Task #6: 支付集成
-========================================
-
-建议: 运行 /ultra-dev 继续 Task #6
-或者: 运行 /ultra-status 查看完整状态
-========================================
+Session recovery detected message including:
+- Last session timestamp
+- Completed tasks count
+- Key decisions made
+- Compressed tokens count
+- Resume point (next pending task)
+- Suggested commands to continue
 ```
 
 ### 1. Detect Project State via Filesystem

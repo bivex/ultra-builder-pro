@@ -73,6 +73,18 @@
         "intentPatterns": ["git.*(force|--force)", "git.*reset.*--hard", "git.*rebase"]
       },
       "blockMessage": "GIT WORKFLOW GUARDIAN: Dangerous operation detected. Review guarding-git-workflow skill before proceeding."
+    },
+    "syncing-status": {
+      "type": "system",
+      "enforcement": "auto",
+      "priority": "high",
+      "promptTriggers": {
+        "keywords": ["task completed", "tests pass", "tests fail", "coverage", "feature status", "status update"],
+        "intentPatterns": ["task.*complete", "tests?.*(pass|fail)", "update.*status", "feature.*status"]
+      },
+      "fileTriggers": {
+        "pathPatterns": [".ultra/tasks/tasks.json", ".ultra/docs/feature-status.json"]
+      }
     }
   }
 }
