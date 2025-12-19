@@ -1,6 +1,6 @@
 ---
 name: guiding-workflow
-description: "Guides next workflow steps based on project state. Suggests optimal commands with rationale."
+description: "TRIGGERS when: phase completes (init/research/plan/dev/test/deliver), user asks 'what's next'/'next step'/'what now', user seems uncertain after command completion, session recovery detected (session-index.json exists). Suggests next command based on filesystem state and Scenario B routing. DO NOT trigger for: specific task execution, code-related questions."
 allowed-tools: Read, Glob
 ---
 

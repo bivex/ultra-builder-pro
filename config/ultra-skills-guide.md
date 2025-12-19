@@ -1,6 +1,6 @@
 # Skills System - Complete Guide
 
-**Ultra Builder Pro 4.1** - Automated quality enforcement through model-invoked skills.
+**Ultra Builder Pro 4.1.1** - Automated quality enforcement through model-invoked skills (native description matching, no external rules file).
 
 ---
 
@@ -44,7 +44,7 @@ allowed-tools: Tool1, Tool2   # Optional: restrict tool access
 
 ### 1. guarding-quality
 
-**Description**: "Enforces code quality (SOLID), test coverage, and UI design standards."
+**Description**: "TRIGGERS when: editing code files (*.ts/*.js/*.tsx/*.jsx/*.py/*.go/*.vue), editing UI files (*.css/*.scss/*.styled.ts), discussing SOLID/DRY/KISS/YAGNI/refactor/test coverage/code quality, running /ultra-test, marking tasks complete. Enforces code quality standards and UI design constraints. DO NOT trigger for: git operations, documentation-only changes."
 
 **Purpose**:
 - Real-time SOLID/DRY/KISS/YAGNI violation detection
@@ -71,7 +71,7 @@ allowed-tools: Tool1, Tool2   # Optional: restrict tool access
 
 ### 2. guarding-git-workflow
 
-**Description**: "Enforces git safety and independent-branch workflow. Blocks dangerous operations."
+**Description**: "TRIGGERS when: git operations (commit/push/branch/merge/rebase/reset/delete), discussing branch strategy or merge timing, keywords 'force push'/'rebase'/'reset --hard'/'unified branch'/'batch merge'. BLOCKS dangerous operations. DO NOT trigger for: code quality issues, non-git file operations."
 
 **Purpose**:
 - Prevent dangerous git operations (force push, hard reset)
@@ -102,7 +102,7 @@ main (always active, never frozen)
 
 ### 3. compressing-context
 
-**Description**: "Compresses context to prevent overflow. Archives completed tasks, enables 20-30 tasks/session."
+**Description**: "TRIGGERS when: 5+ tasks completed in session, token usage exceeds yellow zone (140K+), before /ultra-test or /ultra-deliver, keywords 'context overflow'/'token limit'/'compress session'. Archives completed tasks to .ultra/context-archive/, enables 20-30 tasks/session."
 
 **Purpose**:
 - Prevent context overflow during long sessions
@@ -129,7 +129,7 @@ main (always active, never frozen)
 
 ### 4. guiding-workflow
 
-**Description**: "Guides next workflow steps based on project state. Suggests optimal commands with rationale."
+**Description**: "TRIGGERS when: phase completes (init/research/plan/dev/test/deliver), user asks 'what's next'/'next step'/'what now', session recovery detected (session-index.json exists). Suggests next command based on filesystem state and Scenario B routing."
 
 **Purpose**:
 - Suggest next logical command based on filesystem state
@@ -158,7 +158,7 @@ main (always active, never frozen)
 
 ### 5. automating-e2e-tests
 
-**Description**: "Generate and run E2E tests with Playwright CLI. Measures Core Web Vitals via Lighthouse."
+**Description**: "TRIGGERS when: keywords 'E2E test'/'end-to-end test'/'browser automation'/'Playwright'/'Core Web Vitals'/'LCP'/'INP'/'CLS', running /ultra-test for frontend projects. Generates Playwright tests and measures Core Web Vitals via Lighthouse CLI."
 
 **Purpose**:
 - Generate Playwright test code (TypeScript)
@@ -185,7 +185,7 @@ main (always active, never frozen)
 
 ### 6. syncing-docs
 
-**Description**: "Syncs documentation with code changes. Updates specs/, proposes ADRs, detects spec-code drift."
+**Description**: "TRIGGERS when: /ultra-research completion (check specs/), feature completion, architecture changes, /ultra-deliver execution, keywords 'documentation'/'ADR'/'architecture decision'/'specs'/'sync docs'. Updates specs/, proposes ADRs, detects spec-code drift."
 
 **Purpose**:
 - Ensure documentation stays synchronized with code

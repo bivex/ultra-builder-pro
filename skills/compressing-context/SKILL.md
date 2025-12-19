@@ -1,6 +1,6 @@
 ---
 name: compressing-context
-description: "Compresses context to prevent overflow. Archives completed tasks, enables 20-30 tasks/session."
+description: "TRIGGERS when: 5+ tasks completed in session, token usage exceeds yellow zone (140K+), before /ultra-test or /ultra-deliver, keywords 'context overflow'/'token limit'/'compress session'/'archive session'. Archives completed tasks to .ultra/context-archive/, enables 20-30 tasks/session. DO NOT trigger for: <5 completed tasks, token usage in green zone."
 allowed-tools: Read, Write, TodoWrite
 ---
 

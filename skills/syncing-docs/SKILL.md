@@ -1,6 +1,6 @@
 ---
 name: syncing-docs
-description: "Syncs documentation with code changes. Updates specs/, proposes ADRs, detects spec-code drift."
+description: "TRIGGERS when: /ultra-research completion (check specs/), feature completion, architecture changes, /ultra-deliver execution, keywords 'documentation'/'ADR'/'architecture decision'/'specs'/'sync docs'. Updates specs/product.md and specs/architecture.md, proposes ADRs, detects spec-code drift. DO NOT trigger for: minor code changes, non-documentation requests."
 allowed-tools: Read, Write, Glob, Grep
 ---
 

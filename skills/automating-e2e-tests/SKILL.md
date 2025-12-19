@@ -1,6 +1,6 @@
 ---
 name: automating-e2e-tests
-description: "Generate and run E2E tests with Playwright CLI. Measures Core Web Vitals via Lighthouse."
+description: "TRIGGERS when: keywords 'E2E test'/'end-to-end test'/'browser automation'/'Playwright'/'Core Web Vitals'/'LCP'/'INP'/'CLS', running /ultra-test for frontend projects. Generates Playwright tests and measures Core Web Vitals via Lighthouse CLI. DO NOT trigger for: unit tests, API tests, backend testing."
 allowed-tools: Bash, Read, Write, Edit, Grep, Glob
 ---
 

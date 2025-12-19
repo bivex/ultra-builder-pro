@@ -1,6 +1,6 @@
 ---
 name: guarding-quality
-description: "Enforces code quality (SOLID), test coverage, and UI design standards."
+description: "TRIGGERS when: editing code files (*.ts/*.js/*.tsx/*.jsx/*.py/*.go/*.vue), editing UI files (*.css/*.scss/*.styled.ts), discussing SOLID/DRY/KISS/YAGNI/refactor/test coverage/code quality, running /ultra-test, marking tasks complete. Enforces code quality standards and UI design constraints. DO NOT trigger for: git operations, documentation-only changes."
 allowed-tools: Read, Grep
 ---
 

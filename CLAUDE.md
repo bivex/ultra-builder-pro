@@ -1,4 +1,4 @@
-# Ultra Builder Pro 4.1
+# Ultra Builder Pro 4.1.1
 
 Always respond in Chinese-simplified
 
@@ -151,7 +151,7 @@ main ── feat/task-1 (create → complete → merge → delete)
 
 **Test Quality**: guarding-test-quality enforces TAS ≥70% (blocks fake tests).
 
-Trigger rules in `skill-rules.json`. Slim mode documentation (<500 lines per Skill).
+Skills auto-activate via native description matching (no external rules file needed). Slim mode documentation (<500 lines per Skill).
 
 ---
 
