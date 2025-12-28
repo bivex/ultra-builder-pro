@@ -1,6 +1,9 @@
 # Quality Guardian - Complete Reference
 
-**Ultra Builder Pro 4.1** - Comprehensive quality enforcement reference for code quality, testing, and UI design.
+**Ultra Builder Pro 4.2** - Universal quality enforcement reference for SOLID principles, code quality, and testing.
+
+> **Note**: Language/framework-specific patterns are in `frontend` and `backend` skills.
+> This reference focuses on **principles** that apply to ALL code.
 
 ---
 
@@ -271,7 +274,7 @@ const userService = new UserService(emailSender); // ← Easy to swap
 
 ---
 
-### Additional Core Principles
+### Complementary Principles
 
 #### DRY - Don't Repeat Yourself
 - No code duplication >3 lines
@@ -299,29 +302,30 @@ Test-First > Ship-Then-Test
 
 ---
 
-## Part 2: Quality Standards
+## Part 2: Code Quality Standards
 
-### Code Quality Baseline
-
-#### Core Requirements
+### Core Requirements
 
 - ✅ **Follow SOLID/DRY/KISS/YAGNI** - See Part 1 above
-- ✅ **All public functions must have clear comments** - JSDoc format with @param, @returns, @example
+- ✅ **All public functions must have clear comments** - JSDoc/docstring format
 - ✅ **Unit test coverage ≥80%** - Enforced by quality-guardian skill
 
-#### Code Smells Detection
+### Code Smells Detection
 
 Immediately fix when detected:
-- ❌ Functions >50 lines → Split
-- ❌ Nesting depth >3 levels → Refactor
-- ❌ Magic numbers → Extract to named constants
-- ❌ Commented-out code → Delete (use git history)
-- ❌ Duplicate code >3 lines → Extract to shared function
-- ❌ God classes (>500 lines) → Split by responsibility
-- ❌ Long parameter lists (>5 params) → Use object parameters
-- ❌ Cryptic variable names → Use descriptive names
 
-#### Code Documentation Example
+| Smell | Threshold | Fix |
+|-------|-----------|-----|
+| Long function | >50 lines | Split by responsibility |
+| Deep nesting | >3 levels | Early return, extract |
+| Magic numbers | Any | Named constants |
+| Commented-out code | Any | Delete (use git) |
+| God class | >500 lines | Split by responsibility |
+| Long parameters | >5 params | Object parameters |
+| Cryptic names | Any | Descriptive naming |
+| Duplicate code | >3 lines | Extract to function |
+
+### Code Documentation
 
 ```typescript
 /**
@@ -335,74 +339,13 @@ Immediately fix when detected:
 
 ---
 
-### Frontend Quality Baseline
+## Part 3: Testing Standards
 
-**Mandatory for frontend projects only** (React, Vue, Angular, etc.)
-
-#### Recommended Component Libraries
-
-**Primary (use first)**:
-- **shadcn/ui** - Beautiful, accessible, copy-paste components
-- **Galaxy UI** - Modern, animated component collection
-- **React Bits** - Unique, creative UI components
-
-**Alternatives**:
-- Magic UI, Aceternity UI (advanced animations)
-- Radix UI (headless, accessible primitives)
-- Framer Motion (complex animations)
-
-**Avoid**: Generic Bootstrap, default Material UI without customization
-
-#### UI Design Anti-Patterns (Enforced)
-
-- ❌ **Prohibited**: Default fonts (Inter, Roboto, Open Sans, Lato, Arial, system-ui)
-- ❌ **Prohibited**: Purple gradients on white backgrounds
-- ❌ **Prohibited**: Hard-coded colors (use design tokens/CSS variables)
-- ❌ **Prohibited**: Inconsistent spacing (use theme spacing multiples)
-- ❌ **Prohibited**: Cookie-cutter layouts without context-specific character
-- ❌ **Prohibited**: Converging on common font choices (Space Grotesk) across projects
-
-**Rationale**: Prevents distributional convergence ("AI slop" appearance)
-
-#### Design Thinking (Before Coding)
-
-Commit to a **BOLD aesthetic direction**:
-- **Purpose**: What problem does this interface solve? Who uses it?
-- **Tone**: Pick an extreme - brutally minimal, maximalist chaos, retro-futuristic, organic/natural, luxury/refined, playful/toy-like, editorial/magazine, brutalist/raw, art deco/geometric, soft/pastel, industrial/utilitarian
-- **Differentiation**: What makes this UNFORGETTABLE?
-
-**CRITICAL**: Bold maximalism and refined minimalism both work - the key is **intentionality**, not intensity.
-
-#### Design Best Practices (Suggested)
-
-- ✅ **Typography**: Distinctive font choices (avoid generic), 3x+ size jumps, pair display font with refined body font
-- ✅ **Color**: CSS variables, dominant colors with sharp accents (not timid even palettes)
-- ✅ **Motion**: CSS-only first, orchestrated page load with staggered reveals, scroll-triggering, surprising hover states
-- ✅ **Spatial Composition**: Unexpected layouts, asymmetry, overlap, diagonal flow, grid-breaking elements
-- ✅ **Backgrounds**: Atmosphere and depth (gradient meshes, noise textures, geometric patterns, layered transparencies, dramatic shadows, grain overlays)
-
-#### Internationalization
-
-- ✅ Implement bilingual support: Chinese (simplified) + English
-- ✅ Use react-i18next (React) or vue-i18n (Vue)
-- ✅ All UI strings translatable, date/time/number formatting localized
-
-#### Core Web Vitals
-
-**Measured with Lighthouse CLI** (industry standard):
-- ✅ **LCP** < 2.5s - Optimize images, reduce server response time
-- ✅ **INP** < 200ms - Break up long tasks, use web workers
-- ✅ **CLS** < 0.1 - Include size attributes, reserve space for dynamic content
-
----
-
-### Testing Quality Baseline
-
-#### Test Authenticity Score (TAS) - NEW
+### Test Authenticity Score (TAS)
 
 **Delegated to**: `guarding-test-quality` skill
 
-This skill detects fake/useless tests through static analysis. Key metrics:
+Detects fake/useless tests through static analysis:
 
 | Component | Weight | Pass Threshold |
 |-----------|--------|----------------|
@@ -417,11 +360,7 @@ This skill detects fake/useless tests through static analysis. Key metrics:
 - C (50-69): ❌ **BLOCKED** - Needs improvement
 - D/F (<50): ❌ **BLOCKED** - Fake tests detected
 
-**Reference**: `guidelines/ultra-testing-philosophy.md` for anti-pattern examples and fixes
-
----
-
-#### Realistic Test Execution
+### Realistic Test Execution
 
 - ✅ Execute tests 100% realistically
 - ❌ Minimal mocking: Only mock external services (APIs, databases, SDKs)
@@ -430,61 +369,61 @@ This skill detects fake/useless tests through static analysis. Key metrics:
 
 **Why**: Over-mocked tests give false confidence.
 
-#### Six-Dimensional Test Coverage
+### Six-Dimensional Test Coverage
 
-**All six dimensions mandatory** - Enforced by quality-guardian skill.
+**All six dimensions mandatory**:
 
-| Dimension | Focus |
-|-----------|-------|
-| **1. Functional** | Core business logic, happy paths, component integration |
-| **2. Boundary** | Edge cases (empty/max/min), null/undefined, zero/negative, large inputs |
-| **3. Exception** | Error handling (network/timeout), invalid input, error messages, graceful degradation |
-| **4. Performance** | Load tests, response time, memory leaks, N+1 query detection |
-| **5. Security** | Input validation (SQL/XSS), auth/authz, sensitive data, rate limiting |
-| **6. Compatibility** | Cross-browser/platform/mobile, responsive design |
+| Dimension | Focus | Examples |
+|-----------|-------|----------|
+| **Functional** | Core business logic | Happy paths, integration |
+| **Boundary** | Edge cases | Empty, max, min, null |
+| **Exception** | Error handling | Network errors, timeouts |
+| **Performance** | Speed/memory | Load tests, N+1 queries |
+| **Security** | Protection | SQL injection, XSS, auth |
+| **Compatibility** | Cross-platform | Browser, mobile, API versions |
 
-#### Test Coverage Requirements
+### Coverage Requirements
 
-- ✅ **Overall coverage ≥80%**
-- ✅ **Critical paths: 100%** (authentication, payment, data integrity)
-- ✅ **Branch coverage ≥75%** (all if/else branches tested)
-- ✅ **Function coverage ≥85%** (most functions tested)
-
-**Measurement**:
-- JavaScript/TypeScript: `npm test -- --coverage`
-- Python: `pytest --cov=src --cov-report=html`
-- Go: `go test -coverprofile=coverage.out ./...`
+| Scope | Target |
+|-------|--------|
+| Overall coverage | ≥80% |
+| Critical paths | 100% |
+| Branch coverage | ≥75% |
+| Function coverage | ≥85% |
 
 ---
 
-### Quality Enforcement
+## Part 4: Quality Enforcement
 
-#### Automated Enforcement
+### Automated Checks
 
-- **quality-guardian** - SOLID/DRY/KISS/YAGNI violations, six-dimensional test coverage, UI anti-patterns
-- **CI/CD pipeline** - Tests must pass, coverage must meet threshold
-- **Production monitoring** - Core Web Vitals tracked in real-time
+| Check | Tool | Threshold |
+|-------|------|-----------|
+| Test coverage | CI/CD | ≥80% |
+| Code smells | quality_analyzer.py | 0 violations |
+| Complexity | ESLint/Pylint/golint | ≤10 |
+| Security | SAST tools | 0 high/critical |
 
-#### Violation Consequences
+### Violation Consequences
 
-- ❌ Code quality violations → Task cannot be marked complete
-- ❌ Test coverage <80% → PR blocked
-- ❌ Core Web Vitals failing → Deployment blocked
-- ❌ Security issues → Immediate rollback and fix
+| Violation | Consequence |
+|-----------|-------------|
+| Code quality violations | Task cannot complete |
+| Test coverage <80% | PR blocked |
+| Security issues | Immediate rollback |
 
 ---
 
-### Quality Metrics Dashboard
+## Quality Metrics Summary
 
-| Metric | Target | Current | Trend |
-|--------|--------|---------|-------|
-| Test Coverage | ≥80% | _Track_ | _Monitor_ |
-| Code Smells | 0 | _Track_ | _Monitor_ |
-| LCP | <2.5s | _Measure_ | _Monitor_ |
-| INP | <200ms | _Measure_ | _Monitor_ |
-| CLS | <0.1 | _Measure_ | _Monitor_ |
-| Build Time | <5min | _Track_ | _Monitor_ |
-| Deployment Frequency | Daily | _Track_ | _Monitor_ |
+| Metric | Target |
+|--------|--------|
+| Test Coverage | ≥80% |
+| Code Smells | 0 |
+| Cyclomatic Complexity | ≤10 |
+| Function Lines | ≤50 |
+| Nesting Depth | ≤3 |
+| Build Time | <5min |
 
 ---
 

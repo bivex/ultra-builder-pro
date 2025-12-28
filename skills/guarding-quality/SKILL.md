@@ -1,26 +1,29 @@
 ---
 name: guarding-quality
-description: "Validates code quality across SOLID principles, test coverage, and UI design. This skill activates when editing code files (*.ts, *.js, *.py, *.go), UI files (*.css, *.scss), or discussing refactoring and quality."
+description: "Validates code quality across SOLID principles, complexity limits, and test coverage. This skill activates when editing any code files, discussing refactoring, quality improvement, or code review."
 ---
 
 # Code Quality Guardian
 
-Ensures production-grade code quality across three dimensions.
+Ensures production-grade code quality through universal principles.
+
+> **Note**: Language/framework-specific patterns are in `frontend` and `backend` skills.
+> This skill focuses on **principles** that apply to ALL code.
 
 ## Activation Context
 
 This skill activates when:
-- Editing code files (*.ts, *.js, *.tsx, *.jsx, *.py, *.go, *.vue)
-- Editing UI files (*.css, *.scss, *.styled.ts)
-- Discussing quality, refactoring, or testing
+- Editing any code files (*.ts, *.js, *.py, *.go, *.vue, *.tsx, etc.)
+- Discussing quality, refactoring, or code review
 - Running /ultra-test or completing tasks
+- Reviewing pull requests
 
 ## Resources
 
 | Resource | Purpose |
 |----------|---------|
 | `scripts/quality_analyzer.py` | Analyze code metrics |
-| `REFERENCE.md` | Detailed patterns and examples |
+| `REFERENCE.md` | SOLID principles and detailed examples |
 
 ## Quality Analysis
 
@@ -32,63 +35,56 @@ python scripts/quality_analyzer.py src/  # All files
 python scripts/quality_analyzer.py --summary  # Summary only
 ```
 
+---
+
+## Core Principles
+
+### SOLID Principles (Mandatory)
+
+| Principle | Rule |
+|-----------|------|
+| **S**ingle Responsibility | One reason to change per class/function |
+| **O**pen-Closed | Extend via abstraction, don't modify stable code |
+| **L**iskov Substitution | Subtypes must honor parent contracts |
+| **I**nterface Segregation | Small, focused interfaces (≤5 methods) |
+| **D**ependency Inversion | Depend on abstractions, inject dependencies |
+
+### Complementary Principles
+
+| Principle | Rule |
+|-----------|------|
+| **DRY** | No duplicate code >3 lines |
+| **KISS** | Complexity ≤10, nesting ≤3 |
+| **YAGNI** | Only implement current requirements |
+
+---
+
 ## Quality Thresholds
 
-| Metric | Limit |
-|--------|-------|
-| Function lines | ≤50 |
-| Nesting depth | ≤3 |
-| Complexity | ≤10 |
-| Duplicate lines | ≤3 |
+| Metric | Limit | Action |
+|--------|-------|--------|
+| Function lines | ≤50 | Split into smaller functions |
+| Nesting depth | ≤3 | Extract to helper functions |
+| Cyclomatic complexity | ≤10 | Simplify logic, use polymorphism |
+| Duplicate lines | ≤3 | Extract to shared function |
+| Parameter count | ≤5 | Use object parameters |
+| Class lines | ≤500 | Split by responsibility |
 
-## Code Quality Standards
+---
 
-### Function Design
+## Code Smells (Fix Immediately)
 
-Well-designed functions are:
+| Smell | Fix |
+|-------|-----|
+| Functions >50 lines | Split by responsibility |
+| Nesting >3 levels | Early return, extract functions |
+| Magic numbers | Named constants |
+| Commented-out code | Delete (use git history) |
+| God classes >500 lines | Split into focused classes |
+| Long parameter lists | Object parameters |
+| Cryptic names | Descriptive naming |
 
-- **Focused**: ≤50 lines, single responsibility
-- **Shallow**: ≤3 levels of nesting
-- **Simple**: ≤10 cyclomatic complexity
-- **Unique**: No duplicate blocks
-
-**Good structure example:**
-
-```typescript
-// Focused: does one thing well
-async function processOrder(order: Order): Promise<OrderResult> {
-  const validated = validateOrder(order);
-  const payment = await chargePayment(validated);
-  return createConfirmation(validated, payment);
-}
-
-// Each sub-function also focused
-function validateOrder(order: Order): ValidatedOrder {
-  if (!order.items.length) throw new ValidationError('Empty order');
-  if (!order.customer) throw new ValidationError('Missing customer');
-  return { ...order, validatedAt: new Date() };
-}
-```
-
-### SOLID Principles
-
-| Principle | Application |
-|-----------|-------------|
-| Single Responsibility | One reason to change per class/function |
-| Open-Closed | Extend via abstraction, stable core |
-| Liskov Substitution | Subtypes work wherever parent works |
-| Interface Segregation | Small, focused interfaces |
-| Dependency Inversion | Depend on abstractions, inject deps |
-
-### Configuration Values
-
-Use named constants and environment variables:
-
-```typescript
-// Good: Configurable, self-documenting
-const MAX_RETRY_ATTEMPTS = 3;
-const API_TIMEOUT_MS = parseInt(process.env.API_TIMEOUT || '5000');
-```
+---
 
 ## Test Coverage Standards
 
@@ -100,38 +96,27 @@ const API_TIMEOUT_MS = parseInt(process.env.API_TIMEOUT || '5000');
 
 ### Six Testing Dimensions
 
-1. **Functional** - Does it work correctly?
-2. **Boundary** - Edge cases handled?
-3. **Exception** - Errors handled gracefully?
-4. **Performance** - Meets speed requirements?
-5. **Security** - Protected against attacks?
-6. **Compatibility** - Works across environments?
+| Dimension | Focus |
+|-----------|-------|
+| **Functional** | Core business logic, happy paths |
+| **Boundary** | Edge cases, null/empty, limits |
+| **Exception** | Error handling, graceful degradation |
+| **Performance** | Response time, memory, N+1 queries |
+| **Security** | Input validation, auth, injection |
+| **Compatibility** | Cross-platform, responsive |
 
-## UI Design Quality
+---
 
-### Recommended Component Libraries
+## Philosophy Priority
 
-For distinctive design:
-- shadcn/ui, Galaxy UI, React Bits
-
-### Design Tokens
-
-Use tokens for consistent theming:
-
-```typescript
-const Card = styled.div`
-  background: var(--color-surface);
-  border-radius: var(--radius-md);
-  padding: var(--space-4);
-`;
+```
+User Value > Technical Showoff
+Code Quality > Development Speed
+Systems Thinking > Fragmented Execution
+Test-First > Ship-Then-Test
 ```
 
-### Visual Distinctiveness
-
-- Bold typography with clear hierarchy
-- Intentional color palette
-- Consistent spacing system
-- Purposeful motion/animation
+---
 
 ## Output Format
 
@@ -143,7 +128,10 @@ Provide guidance in Chinese at runtime:
 
 检查结果：
 - {具体发现}
-- {改进建议}
+- {违反的原则}
+
+改进建议：
+- {具体修改方案}
 
 参考：REFERENCE.md {section}
 ========================
