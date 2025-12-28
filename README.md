@@ -10,7 +10,7 @@
 
 [![Version](https://img.shields.io/badge/version-4.2.0-blue)](docs/CHANGELOG.md)
 [![Status](https://img.shields.io/badge/status-production--ready-green)](tests/verify-documentation-consistency.sh)
-[![Skills](https://img.shields.io/badge/skills-6-orange)](config/ultra-skills-guide.md)
+[![Skills](https://img.shields.io/badge/skills-10-orange)](config/ultra-skills-guide.md)
 [![Official Compliance](https://img.shields.io/badge/official-100%25%20native-brightgreen)](https://docs.claude.com/claude-code)
 
 </div>
@@ -66,11 +66,13 @@ New principles added to CLAUDE.md:
 - **Consolidated**: All rules now in CLAUDE.md
 - **Benefit**: One file to maintain, clearer ownership
 
-### 4. Streamlined Skills (8 → 6)
+### 4. Expanded Skills (6 → 10)
 
-Removed rarely-used skills:
-- `compressing-context` (manual context management preferred)
-- `automating-e2e-tests` (integrated into ultra-test workflow)
+New domain-specific skills added:
+- `frontend` - React/Vue/Next.js patterns, Core Web Vitals, accessibility
+- `backend` - Node.js/Python/Go patterns, API design, security
+- `smart-contract` - Solidity patterns, security audit, gas optimization
+- `skill-creator` - Guide for creating new skills
 
 ### 5. Streamlined Commands (9 → 8)
 
@@ -103,7 +105,7 @@ Ultra Builder Pro 4.2 is a **complete AI-powered development workflow system** d
 ### Core Features
 
 - **Structured 7-Phase Workflow**: Standardized development process
-- **6 Automated Skills**: Real-time quality guards with **native auto-activation**
+- **10 Automated Skills**: Quality guards + domain expertise with **native auto-activation**
 - **4 Expert Agents**: Specialized sub-agents for research, architecture, QA, performance
 - **Modular Documentation**: On-demand loading
 - **2 MCP Integrations**: Context7 (docs) + Exa (code search)
@@ -114,7 +116,7 @@ Ultra Builder Pro 4.2 is a **complete AI-powered development workflow system** d
 | Metric | Before | After | Improvement |
 |--------|--------|-------|-------------|
 | **Prompt Lines** | ~2,175 | ~898 | **-59%** |
-| **Skills Count** | 8 | 6 | **-25%** |
+| **Skills Count** | 6 | 10 | **+67%** (domain skills) |
 | **Config Files** | 2 (CLAUDE.md + config.json) | 1 (CLAUDE.md) | **-50%** |
 | **Agent Verbosity** | 441 lines (QA) | 128 lines | **-71%** |
 
@@ -132,13 +134,17 @@ Ultra Builder Pro 4.2.0
 │   ├── permissions.deny               # Sensitive file protection
 │   └── alwaysThinkingEnabled          # Extended thinking enabled
 │
-├── skills/                            # 6 Automated Skills (native activation)
-│   ├── guarding-quality/              # Code quality enforcement
+├── skills/                            # 10 Automated Skills (native activation)
+│   ├── guarding-quality/              # SOLID principles + code quality
 │   ├── guarding-test-quality/         # TAS + fake test detection
-│   ├── guarding-git-workflow/         # Git safety + workflow
+│   ├── guarding-git-workflow/         # Git safety + parallel workflow
 │   ├── syncing-docs/                  # Documentation sync
 │   ├── syncing-status/                # Feature status tracking
-│   └── guiding-workflow/              # Workflow guidance
+│   ├── guiding-workflow/              # Workflow guidance
+│   ├── frontend/                      # React/Vue/Next.js patterns
+│   ├── backend/                       # Node.js/Python/Go patterns
+│   ├── smart-contract/                # Solidity + Foundry patterns
+│   └── skill-creator/                 # Guide for creating skills
 │
 ├── agents/                            # 4 Expert agents (Anthropic-compliant)
 │   ├── ultra-research-agent.md        # Technical research (sonnet)
@@ -225,18 +231,32 @@ Ultra Builder Pro 4.2.0
 
 ---
 
-## 6 Automated Skills
+## 10 Automated Skills
 
-### Skills Overview
+### Guard Skills (Quality Enforcement)
 
 | Skill | Trigger | Function |
 |-------|---------|----------|
-| **guarding-quality** | Edit code files | SOLID + code quality enforcement |
+| **guarding-quality** | Edit code files | SOLID principles + complexity limits |
 | **guarding-test-quality** | Edit test files | TAS calculation + fake test detection |
 | **guarding-git-workflow** | Git operations | Parallel workflow + conflict resolution |
+
+### Sync Skills (Automation)
+
+| Skill | Trigger | Function |
+|-------|---------|----------|
 | **syncing-docs** | Feature completion | Documentation sync reminders |
 | **syncing-status** | Task/test completion | Feature status tracking |
 | **guiding-workflow** | Phase completion | Next-step suggestions |
+
+### Domain Skills (Specialized Expertise)
+
+| Skill | Trigger | Function |
+|-------|---------|----------|
+| **frontend** | React/Vue/Next.js code | Component patterns, Core Web Vitals, accessibility |
+| **backend** | API/DB/server code | Express/FastAPI/Gin patterns, OWASP security |
+| **smart-contract** | Solidity code | Security audit, gas optimization, Foundry tests |
+| **skill-creator** | Creating new skills | Skill structure guide, packaging scripts |
 
 ### Native Auto-Activation
 
@@ -315,7 +335,7 @@ cp -r Ultra-Builder-Pro-4.2/* ~/.claude/
 ### Verification
 
 ```bash
-# Check Skills (should be 6)
+# Check Skills (should be 10)
 ls ~/.claude/skills/ | wc -l
 
 # Check Commands (should be 8)
@@ -330,13 +350,14 @@ claude
 
 ## Version History
 
-### v4.2.0 (2025-12-28) - Anthropic Compliance Release
+### v4.2.0 (2025-12-28) - Anthropic Compliance + Domain Skills
 
 - **Prompt Engineering**: All prompts rewritten following Anthropic best practices
 - **Intellectual Honesty**: New framework for principled pushback
 - **Parallel Development**: Git workflow supporting concurrent task execution
 - **Single Source**: Removed config.json, consolidated to CLAUDE.md
-- **Skills Reduction**: 8 → 6 Skills (-25%)
+- **Domain Skills**: Added frontend, backend, smart-contract, skill-creator (6 → 10)
+- **Separation of Concerns**: guarding-quality → principles only, implementation → domain skills
 - **Agent Optimization**: -71% verbosity (QA agent 441 → 128 lines)
 - **Positive Framing**: Eliminated negative instruction patterns
 
@@ -379,7 +400,7 @@ claude
 
 ### Reference
 
-- **[Skills Guide](config/ultra-skills-guide.md)** - All 6 Skills detailed
+- **[Skills Guide](config/ultra-skills-guide.md)** - All 10 Skills detailed
 - **[MCP Guide](config/ultra-mcp-guide.md)** - MCP decision tree
 - **[SOLID Principles](guidelines/ultra-solid-principles.md)** - Code quality
 - **[Testing Philosophy](guidelines/ultra-testing-philosophy.md)** - Anti-patterns + TAS
