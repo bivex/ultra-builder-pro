@@ -6,445 +6,161 @@ allowed-tools: Read, Write, Edit, Bash, TodoWrite, Grep, Glob, Task
 
 # /ultra-dev
 
-## Purpose
-
 Execute development tasks using TDD workflow with native task management.
 
 ## Arguments
 
 - `$1`: Task ID (if empty, auto-select next pending task)
 
-## Bypass Flags (REMOVED)
+---
 
-**The following flags have been REMOVED to enforce quality**:
-- ~~`no-branch`~~ - Independent branches are mandatory
-- ~~`skip-tests`~~ - TDD workflow is mandatory
+## Pre-Execution Validation (MANDATORY)
 
-See `guidelines/ultra-testing-philosophy.md` for testing philosophy.
+**Before writing ANY code, you MUST perform these three validations. If any validation fails, STOP and report the failure to the user with the solution. Do NOT proceed with development.**
 
-## Pre-Execution Checks (HARD BLOCKS)
+### Validation 1: Specification Exists
 
-**⚠️ These checks are MANDATORY and CANNOT be bypassed. Development BLOCKED until all pass.**
+**What to check**: Read `.ultra/tasks/tasks.json` and verify the target task has a `trace_to` field pointing to a valid specification file.
 
-### BLOCK 1: Specification Not Confirmed
+**Why this matters**: Development without specification leads to mock code, hardcoded values, and degraded implementations. The spec provides the contract that tests verify against.
 
-**Check**: Does the task have a confirmed specification?
+**If validation fails**:
+- Report: "❌ 任务 #{id} 没有关联规范 (trace_to 字段缺失)"
+- Solution: "请先运行 /ultra-research 建立规范，或在 tasks.json 中添加 trace_to 字段"
+- STOP here. Do not proceed.
 
-```bash
-# For existing projects with tasks
-if [ -f ".ultra/tasks/tasks.json" ]; then
-  # Check if task has trace_to field pointing to valid spec
-  TASK_TRACE=$(cat .ultra/tasks/tasks.json | grep -A5 "\"id\": \"${TASK_ID}\"" | grep "trace_to")
-  if [ -z "$TASK_TRACE" ]; then
-    # BLOCK: No specification trace
-    echo "❌ BLOCKED: Task has no trace_to specification"
-    exit 1
-  fi
-fi
+**If validation passes**: Continue to Validation 2.
 
-# For new features, check if proposal exists
-if [ ! -f ".ultra/changes/task-${TASK_ID}/proposal.md" ] && [ ! -f ".ultra/specs/product.md" ]; then
-  # BLOCK: No specification found
-  echo "❌ BLOCKED: No specification found"
-  exit 1
-fi
-```
+### Validation 2: Feature Branch Active
 
-**Block Message (Chinese)**:
-```
-❌ 开发被阻断：规范未确认
+**What to check**: Run `git branch --show-current` and verify the result is NOT `main` or `master`.
 
-原因：
-- 任务 #{id} 没有关联的规范文档
-- 或 .ultra/specs/product.md 不存在
+**Why this matters**: Main branch must remain deployable at all times. Each task requires an independent branch so changes can be reverted individually without affecting other work.
 
-解决方案：
-1. 运行 /ultra-research 完成规范研究
-2. 或确保 tasks.json 中的 trace_to 字段指向有效规范
+**If validation fails**:
+- Report: "❌ 当前在 main/master 分支，禁止直接开发"
+- Solution: "请运行: git checkout -b feat/task-{id}-{slug}"
+- STOP here. Do not proceed.
 
-阻断原因：无规范开发会导致 mock/降级/静态编码，违反 Spec-Driven Development 原则。
-```
+**If validation passes**: Continue to Validation 3.
 
-### BLOCK 2: Main Branch Development Forbidden
+### Validation 3: Dependencies Completed
 
-**Check**: Are we on main/master branch?
+**What to check**: Read `.ultra/tasks/tasks.json`, find the target task's `dependencies` array, and verify each dependency task has `status: "completed"`.
 
-```bash
-CURRENT_BRANCH=$(git branch --show-current 2>/dev/null)
-if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
-  # BLOCK: Cannot develop on main branch
-  echo "❌ BLOCKED: Development on main/master branch is forbidden"
-  exit 1
-fi
-```
+**Why this matters**: Building on incomplete dependencies forces mock implementations or static workarounds. Complete dependencies provide real APIs and data structures to code against.
 
-**Block Message (Chinese)**:
-```
-❌ 开发被阻断：禁止在主分支开发
+**If validation fails**:
+- Report: "❌ 依赖任务未完成: Task #{dep_id} (状态: {status})"
+- Solution: "请先完成依赖任务，或使用 /ultra-plan 调整任务顺序"
+- STOP here. Do not proceed.
 
-当前分支：main/master
-期望分支：feat/task-{id}-{slug}
-
-解决方案：
-git checkout -b feat/task-{id}-{slug}
-
-阻断原因：主分支必须保持可部署状态，所有开发必须在独立分支进行。
-```
-
-### BLOCK 3: Dependencies Not Satisfied
-
-**Check**: Are all task dependencies completed?
-
-```bash
-# Check if task has dependencies
-DEPS=$(cat .ultra/tasks/tasks.json | jq -r ".tasks[] | select(.id==\"${TASK_ID}\") | .dependencies[]?" 2>/dev/null)
-for DEP in $DEPS; do
-  DEP_STATUS=$(cat .ultra/tasks/tasks.json | jq -r ".tasks[] | select(.id==\"$DEP\") | .status")
-  if [ "$DEP_STATUS" != "completed" ]; then
-    # BLOCK: Dependency not completed
-    echo "❌ BLOCKED: Dependency task #$DEP is not completed"
-    exit 1
-  fi
-done
-```
-
-**Block Message (Chinese)**:
-```
-❌ 开发被阻断：依赖任务未完成
-
-任务 #{id} 依赖以下未完成任务：
-- Task #{dep_id}: {dep_title} (状态: {dep_status})
-
-解决方案：
-先完成依赖任务，或使用 /ultra-plan 重新评估任务顺序
-
-阻断原因：跳过依赖会导致代码不完整或需要 mock/静态编码绕过。
-```
+**If all validations pass**: Proceed to Development Workflow.
 
 ---
 
-### Soft Warnings (Non-blocking)
+## Development Workflow
 
-Display warnings but allow execution:
-- Check for in-progress tasks → Warn if found, suggest completing first
-- Check git status → Suggest commit/stash if uncommitted changes
+### Step 1: Task Selection and Context
 
-## Workflow
+1. Read `.ultra/tasks/tasks.json`
+2. If task ID provided, select that task; otherwise select first task with `status: "pending"`
+3. Display task context to user: ID, title, complexity, dependencies, description
+4. Update task status to `"in_progress"` in tasks.json
+5. Use TodoWrite to track progress
 
-### 1. Task Selection
-
-- Use `$1` task ID, or auto-select next pending task
-- Display task context: ID, title, complexity, dependencies, description
-- Mark task `"in_progress"` in `.ultra/tasks/tasks.json`
-
-**Agent Delegation** (auto-triggered for complex tasks):
+**For complex tasks** (complexity >= 7 AND type == "architecture"):
+Delegate to ultra-architect-agent using the Task tool:
 ```
-If task.complexity >= 7 AND task.type == "architecture":
-  Task(subagent_type="ultra-architect-agent",
-       prompt="Design implementation approach for task #{id}: {title}.
-               Analyze SOLID compliance, scalability needs, and provide trade-off analysis.")
+Task(subagent_type="ultra-architect-agent",
+     prompt="Design implementation approach for task #{id}: {title}.
+             Provide SOLID compliance analysis and trade-off recommendations.")
 ```
 
-### 2. Development Branch
+### Step 2: Create Feature Branch
 
-Create independent branch per task:
-```bash
-git checkout -b feat/task-{id}-{slug}
-```
+Run: `git checkout -b feat/task-{id}-{slug}`
 
-**Note**: Workflow enforcement is handled by `guarding-git-workflow` skill. See `@guidelines/ultra-git-workflow.md` for complete branch workflow rules.
+Where `{slug}` is a 2-3 word lowercase hyphenated description of the task.
 
-### 2.7. Create Changes Directory (OpenSpec Pattern)
+### Step 3: Create Changes Directory
 
-Create isolated workspace for feature proposals following OpenSpec two-folder pattern:
-
-**Directory structure**:
-```bash
-mkdir -p .ultra/changes/task-{id}/specs
-```
-
-**Files to create**:
+Create the OpenSpec workspace:
 ```
 .ultra/changes/task-{id}/
-├── proposal.md          # Feature overview and rationale
-├── tasks.md             # Implementation checklist (copy from tasks.json)
-└── specs/               # Spec deltas (optional, only if specs change)
-    ├── product.md       # New/modified user stories
-    └── architecture.md  # Architecture changes
+├── proposal.md     # Feature overview and rationale
+├── tasks.md        # Copy task details from tasks.json
+└── specs/          # Only if modifying specifications
 ```
 
-**proposal.md template**:
-```markdown
-# Feature: [Task Title]
+### Step 4: TDD Development Cycle
 
-**Task ID**: {id}
-**Status**: In Progress
-**Branch**: feat/task-{id}-{slug}
+**You MUST follow RED → GREEN → REFACTOR strictly. Do NOT write implementation before tests.**
 
-## Overview
-[What is being built]
+**RED Phase**: Write failing tests first
+- Cover 6 dimensions: Functional, Boundary, Exception, Performance, Security, Compatibility
+- Tests MUST fail initially (verifies tests are meaningful)
+- Run tests to confirm failure
 
-## Rationale
-[Why this change is needed - link to requirement]
+**GREEN Phase**: Write minimum code to pass tests
+- Only enough code to make tests pass
+- No premature optimization or extra features
+- Run tests to confirm all pass
 
-## Impact Assessment
-- **User Stories Affected**: [List from specs/product.md]
-- **Architecture Changes**: [Yes/No - describe if yes]
-- **Breaking Changes**: [Yes/No - list if yes]
+**REFACTOR Phase**: Improve code quality
+- Apply SOLID principles
+- Remove duplication (DRY)
+- Simplify complexity (KISS)
+- Remove unused code (YAGNI)
+- Tests must still pass after refactoring
 
-## Requirements Trace
-- Traces to: specs/product.md#{user-story-id}
-```
+### Step 5: Quality Gates
 
-**tasks.md content**: Copy task details from .ultra/tasks/tasks.json for tracking
+**Before marking task complete, verify ALL gates pass:**
 
-**specs/ usage** (optional):
-- Create specs/product.md if adding/modifying user stories
-- Create specs/architecture.md if changing technology decisions
-- These are **deltas** (what's new/changed), not full copies
-- Will be merged back to main specs/ after task completion
+| Gate | Requirement | How to Verify |
+|------|-------------|---------------|
+| G1 | Tests pass | `npm test` exits with 0 |
+| G2 | Coverage ≥80% | `npm test -- --coverage` |
+| G3 | TDD verified | RED→GREEN→REFACTOR completed |
+| G4 | No tautologies | No `expect(true).toBe(true)` patterns |
+| G5 | No skipped tests | Max 1 `.skip()` allowed |
+| G6 | 6D coverage | All dimensions have tests |
 
-**Output** (Chinese): Report changes directory creation, proposal template ready
+**TAS Score Requirement**: guarding-test-quality skill calculates Test Authenticity Score.
+- TAS ≥70% required (Grade A/B)
+- TAS <70% blocks completion (Grade C/D/F)
 
-### 3. TDD Development Cycle
+### Step 6: Commit and Merge
 
-**RED → GREEN → REFACTOR**:
-- **RED**: Write failing tests (6 dimensions: Functional, Boundary, Exception, Performance, Security, Compatibility)
-- **GREEN**: Implement minimum code to pass
-- **REFACTOR**: Improve quality (SOLID/DRY/KISS/YAGNI)
+1. Commit with conventional format: `feat(scope): description`
+2. Switch to main: `git checkout main`
+3. Pull latest: `git pull origin main`
+4. Merge with history: `git merge --no-ff feat/task-{id}-{slug}`
+5. Push: `git push origin main`
+6. Delete branch: `git branch -d feat/task-{id}-{slug}`
+7. Update task status to `"completed"` in tasks.json
+8. Archive changes: `mv .ultra/changes/task-{id} .ultra/changes/archive/`
 
-**Tool Selection**:
-- Small projects (<50 files): Grep/Glob + Edit
-- Large projects (>100 files): Use built-in tools (explicit instruction required)
+### Step 7: Report Completion
 
-**Reference**: `@config/ultra-mcp-guide.md` for tool selection decision tree
+Display completion message in Chinese including:
+- Commit hash
+- Branch merge status
+- Project progress (completed/total tasks)
+- Next steps suggestion
 
-### 4. Commit & Update
-
-- Commit with conventional format (Git Workflow Guardian assists)
-- Update task status in `tasks.json`
-- Add implementation notes
-
-### 5. Quality Gates (6 Mandatory)
-
-**⚠️ ALL gates must pass before marking task complete. No exceptions.**
-
-| Gate | Requirement | Verification |
-|------|-------------|--------------|
-| **G1** | Tests pass | `npm test` exit code 0 |
-| **G2** | Coverage ≥80% | `npm test -- --coverage` |
-| **G3** | TDD phases verified | RED→GREEN→REFACTOR completed |
-| **G4** | No tautologies | No `expect(true).toBe(true)` patterns |
-| **G5** | No skipped tests | Max 1 `.skip()` allowed |
-| **G6** | 6D coverage | All dimensions tested |
-
-**Test Authenticity Score (TAS)**:
-- `guarding-test-quality` skill auto-calculates TAS
-- **TAS ≥70% required** (Grade A/B pass, Grade C/D/F blocked)
-- Components: Mock Ratio (25%), Assertion Quality (35%), Real Execution (25%), Pattern Compliance (15%)
-
-**Blocking Conditions**:
-- ❌ TAS < 70% → Task cannot complete
-- ❌ Critical anti-patterns (tautology, empty tests) → Task cannot complete
-- ❌ Zero assertions in test file → Task cannot complete
-
-**Reference**: `guidelines/ultra-testing-philosophy.md` for anti-pattern examples
-
-### 6. Merge to Main & Clean Up
-
-**Prerequisites**: All Quality Gates must pass
-
-### 6.1. Merge Spec Deltas (if exists)
-
-**Check for spec deltas**:
-```bash
-if [ -d ".ultra/changes/task-{id}/specs" ]; then
-  echo "Spec deltas detected, merging back to main specs/"
-fi
-```
-
-**Merge process** (if spec deltas exist):
-
-1. **Review changes**:
-   - Read `.ultra/changes/task-{id}/specs/product.md` (if exists)
-   - Read `.ultra/changes/task-{id}/specs/architecture.md` (if exists)
-   - Verify alignment with implemented code
-
-2. **Merge to main specs**:
-   - Append new user stories to `specs/product.md`
-   - Update technology stack in `specs/architecture.md`
-   - Update traceability: Ensure task.trace_to matches merged specs
-
-3. **Archive changes**:
-   ```bash
-   mkdir -p .ultra/changes/archive
-   mv .ultra/changes/task-{id} .ultra/changes/archive/task-{id}-$(date +%Y-%m-%d)
-   ```
-
-**Output** (Chinese - Detailed status):
-```
-📋 Spec Delta Merge Status
-========================
-✅ Reviewed spec changes in .ultra/changes/task-{id}/specs/
-
-Updated sections:
-- specs/product.md #{section-id} (new user story added)
-- specs/architecture.md #{section-id} (technology decision updated)
-
-Traceability verified:
-- task.trace_to matches merged specs: ✅
-
-Changes archived:
-- .ultra/changes/task-{id} → .ultra/changes/archive/task-{id}-{date}
-```
-
-### 6.2. Merge Branch to Main
-
-**Execution**:
-```bash
-# 1. Switch to main branch
-git checkout main
-
-# 2. Pull latest changes (avoid conflicts)
-git pull origin main
-
-# 3. Merge feature branch (--no-ff preserves history)
-git merge --no-ff feat/task-{id}-{slug}
-
-# 4. Push to remote (if configured)
-git push origin main
-
-# 5. Delete local feature branch
-git branch -d feat/task-{id}-{slug}
-
-# 6. Delete remote branch (if exists)
-git push origin --delete feat/task-{id}-{slug}
-```
-
-**Mark task as "completed"** in `.ultra/tasks/tasks.json`
-
-### 6.3. Update Feature Status (MANDATORY)
-
-**⚠️ CRITICAL: This step is NON-OPTIONAL. Do NOT skip under any circumstances.**
-
-**Before displaying "Task Completed" message**, you MUST execute these steps:
-
-**Step 1: Read current feature status**
-```bash
-cat .ultra/docs/feature-status.json
-```
-
-**Step 2: Check if entry exists for current task**
-- If entry with matching `taskId` exists → Skip creation (already recorded)
-- If NO entry exists → Proceed to Step 3
-
-**Step 3: Create new entry** (execute, not just describe)
-```bash
-# Get task info from context
-TASK_ID="${current_task_id}"
-TASK_TITLE="${current_task_title}"
-COMMIT=$(git rev-parse HEAD 2>/dev/null || echo "no-commit")
-BRANCH=$(git branch --show-current 2>/dev/null || echo "main")
-TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-
-# Create the feature entry JSON
-NEW_ENTRY='{
-  "id": "feat-'$TASK_ID'",
-  "name": "'$TASK_TITLE'",
-  "status": "pending",
-  "taskId": "'$TASK_ID'",
-  "implementedAt": "'$TIMESTAMP'",
-  "commit": "'$COMMIT'",
-  "branch": "'$BRANCH'"
-}'
-
-# Update feature-status.json (add new entry to features array)
-```
-
-**Step 4: Verify update succeeded**
-```bash
-cat .ultra/docs/feature-status.json | grep "feat-${TASK_ID}"
-# Must show the newly created entry
-```
-
-**Output Format** (Chinese at runtime):
-```
-Task #{id} completed message including:
-   - Commit hash
-   - Branch merge status: feat/task-{id} → main
-   - Feature status recorded: pending (awaiting /ultra-test)
-   - Project progress: {completed}/{total} tasks
-```
-
-**Failure Handling**:
-If feature-status.json update fails:
-1. Display warning (Chinese at runtime)
-2. Log error to .ultra/docs/status-sync.log (if available)
-3. Continue with task completion (do NOT block)
-4. syncing-status Skill will auto-fix on next trigger
-
-**Output** (Example structure - output in Chinese at runtime per Language Protocol):
-```
-🎉 Task #{id} Completed!
-========================
-
-✅ Development Completed
-   - All code committed: feat/task-{id}-{slug}
-   - TDD cycle: RED → GREEN → REFACTOR ✅
-   - Code quality checks: SOLID principles passed ✅
-
-✅ Branch Merge Completed
-   - Switched to main branch
-   - Pulled latest code: main up-to-date
-   - Merged: feat/task-{id}-{slug} → main (--no-ff)
-   - Pushed to remote: origin/main
-   - Deleted local branch: feat/task-{id}-{slug} ✅
-   - Deleted remote branch: origin/feat/task-{id}-{slug} ✅
-
-✅ Spec Updates (if any)
-   - specs/product.md: [updated section]
-   - specs/architecture.md: [updated section]
-   - Changes archived to: .ultra/changes/archive/task-{id}-{date}
-
-✅ Task Status Updated
-   - .ultra/tasks/tasks.json: task #{id} → "completed"
-   - Completion time: {timestamp}
-
-========================
-📊 Project Progress
-   - Completed: X/Y tasks ({percentage}%)
-   - In progress: 0 tasks
-   - Pending: Y-X tasks
-
-🚀 Next Steps
-   - Run /ultra-test to verify all tests pass
-   - Or run /ultra-dev to continue next task
-   - Or run /ultra-status to view overall progress
-```
+---
 
 ## Integration
 
-- **Skills**: guarding-quality, guarding-git-workflow (auto-activate)
-- **Agents**: ultra-architect-agent (for complex design)
-- **Next**: `/ultra-test` or `/ultra-dev [next-task-id]`
+- **Skills activated**: guarding-quality, guarding-git-workflow, guarding-test-quality
+- **Agents available**: ultra-architect-agent (for complexity >= 7)
+- **Next command**: `/ultra-test` or `/ultra-dev [next-task-id]`
 
-## Usage Examples
+## Usage
 
 ```bash
-/ultra-dev              # Auto-select next task
-/ultra-dev 5            # Work on task 5
+/ultra-dev              # Auto-select next pending task
+/ultra-dev 5            # Work on task #5
 ```
-
-## Output Format
-
-**Standard output structure**: See `@config/ultra-command-output-template.md` for the complete 6-section format.
-
-**Command icon**: 💻
-
-**Example output**: See template Section 7.4 for ultra-dev specific example (includes detailed merge back report).
-
-## References
-
-- @workflows/ultra-development-workflow.md - Complete TDD workflow
-- @guidelines/ultra-solid-principles.md - Code quality standards
-- @config/ultra-mcp-guide.md - Tool selection guide
