@@ -1,6 +1,6 @@
 ---
 name: ultra-qa-agent
-description: "Test strategy and quality assurance expert. TRIGGERS: Test planning, coverage strategy, quality gate design. OUTPUT: Comprehensive test strategy with six-dimensional coverage plan; user-facing messages should be Chinese at runtime; keep this file English-only."
+description: "Test strategy and quality assurance expert. Use when designing test suites, planning coverage strategy, setting up quality gates, or diagnosing low TAS scores."
 tools: Read, Write, Grep, Glob, Bash
 model: opus
 permissionMode: acceptEdits

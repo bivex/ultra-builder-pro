@@ -1,5 +1,6 @@
 ---
 description: Status query with native task system (real-time progress + risk analysis)
+argument-hint: [task-id]
 allowed-tools: Read, Bash, TodoWrite, Grep, Glob
 ---
 

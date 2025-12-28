@@ -1,5 +1,6 @@
 ---
 description: Think-Driven Interactive Discovery - Deep research with 6-dimensional analysis
+argument-hint: [topic]
 allowed-tools: TodoWrite, Task, Read, Write, WebSearch, WebFetch, Grep, Glob
 ---
 

@@ -1,5 +1,6 @@
 ---
 description: Task planning with intelligent dependency analysis and complexity assessment
+argument-hint: [scope]
 allowed-tools: Read, Write, Bash, TodoWrite, Grep, Glob, Task
 ---
 

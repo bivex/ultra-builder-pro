@@ -3,16 +3,16 @@ description: Manually trigger session archive and memory reset
 allowed-tools: TodoWrite, Read, Write, Bash
 ---
 
-# /session-reset
+# /ultra-session-reset
 
 ## Purpose
 
-Immediately archives current session and clears L4 Session Memory to start fresh.
+Immediately archives current session and clears context to start fresh.
 
 ## Usage
 
 ```bash
-/session-reset [--keep-context]
+/ultra-session-reset
 ```
 
 **Options**:

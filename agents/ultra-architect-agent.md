@@ -1,6 +1,6 @@
 ---
 name: ultra-architect-agent
-description: "System architecture design expert. TRIGGERS: Architecture design, SOLID compliance analysis, scalability planning. OUTPUT: Architecture document with SOLID scorecard, diagrams, trade-off analysis; user messages in Chinese at runtime."
+description: "Expert software architect for system design. Use when designing new systems, evaluating architecture patterns, analyzing SOLID compliance, or planning for scalability."
 tools: Read, Write, Grep, Glob, TodoWrite
 model: opus
 permissionMode: acceptEdits

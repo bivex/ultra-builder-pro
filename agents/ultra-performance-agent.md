@@ -1,6 +1,6 @@
 ---
 name: ultra-performance-agent
-description: "Performance optimization expert. TRIGGERS: Core Web Vitals optimization, bottleneck analysis, load time improvement. OUTPUT: Performance report with metrics, bottleneck analysis, optimization recommendations; user messages in Chinese at runtime."
+description: "Performance optimization specialist. Use when optimizing Core Web Vitals, analyzing bottlenecks, improving load times, or profiling runtime performance."
 tools: Read, Write, Edit, Bash, Grep, Glob
 model: sonnet
 permissionMode: acceptEdits

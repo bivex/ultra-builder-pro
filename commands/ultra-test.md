@@ -1,5 +1,6 @@
 ---
 description: Comprehensive testing (six-dimensional coverage + Core Web Vitals)
+argument-hint: [scope]
 allowed-tools: TodoWrite, Bash, Read, Write, Task, Grep, Glob
 ---
 

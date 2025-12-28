@@ -1,6 +1,6 @@
 ---
 name: ultra-research-agent
-description: "Technical research specialist for /ultra-research Mode 2 and on-demand deep analysis. TRIGGERS: Technology comparisons, best-practices extraction, risk assessment. OUTPUT: Structured report with 6D scoring; user messages in Chinese at runtime."
+description: "Technical research specialist for evidence-based analysis. Use for technology comparisons, best-practice extraction, risk assessment, or deep technical investigation requiring web research."
 tools: WebSearch, WebFetch, Read, Write, Grep, Glob, Bash
 model: sonnet
 permissionMode: acceptEdits

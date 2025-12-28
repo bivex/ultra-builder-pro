@@ -1,5 +1,6 @@
 ---
 description: Delivery optimization (performance + security + documentation)
+argument-hint: [version-type]
 allowed-tools: TodoWrite, Task, Read, Write, Edit, Bash, Grep, Glob
 ---
 
