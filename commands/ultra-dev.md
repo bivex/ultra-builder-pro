@@ -22,12 +22,112 @@ Execute development tasks using TDD workflow with native task management.
 
 See `guidelines/ultra-testing-philosophy.md` for testing philosophy.
 
-## Pre-Execution Checks
+## Pre-Execution Checks (HARD BLOCKS)
 
-Display warnings (don't block execution):
-- Check for in-progress tasks → Warn if found
+**⚠️ These checks are MANDATORY and CANNOT be bypassed. Development BLOCKED until all pass.**
+
+### BLOCK 1: Specification Not Confirmed
+
+**Check**: Does the task have a confirmed specification?
+
+```bash
+# For existing projects with tasks
+if [ -f ".ultra/tasks/tasks.json" ]; then
+  # Check if task has trace_to field pointing to valid spec
+  TASK_TRACE=$(cat .ultra/tasks/tasks.json | grep -A5 "\"id\": \"${TASK_ID}\"" | grep "trace_to")
+  if [ -z "$TASK_TRACE" ]; then
+    # BLOCK: No specification trace
+    echo "❌ BLOCKED: Task has no trace_to specification"
+    exit 1
+  fi
+fi
+
+# For new features, check if proposal exists
+if [ ! -f ".ultra/changes/task-${TASK_ID}/proposal.md" ] && [ ! -f ".ultra/specs/product.md" ]; then
+  # BLOCK: No specification found
+  echo "❌ BLOCKED: No specification found"
+  exit 1
+fi
+```
+
+**Block Message (Chinese)**:
+```
+❌ 开发被阻断：规范未确认
+
+原因：
+- 任务 #{id} 没有关联的规范文档
+- 或 .ultra/specs/product.md 不存在
+
+解决方案：
+1. 运行 /ultra-research 完成规范研究
+2. 或确保 tasks.json 中的 trace_to 字段指向有效规范
+
+阻断原因：无规范开发会导致 mock/降级/静态编码，违反 Spec-Driven Development 原则。
+```
+
+### BLOCK 2: Main Branch Development Forbidden
+
+**Check**: Are we on main/master branch?
+
+```bash
+CURRENT_BRANCH=$(git branch --show-current 2>/dev/null)
+if [ "$CURRENT_BRANCH" = "main" ] || [ "$CURRENT_BRANCH" = "master" ]; then
+  # BLOCK: Cannot develop on main branch
+  echo "❌ BLOCKED: Development on main/master branch is forbidden"
+  exit 1
+fi
+```
+
+**Block Message (Chinese)**:
+```
+❌ 开发被阻断：禁止在主分支开发
+
+当前分支：main/master
+期望分支：feat/task-{id}-{slug}
+
+解决方案：
+git checkout -b feat/task-{id}-{slug}
+
+阻断原因：主分支必须保持可部署状态，所有开发必须在独立分支进行。
+```
+
+### BLOCK 3: Dependencies Not Satisfied
+
+**Check**: Are all task dependencies completed?
+
+```bash
+# Check if task has dependencies
+DEPS=$(cat .ultra/tasks/tasks.json | jq -r ".tasks[] | select(.id==\"${TASK_ID}\") | .dependencies[]?" 2>/dev/null)
+for DEP in $DEPS; do
+  DEP_STATUS=$(cat .ultra/tasks/tasks.json | jq -r ".tasks[] | select(.id==\"$DEP\") | .status")
+  if [ "$DEP_STATUS" != "completed" ]; then
+    # BLOCK: Dependency not completed
+    echo "❌ BLOCKED: Dependency task #$DEP is not completed"
+    exit 1
+  fi
+done
+```
+
+**Block Message (Chinese)**:
+```
+❌ 开发被阻断：依赖任务未完成
+
+任务 #{id} 依赖以下未完成任务：
+- Task #{dep_id}: {dep_title} (状态: {dep_status})
+
+解决方案：
+先完成依赖任务，或使用 /ultra-plan 重新评估任务顺序
+
+阻断原因：跳过依赖会导致代码不完整或需要 mock/静态编码绕过。
+```
+
+---
+
+### Soft Warnings (Non-blocking)
+
+Display warnings but allow execution:
+- Check for in-progress tasks → Warn if found, suggest completing first
 - Check git status → Suggest commit/stash if uncommitted changes
-- Validate task dependencies → Warn if dependencies incomplete
 
 ## Workflow
 
@@ -36,6 +136,14 @@ Display warnings (don't block execution):
 - Use `$1` task ID, or auto-select next pending task
 - Display task context: ID, title, complexity, dependencies, description
 - Mark task `"in_progress"` in `.ultra/tasks/tasks.json`
+
+**Agent Delegation** (auto-triggered for complex tasks):
+```
+If task.complexity >= 7 AND task.type == "architecture":
+  Task(subagent_type="ultra-architect-agent",
+       prompt="Design implementation approach for task #{id}: {title}.
+               Analyze SOLID compliance, scalability needs, and provide trade-off analysis.")
+```
 
 ### 2. Development Branch
 

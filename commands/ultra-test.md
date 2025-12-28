@@ -82,6 +82,14 @@ Quality Gate: ❌ BLOCKED (2 files below 70%)
 - ❌ Tautology detected (`expect(true).toBe(true)`) → Tests BLOCKED
 - ❌ Empty test body detected → Tests BLOCKED
 
+**Agent Delegation** (auto-triggered when TAS critically low):
+```
+If project average TAS < 50%:
+  Task(subagent_type="ultra-qa-agent",
+       prompt="Analyze test suite quality issues: {files_with_low_TAS}.
+               Provide comprehensive test strategy redesign with 6D coverage plan.")
+```
+
 **Reference**: `guidelines/ultra-testing-philosophy.md` for anti-pattern examples and fixes
 
 ---
