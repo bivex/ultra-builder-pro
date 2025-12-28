@@ -21,23 +21,30 @@ This skill activates during:
 | `scripts/git_safety_check.py` | Analyze git commands for risk |
 | `REFERENCE.md` | Detailed branch strategies and conventions |
 
-## Safe Git Workflow
+## Parallel Development Workflow
 
 ### Branch Lifecycle
 
-Each task follows this pattern:
+Multiple tasks can run in parallel:
 
 ```
 main (always deployable)
- ├── feat/task-1 → complete → merge → delete
- ├── feat/task-2 → complete → merge → delete
- └── feat/task-3 → complete → merge → delete
+ ├── feat/task-1 ──────→ rebase → merge    (Developer A)
+ ├── feat/task-2 ──────→ rebase → merge    (Developer B / parallel)
+ └── feat/task-3 ──────→ rebase → merge    (same developer / parallel)
 ```
 
+**Key principles:**
+- All branches created from latest main (`git checkout main && git pull` first)
+- Multiple tasks can run simultaneously
+- Rebase from main before merge to handle conflicts
+- Each merge is atomic and independently reversible
+
 **Benefits:**
+- Parallel development for team/multi-task scenarios
 - Main stays deployable for hotfixes
 - Each task independently reversible
-- Clean git history
+- Conflicts resolved before merge (not after)
 
 ### Branch Naming Convention
 
@@ -75,7 +82,28 @@ Run before high-risk operations:
 ```bash
 python scripts/git_safety_check.py "git push --force origin main"
 python scripts/git_safety_check.py --analyze-repo
+python scripts/git_safety_check.py --parallel-status  # Check parallel branches
 ```
+
+### Parallel Branch Sync (Before Merge)
+
+Always sync with main before merging:
+
+```bash
+git fetch origin
+git rebase origin/main
+# Resolve conflicts if any
+git checkout main && git merge --no-ff feat/task-{id}
+```
+
+### Conflict Resolution
+
+When parallel branches modify same files:
+
+1. **Rebase first**: `git rebase origin/main`
+2. **Resolve conflicts**: Edit conflicted files, `git add`, `git rebase --continue`
+3. **Test after resolve**: Run tests to verify integration
+4. **Then merge**: `git checkout main && git merge --no-ff <branch>`
 
 ## Commit Convention
 

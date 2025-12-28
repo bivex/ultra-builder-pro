@@ -44,16 +44,18 @@ Execute development tasks using TDD workflow with native task management.
 
 **If validation passes**: Continue to Validation 3.
 
-### Validation 3: Dependencies Completed
+### Validation 3: Dependencies Check (Soft Validation)
 
-**What to check**: Read `.ultra/tasks/tasks.json`, find the target task's `dependencies` array, and verify each dependency task has `status: "completed"`.
+**What to check**: Read `.ultra/tasks/tasks.json`, find the target task's `dependencies` array, and check each dependency task status.
 
-**Why this matters**: Building on incomplete dependencies forces mock implementations or static workarounds. Complete dependencies provide real APIs and data structures to code against.
+**Parallel Development Mode**: Dependencies are soft constraints. Tasks can run in parallel even if dependencies are incomplete.
 
-**If validation fails**:
-- Report: "❌ 依赖任务未完成: Task #{dep_id} (状态: {status})"
-- Solution: "请先完成依赖任务，或使用 /ultra-plan 调整任务顺序"
-- STOP here. Do not proceed.
+**If dependencies incomplete**:
+- Report: "⚠️ 依赖任务未完成: Task #{dep_id} (状态: {status})"
+- Warning: "并行开发模式：可继续开发，但需注意接口兼容性"
+- **Continue with development** (do not block)
+
+**If dependencies are `completed`**: No warning needed.
 
 **If all validations pass**: Proceed to Development Workflow.
 
@@ -77,11 +79,19 @@ Task(subagent_type="ultra-architect-agent",
              Provide SOLID compliance analysis and trade-off recommendations.")
 ```
 
-### Step 2: Create Feature Branch
+### Step 2: Create Feature Branch (from main)
 
-Run: `git checkout -b feat/task-{id}-{slug}`
+**Always start from latest main** (enables parallel development):
+
+```bash
+git checkout main
+git pull origin main
+git checkout -b feat/task-{id}-{slug}
+```
 
 Where `{slug}` is a 2-3 word lowercase hyphenated description of the task.
+
+**Why from main**: Ensures branch is based on latest stable code, enabling parallel work without blocking on other tasks.
 
 ### Step 3: Create Changes Directory
 
@@ -131,16 +141,27 @@ Create the OpenSpec workspace:
 - TAS ≥70% required (Grade A/B)
 - TAS <70% blocks completion (Grade C/D/F)
 
-### Step 6: Commit and Merge
+### Step 6: Sync, Merge, and Cleanup
+
+**Parallel-safe merge process:**
 
 1. Commit with conventional format: `feat(scope): description`
-2. Switch to main: `git checkout main`
-3. Pull latest: `git pull origin main`
-4. Merge with history: `git merge --no-ff feat/task-{id}-{slug}`
-5. Push: `git push origin main`
-6. Delete branch: `git branch -d feat/task-{id}-{slug}`
-7. Update task status to `"completed"` in tasks.json
-8. Archive changes: `mv .ultra/changes/task-{id} .ultra/changes/archive/`
+2. Sync with main (handle parallel changes):
+   ```bash
+   git fetch origin
+   git rebase origin/main
+   # If conflicts: resolve, git add, git rebase --continue
+   ```
+3. Run tests after rebase to verify integration
+4. Switch to main: `git checkout main`
+5. Pull latest: `git pull origin main`
+6. Merge with history: `git merge --no-ff feat/task-{id}-{slug}`
+7. Push: `git push origin main`
+8. Delete branch: `git branch -d feat/task-{id}-{slug}`
+9. Update task status to `"completed"` in tasks.json
+10. Archive changes: `mv .ultra/changes/task-{id} .ultra/changes/archive/`
+
+**Conflict resolution**: If rebase has conflicts, resolve them before merging. Never merge unresolved conflicts.
 
 ### Step 7: Report Completion
 

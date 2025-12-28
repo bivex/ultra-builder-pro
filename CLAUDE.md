@@ -208,17 +208,41 @@ Every merged feature works end-to-end. Partial implementations stay in feature b
 
 ## Git Workflow
 
-### Branch Strategy
+### Parallel Development Model
+
+```
+main (always deployable)
+ ├── feat/task-1 ──────→ rebase main → merge
+ ├── feat/task-2 ──────→ rebase main → merge  (parallel)
+ └── feat/task-3 ──────→ rebase main → merge  (parallel)
+```
+
+**Key principles:**
+- All branches created from latest main
+- Multiple tasks can run in parallel
+- Rebase from main before merge to resolve conflicts
+- Each merge is atomic and reversible
+
+### Branch Naming
 ```
 feat/task-{id}-{slug}     # New feature
 fix/bug-{id}-{slug}       # Bug fix
 refactor/{slug}           # Refactoring
 ```
 
+### Branch Lifecycle
+```bash
+git checkout main && git pull                    # Start from main
+git checkout -b feat/task-{id}-{slug}            # Create branch
+# ... development ...
+git fetch origin && git rebase origin/main      # Sync before merge
+git checkout main && git merge --no-ff <branch>  # Merge
+git branch -d <branch>                           # Cleanup
+```
+
 ### Commit Convention
 - Style: Conventional Commits
 - Co-author: `Claude <noreply@anthropic.com>`
-- Strategy: task → branch → merge → delete
 
 ---
 

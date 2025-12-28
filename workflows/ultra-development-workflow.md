@@ -186,9 +186,16 @@ Custom Flow → User-selected rounds (flexible)
 
 ## Phase 4: Development (/ultra-dev)
 
-**Purpose**: TDD-driven development with automatic task management and git integration.
+**Purpose**: TDD-driven development with parallel task support and git integration.
 
 **Command**: `/ultra-dev [task-id]` (if empty, auto-selects next pending task)
+
+### Parallel Development Mode
+
+Multiple tasks can run in parallel:
+- Dependencies are soft constraints (warning only, not blocking)
+- All branches created from latest main
+- Rebase from main before merge to resolve conflicts
 
 **TDD Cycle (MANDATORY)**:
 
@@ -202,20 +209,25 @@ Custom Flow → User-selected rounds (flexible)
 
 **Automatic Actions**:
 - Mark task `in_progress` in tasks.json
-- Create branch: `feat/task-{id}-{slug}`
+- Create branch from main: `git checkout main && git pull && git checkout -b feat/task-{id}-{slug}`
 - After GREEN: Commit with conventional format
 - Update task status + implementation notes
-- **After Quality Gates pass**: Merge to main and delete branch
+- **After Quality Gates pass**: Sync and merge to main
 
 **Quality Gates**: All tests passing, code quality checks passed, 6-dimensional coverage complete, documentation updated
 
-**Merge & Cleanup** (after Quality Gates):
+**Parallel-Safe Merge Process** (after Quality Gates):
 ```bash
+# Sync with main first (handle parallel changes)
+git fetch origin && git rebase origin/main
+# If conflicts: resolve, git add, git rebase --continue
+npm test  # Verify after rebase
+
+# Merge to main
 git checkout main && git pull origin main
 git merge --no-ff feat/task-{id}-{slug}
 git push origin main
 git branch -d feat/task-{id}-{slug}
-git push origin --delete feat/task-{id}-{slug}
 ```
 Mark task as `completed` in tasks.json
 

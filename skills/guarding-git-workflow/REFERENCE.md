@@ -1,23 +1,29 @@
 # Git Workflow - Complete Guide
 
-**Ultra Builder Pro 4.0** - Git workflow standards for version control and collaboration.
+**Ultra Builder Pro 4.2** - Git workflow standards for parallel development and collaboration.
 
 ---
 
-## ⚠️ CRITICAL: Workflow is Non-Negotiable
+## Parallel Development Model
 
-**THERE IS ONLY ONE WORKFLOW - Independent Task Branches**
+**Multiple tasks can run in parallel** - no blocking on dependencies.
 
 ```
-main (always active, never frozen)
- ├── feat/task-1-xxx (create → complete → merge → delete)
- ├── feat/task-2-yyy (create → complete → merge → delete)
- └── feat/task-3-zzz (create → complete → merge → delete)
+main (always deployable)
+ ├── feat/task-1 ──────→ rebase main → merge    (Developer A)
+ ├── feat/task-2 ──────→ rebase main → merge    (Developer B / parallel)
+ └── feat/task-3 ──────→ rebase main → merge    (same developer / parallel)
 ```
 
-**FORBIDDEN**: Unified/long-lived feature branches, freezing main, delaying merges, any "Option 1 vs Option 2"
+**Core Principles:**
+- All branches created from latest main
+- Multiple tasks can run simultaneously
+- Rebase from main before merge (resolve conflicts early)
+- Each merge is atomic and independently reversible
 
-**WHY**: Production projects MUST keep main branch deployable. Hotfixes cannot wait for 31 tasks to complete. Each task is independently reversible.
+**FORBIDDEN**: Long-lived feature branches, freezing main, merging without rebase sync
+
+**WHY**: Production projects MUST keep main branch deployable. Parallel development enables team collaboration and faster delivery. Each task is independently reversible.
 
 ---
 
@@ -145,19 +151,37 @@ git branch --show-current | grep -vE "^(main|master|develop|release/.*)$"
 
 ## Common Git Workflows
 
-### Feature Development
+### Feature Development (Parallel-Safe)
 ```bash
+# Always start from latest main
+git checkout main && git pull origin main
 git checkout -b feat/task-123-new-feature
+
+# Development work
 git add src/feature.ts
 git commit -m "feat: implement basic feature logic"
+
+# Before merge: sync with main (critical for parallel work)
 git fetch origin && git rebase origin/main
-git push origin feat/task-123-new-feature
-# Create PR, merge, then:
+# If conflicts: resolve, git add, git rebase --continue
+
+# Run tests after rebase
+npm test
+
+# Merge to main
 git checkout main && git pull origin main
+git merge --no-ff feat/task-123-new-feature
+git push origin main
 git branch -d feat/task-123-new-feature
 ```
 
-### Bug Fix
+### Parallel Development Tips
+- **Check parallel branches**: `git branch -a | grep feat/`
+- **See what's in flight**: `git log main..origin/feat/task-xxx --oneline`
+- **Resolve conflicts early**: Rebase frequently if working on overlapping code
+- **Check parallel status**: `python scripts/git_safety_check.py --parallel-status`
+
+### Bug Fix (Parallel-Safe)
 ```bash
 git checkout main && git pull origin main
 git checkout -b fix/bug-456-memory-leak
@@ -165,11 +189,42 @@ git add src/memory-management.ts
 git commit -m "fix: resolve memory leak in cache cleanup"
 git add tests/memory-management.test.ts
 git commit -m "test: add test for memory leak prevention"
-git push origin fix/bug-456-memory-leak
+
+# Before merge: sync with main (parallel-safe)
+git fetch origin && git rebase origin/main
+npm test
+
+# Merge to main
+git checkout main && git pull origin main
+git merge --no-ff fix/bug-456-memory-leak
+git push origin main
+git branch -d fix/bug-456-memory-leak
+
 # After merge, backport if needed:
 git checkout release/v1.0
 git cherry-pick <commit-hash>
 git push origin release/v1.0
+```
+
+### Conflict Resolution (Parallel Branches)
+When parallel branches modify same files:
+```bash
+# 1. Rebase first
+git fetch origin
+git rebase origin/main
+
+# 2. Resolve conflicts
+# Edit conflicted files, remove <<<<<<< HEAD markers
+git add resolved-file.ts
+git rebase --continue
+
+# 3. Test after resolve
+npm test
+
+# 4. Then merge
+git checkout main && git pull origin main
+git merge --no-ff <branch>
+git push origin main
 ```
 
 ### Hotfix (Production Emergency)
