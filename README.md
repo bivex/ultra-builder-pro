@@ -77,6 +77,23 @@ Removed rarely-used skills:
 Removed:
 - `ultra-session-reset` (consolidated into workflow)
 
+### 6. Parallel Development Workflow
+
+New git workflow supporting concurrent task development:
+
+```
+main (always deployable)
+ ├── feat/task-1 ──────→ rebase → merge
+ ├── feat/task-2 ──────→ rebase → merge (parallel)
+ └── feat/task-3 ──────→ rebase → merge (parallel)
+```
+
+**Key Features:**
+- Multiple tasks can run simultaneously
+- Dependencies are soft constraints (warning only, not blocking)
+- Rebase before merge ensures conflict resolution
+- Each merge is atomic and independently reversible
+
 ---
 
 ## System Overview
@@ -216,7 +233,7 @@ Ultra Builder Pro 4.2.0
 |-------|---------|----------|
 | **guarding-quality** | Edit code files | SOLID + code quality enforcement |
 | **guarding-test-quality** | Edit test files | TAS calculation + fake test detection |
-| **guarding-git-workflow** | Git operations | Git safety + workflow enforcement |
+| **guarding-git-workflow** | Git operations | Parallel workflow + conflict resolution |
 | **syncing-docs** | Feature completion | Documentation sync reminders |
 | **syncing-status** | Task/test completion | Feature status tracking |
 | **guiding-workflow** | Phase completion | Next-step suggestions |
@@ -274,7 +291,7 @@ All gates defined in CLAUDE.md (single source):
 | Coverage | ≥80% overall, 100% critical paths |
 | TAS | ≥70% Test Authenticity Score |
 | SOLID | Full compliance enforced |
-| Branch | task → branch → merge → delete |
+| Git | Parallel branches → rebase → merge → delete |
 
 ---
 
@@ -317,6 +334,7 @@ claude
 
 - **Prompt Engineering**: All prompts rewritten following Anthropic best practices
 - **Intellectual Honesty**: New framework for principled pushback
+- **Parallel Development**: Git workflow supporting concurrent task execution
 - **Single Source**: Removed config.json, consolidated to CLAUDE.md
 - **Skills Reduction**: 8 → 6 Skills (-25%)
 - **Agent Optimization**: -71% verbosity (QA agent 441 → 128 lines)
