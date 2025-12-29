@@ -95,6 +95,59 @@ If project average TAS < 50%:
 
 ---
 
+### 0.5: Codex Test Generation (Dual-Engine)
+
+**Before Claude Code writes tests, optionally let Codex generate test cases.**
+
+**When to Use**:
+- Coverage gap detected (< 80%)
+- Complex logic requires edge case coverage
+- Security-critical code needs penetration tests
+
+**Codex Test Generation**:
+```bash
+# Generate comprehensive tests for a file
+codex -q <<EOF
+Generate comprehensive test cases for the following code:
+$(cat {target_file})
+
+Requirements:
+1. Cover all branches and paths
+2. Include boundary tests (null, empty, max, min)
+3. Include exception tests (error handling)
+4. Include security tests (injection, XSS)
+5. Use vitest/jest syntax
+6. Mock only external dependencies (DB, API)
+7. Each test must have meaningful assertions
+
+Output complete test file code.
+EOF
+```
+
+**Codex Test Review**:
+```bash
+# Review existing tests for quality
+codex -q <<EOF
+Review the following test file for quality issues:
+$(cat {test_file})
+
+Check for:
+1. Tautology tests (expect(true).toBe(true))
+2. Over-mocking (internal modules mocked)
+3. Missing edge cases
+4. Weak assertions (only toHaveBeenCalled)
+
+Provide specific improvements with code.
+EOF
+```
+
+**Integration with TAS**:
+- Codex-generated tests are validated by TAS
+- TAS ≥ 70% required for generated tests
+- Regenerate if TAS < 70%
+
+---
+
 ### 1. Design Test Strategy
 
 Design comprehensive strategy covering all six dimensions:
@@ -320,9 +373,11 @@ If feature-status.json update fails:
 ## Integration
 
 - **Skills**:
-  - **guarding-test-quality** (NEW - TAS analysis, anti-pattern detection)
+  - **guarding-test-quality** (TAS analysis, anti-pattern detection)
+  - **codex-test-gen** (Codex test generation and review)
   - guarding-quality (six-dimensional coverage enforcement)
   - automating-e2e-tests (E2E testing, auto-activates on keywords)
+- **Dual-Engine**: Claude Code (test design) + Codex (test generation/review)
 - **Next**: `/ultra-deliver` for deployment prep
 
 ## Output Format

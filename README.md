@@ -1,16 +1,17 @@
-# Ultra Builder Pro 4.2
+# Ultra Builder Pro 4.3
 
 <div align="center">
 
-**Version 4.2.1 (Production Ready)**
+**Version 4.3.0 (Dual-Engine Collaborative Development)**
 
-*Production-Grade AI-Powered Development System for Claude Code*
+*Production-Grade AI-Powered Development System for Claude Code + Codex*
 
 ---
 
-[![Version](https://img.shields.io/badge/version-4.2.1-blue)](docs/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-4.3.0-blue)](docs/CHANGELOG.md)
 [![Status](https://img.shields.io/badge/status-production--ready-green)](tests/verify-documentation-consistency.sh)
-[![Skills](https://img.shields.io/badge/skills-10-orange)](config/ultra-skills-guide.md)
+[![Skills](https://img.shields.io/badge/skills-13-orange)](config/ultra-skills-guide.md)
+[![Dual-Engine](https://img.shields.io/badge/dual--engine-Claude%20%2B%20Codex-purple)](skills/codex-reviewer/SKILL.md)
 [![Official Compliance](https://img.shields.io/badge/official-100%25%20native-brightgreen)](https://docs.claude.com/claude-code)
 
 </div>
@@ -37,95 +38,121 @@ claude
 
 ---
 
-## What's New in 4.2.0
+## What's New in 4.3.0
 
-### 1. Anthropic Prompt Engineering Compliance
+### 🚀 Dual-Engine Collaborative Development
 
-All prompts rewritten following official Anthropic best practices:
-
-- **Positive Framing**: "DO this" instead of "DON'T do that"
-- **Core Principles**: 3-5 focused rules instead of exhaustive lists
-- **Concrete Examples**: Real code snippets over abstract descriptions
-- **Reduced Verbosity**: ultra-qa-agent reduced from 441 → 128 lines (-71%)
-
-### 2. Intellectual Honesty Framework
-
-New principles added to CLAUDE.md:
-
-| Principle | Description |
-|-----------|-------------|
-| Challenge Assumptions | Question user conclusions directly |
-| Mark Uncertainty | Distinguish Fact / Inference / Speculation |
-| Actionable Output | Concrete next steps with priorities |
-| Prioritize User Growth | Truth over comfort |
-| Verify Before Claiming | Query official docs first |
-
-### 3. Single Source Configuration
-
-- **Removed**: `.ultra-template/config.json`
-- **Consolidated**: All rules now in CLAUDE.md
-- **Benefit**: One file to maintain, clearer ownership
-
-### 4. Expanded Skills (6 → 10)
-
-New domain-specific skills added:
-- `frontend` - React/Vue/Next.js patterns, Core Web Vitals, accessibility
-- `backend` - Node.js/Python/Go patterns, API design, security
-- `smart-contract` - Solidity patterns, security audit, gas optimization
-- `skill-creator` - Guide for creating new skills
-
-### 5. Streamlined Commands (9 → 8)
-
-Removed:
-- `ultra-session-reset` (consolidated into workflow)
-
-### 6. Parallel Development Workflow
-
-New git workflow supporting concurrent task development:
+Ultra Builder Pro now supports **Claude Code + Codex** dual-engine collaboration:
 
 ```
-main (always deployable)
- ├── feat/task-1 ──────→ rebase → merge
- ├── feat/task-2 ──────→ rebase → merge (parallel)
- └── feat/task-3 ──────→ rebase → merge (parallel)
+Claude Code (Primary)          Codex (Reviewer)
+      │                              │
+      ├── Development ──────────────→│ Code Review
+      │                              │ (bugs, security, performance)
+      │←─────────────── Feedback ────┤
+      │                              │
+      ├── Tests ────────────────────→│ Test Generation
+      │                              │ (edge cases, security tests)
+      │←─────────────── New Tests ───┤
+      │                              │
+      ├── Documentation ────────────→│ Doc Enhancement
+      │                              │ (examples, FAQ, best practices)
+      │←─────────── Enhanced Docs ───┤
+      │                              │
+      └── Final Approval ────────────┘
 ```
 
 **Key Features:**
-- Multiple tasks can run simultaneously
-- Dependencies are soft constraints (warning only, not blocking)
-- Rebase before merge ensures conflict resolution
-- Each merge is atomic and independently reversible
+
+| Feature | Description |
+|---------|-------------|
+| **Codex Code Review** | After every Edit/Write, Codex reviews for bugs, security, performance |
+| **Stuck Detection** | If Claude Code fails same issue 3 times → Codex takes over fixing |
+| **Role Swap** | Codex fixes → Claude Code reviews (bidirectional collaboration) |
+| **Test Generation** | Codex generates comprehensive tests with 6D coverage |
+| **Doc Collaboration** | Claude drafts → Codex reviews/enhances → Claude finalizes |
+
+### New Codex Skills (10 → 13)
+
+| Skill | Trigger | Function |
+|-------|---------|----------|
+| **codex-reviewer** | Edit/Write on code files | 100-point code review with 4 dimensions |
+| **codex-test-gen** | Coverage gaps detected | 6-dimensional test generation |
+| **codex-doc-reviewer** | Documentation updates | Review + enhancement with examples |
+
+### New Hook: Codex Review Trigger
+
+```
+Edit/Write on .ts/.tsx/.js/.py/.go/...
+       ↓
+PostToolUse Hook triggers
+       ↓
+codex-review-trigger.sh activates
+       ↓
+Outputs: "🔍 CODEX REVIEW TRIGGERED"
+       ↓
+Suggests: `codex -q "Review {file} for bugs and security"`
+```
+
+### Stuck Detection & Role Swap
+
+```
+Normal Flow:
+  Claude Code → implement → Codex review → pass ✅
+
+Stuck Flow (same error 3x):
+  Claude Code → fail → fail → fail
+       ↓
+  ⚠️ STUCK DETECTION ACTIVATED
+       ↓
+  Codex → fix attempt → Claude Code review → pass ✅
+```
+
+### Quality Score System
+
+Codex reviews use 100-point scoring:
+
+| Dimension | Weight | Checks |
+|-----------|--------|--------|
+| Correctness | 40% | Logic errors, null checks, race conditions |
+| Security | 30% | Injection, XSS, CSRF, secrets exposure |
+| Performance | 20% | N+1, memory leaks, complexity |
+| Maintainability | 10% | Naming, complexity, coupling |
+
+**Threshold**: Score ≥ 80/100 required to proceed
 
 ---
 
 ## System Overview
 
-Ultra Builder Pro 4.2 is a **complete AI-powered development workflow system** designed for Claude Code.
+Ultra Builder Pro 4.3 is a **dual-engine AI-powered development workflow system** combining Claude Code and Codex.
 
 ### Core Features
 
+- **Dual-Engine Collaboration**: Claude Code (dev) + Codex (review/test/docs)
 - **Structured 7-Phase Workflow**: Standardized development process
-- **10 Automated Skills**: Quality guards + domain expertise with **native auto-activation**
+- **13 Automated Skills**: Quality guards + domain expertise + **Codex integration**
 - **4 Expert Agents**: Specialized sub-agents for research, architecture, QA, performance
-- **Modular Documentation**: On-demand loading
+- **Stuck Detection**: Automatic role swap when blocked
 - **2 MCP Integrations**: Context7 (docs) + Exa (code search)
 - **Bilingual Support**: Chinese output, English system files
 
-### Quantified Improvements (4.1.4 → 4.2.0)
+### Quantified Improvements (4.2.1 → 4.3.0)
 
 | Metric | Before | After | Improvement |
 |--------|--------|-------|-------------|
-| **Prompt Lines** | ~2,175 | ~898 | **-59%** |
-| **Skills Count** | 6 | 10 | **+67%** (domain skills) |
-| **Config Files** | 2 (CLAUDE.md + config.json) | 1 (CLAUDE.md) | **-50%** |
-| **Agent Verbosity** | 441 lines (QA) | 128 lines | **-71%** |
+| **Skills Count** | 10 | 13 | **+30%** (Codex skills) |
+| **Code Review** | Manual | Automated (Codex) | **100% coverage** |
+| **Test Generation** | Claude only | Claude + Codex | **6D coverage** |
+| **Doc Quality** | Single pass | Dual-engine review | **Enhanced** |
+| **Stuck Recovery** | Manual | Auto role swap | **Automated** |
 
 ---
 
 ## System Architecture
 
 ```
-Ultra Builder Pro 4.2.0
+Ultra Builder Pro 4.3.0 (Dual-Engine)
 │
 ├── CLAUDE.md                          # Single source of truth (config + principles)
 │
@@ -133,24 +160,38 @@ Ultra Builder Pro 4.2.0
 │   ├── permissions.allow              # Official tool permissions
 │   ├── permissions.deny               # Sensitive file protection
 │   └── hooks                          # UserPromptSubmit + PostToolUse hooks
+│       ├── UserPromptSubmit           # skill-activation-prompt.sh
+│       └── PostToolUse                # post-tool-use-tracker.sh + codex-review-trigger.sh
 │
 ├── hooks/                             # Hook implementations
 │   ├── skill-activation-prompt.ts     # Command-skill binding logic
 │   ├── skill-activation-prompt.sh     # Hook shell wrapper
-│   └── post-tool-use-tracker.sh       # File modification tracker
+│   ├── post-tool-use-tracker.sh       # File modification tracker
+│   └── codex-review-trigger.sh        # 🆕 Codex review auto-trigger
 │
-├── skills/                            # 10 Automated Skills (native activation)
-│   ├── skill-rules.json               # Command-skill bindings + trigger rules
+├── skills/                            # 13 Automated Skills (native + Codex)
+│   ├── skill-rules.json               # Command-skill bindings + dualEngineConfig
+│   │
+│   │   # Guard Skills (Quality Enforcement)
 │   ├── guarding-quality/              # SOLID principles + code quality
 │   ├── guarding-test-quality/         # TAS + fake test detection
 │   ├── guarding-git-workflow/         # Git safety + parallel workflow
+│   │
+│   │   # Sync Skills (Automation)
 │   ├── syncing-docs/                  # Documentation sync
 │   ├── syncing-status/                # Feature status tracking
 │   ├── guiding-workflow/              # Workflow guidance
+│   │
+│   │   # Domain Skills (Expertise)
 │   ├── frontend/                      # React/Vue/Next.js patterns
 │   ├── backend/                       # Node.js/Python/Go patterns
 │   ├── smart-contract/                # Solidity + Foundry patterns
-│   └── skill-creator/                 # Guide for creating skills
+│   ├── skill-creator/                 # Guide for creating skills
+│   │
+│   │   # 🆕 Codex Skills (Dual-Engine)
+│   ├── codex-reviewer/                # Code review (100-point scoring)
+│   ├── codex-test-gen/                # Test generation (6D coverage)
+│   └── codex-doc-reviewer/            # Doc review + enhancement
 │
 ├── agents/                            # 4 Expert agents (Anthropic-compliant)
 │   ├── ultra-research-agent.md        # Technical research (sonnet)
@@ -158,13 +199,13 @@ Ultra Builder Pro 4.2.0
 │   ├── ultra-performance-agent.md     # Performance optimization (sonnet)
 │   └── ultra-qa-agent.md              # Test strategy (opus)
 │
-├── commands/                          # 8 Workflow commands
+├── commands/                          # 8 Workflow commands (Dual-Engine enhanced)
 │   ├── ultra-init.md                  # /ultra-init
 │   ├── ultra-research.md              # /ultra-research
 │   ├── ultra-plan.md                  # /ultra-plan
-│   ├── ultra-dev.md                   # /ultra-dev
-│   ├── ultra-test.md                  # /ultra-test
-│   ├── ultra-deliver.md               # /ultra-deliver
+│   ├── ultra-dev.md                   # /ultra-dev + Codex feedback loop
+│   ├── ultra-test.md                  # /ultra-test + Codex test generation
+│   ├── ultra-deliver.md               # /ultra-deliver + Codex doc collaboration
 │   ├── ultra-status.md                # /ultra-status
 │   └── ultra-think.md                 # /ultra-think
 │
@@ -237,7 +278,7 @@ Ultra Builder Pro 4.2.0
 
 ---
 
-## 10 Automated Skills
+## 13 Automated Skills
 
 ### Guard Skills (Quality Enforcement)
 
@@ -264,6 +305,14 @@ Ultra Builder Pro 4.2.0
 | **smart-contract** | Solidity code | Security audit, gas optimization, Foundry tests |
 | **skill-creator** | Creating new skills | Skill structure guide, packaging scripts |
 
+### 🆕 Codex Skills (Dual-Engine Collaboration)
+
+| Skill | Trigger | Function |
+|-------|---------|----------|
+| **codex-reviewer** | Edit/Write on code files | 100-point code review (correctness, security, performance, maintainability) |
+| **codex-test-gen** | Coverage < 80% or gaps detected | 6-dimensional test generation with TAS validation |
+| **codex-doc-reviewer** | Documentation updates | Review + enhancement (examples, FAQ, best practices) |
+
 ### Command-Skill Binding (Hook-Based Auto-Activation)
 
 ```
@@ -277,22 +326,38 @@ Loads bound skills from skill-rules.json
        ↓
 Outputs: "🚀 SKILLS AUTO-ACTIVATED for /ultra-dev"
        ↓
-Claude follows skill specifications during execution
+Claude + Codex follow skill specifications
 ```
 
-**Command-Skill Bindings:**
+**Command-Skill Bindings (Dual-Engine):**
 
 | Command | Auto-Activated Skills |
 |---------|----------------------|
-| `/ultra-dev` | guarding-quality, guarding-git-workflow, guarding-test-quality |
-| `/ultra-test` | guarding-test-quality, guarding-quality |
-| `/ultra-deliver` | syncing-docs, syncing-status, guarding-quality |
+| `/ultra-dev` | guarding-quality, guarding-git-workflow, guarding-test-quality, **codex-reviewer** |
+| `/ultra-test` | guarding-test-quality, guarding-quality, **codex-test-gen** |
+| `/ultra-deliver` | syncing-docs, syncing-status, guarding-quality, **codex-doc-reviewer** |
 | `/ultra-status` | syncing-status, guiding-workflow |
 | `/ultra-research` | syncing-docs, guiding-workflow |
 | `/ultra-plan` | guarding-quality |
 | `/ultra-think` | guiding-workflow |
 
 Skills also activate via keyword/file triggers for non-command contexts.
+
+### PostToolUse Hook: Codex Review Trigger
+
+After Edit/Write on code files (`.ts`, `.tsx`, `.js`, `.py`, `.go`, etc.):
+
+```
+codex-review-trigger.sh
+       ↓
+Detects code file modification
+       ↓
+Outputs: "🔍 CODEX REVIEW TRIGGERED"
+       ↓
+Suggests: codex -q "Review {file} for bugs and security"
+       ↓
+Tracks error history for stuck detection
+```
 
 ---
 
@@ -378,6 +443,17 @@ claude
 
 ## Version History
 
+### v4.3.0 (2025-12-30) - Dual-Engine Collaborative Development 🚀
+
+- **Claude Code + Codex**: Dual-engine collaboration system
+- **3 New Codex Skills**: codex-reviewer, codex-test-gen, codex-doc-reviewer
+- **Codex Review Hook**: Auto-trigger after Edit/Write on code files
+- **Stuck Detection**: Auto role swap when same error repeated 3 times
+- **100-Point Scoring**: Codex code review with 4-dimensional analysis
+- **6D Test Generation**: Codex generates comprehensive tests
+- **Doc Collaboration**: Claude drafts → Codex reviews/enhances → Claude finalizes
+- **Commands Enhanced**: ultra-dev, ultra-test, ultra-deliver with Codex integration
+
 ### v4.2.1 (2025-12-30) - Command-Skill Binding System
 
 - **Hook-Based Activation**: UserPromptSubmit hook triggers skill auto-activation
@@ -452,10 +528,10 @@ claude
 
 <div align="center">
 
-**Ultra Builder Pro 4.2.1** - Production-Grade Claude Code Development System
+**Ultra Builder Pro 4.3.0** - Dual-Engine Collaborative Development System
 
-*Truth over comfort. Precision over confidence.*
+*Claude Code + Codex: Truth over comfort. Precision over confidence.*
 
-[Skills Guide](config/ultra-skills-guide.md) | [MCP Guide](config/ultra-mcp-guide.md) | [Workflow](workflows/ultra-development-workflow.md)
+[Skills Guide](config/ultra-skills-guide.md) | [MCP Guide](config/ultra-mcp-guide.md) | [Workflow](workflows/ultra-development-workflow.md) | [Codex Integration](skills/codex-reviewer/SKILL.md)
 
 </div>

@@ -1,13 +1,29 @@
 {
-  "version": "4.2",
-  "description": "UltraBuild Pro 4.2 技能自动触发规则",
+  "version": "4.3",
+  "description": "UltraBuild Pro 4.3 技能自动触发规则 - 双引擎协作版",
+  "dualEngineConfig": {
+    "enabled": true,
+    "primaryBackend": "claude",
+    "reviewBackend": "codex",
+    "stuckDetection": {
+      "maxRetries": 3,
+      "sameErrorThreshold": 2,
+      "roleSwapEnabled": true
+    },
+    "documentCollaboration": {
+      "draftBackend": "claude",
+      "reviewBackend": "codex",
+      "enhanceBackend": "codex",
+      "finalBackend": "claude"
+    }
+  },
   "commandSkillBindings": {
     "/ultra-init": [],
     "/ultra-research": ["syncing-docs", "guiding-workflow"],
     "/ultra-plan": ["guarding-quality"],
-    "/ultra-dev": ["guarding-quality", "guarding-git-workflow", "guarding-test-quality"],
-    "/ultra-test": ["guarding-test-quality", "guarding-quality"],
-    "/ultra-deliver": ["syncing-docs", "syncing-status", "guarding-quality"],
+    "/ultra-dev": ["guarding-quality", "guarding-git-workflow", "guarding-test-quality", "codex-reviewer"],
+    "/ultra-test": ["guarding-test-quality", "guarding-quality", "codex-test-gen"],
+    "/ultra-deliver": ["syncing-docs", "syncing-status", "guarding-quality", "codex-doc-reviewer"],
     "/ultra-status": ["syncing-status", "guiding-workflow"],
     "/ultra-think": ["guiding-workflow"]
   },
@@ -117,6 +133,48 @@
       "fileTriggers": {
         "pathPatterns": ["**/*.sol", "**/contracts/**", "**/foundry/**"]
       }
+    },
+    "codex-reviewer": {
+      "type": "dual-engine",
+      "enforcement": "auto",
+      "priority": "critical",
+      "backend": "codex",
+      "description": "Codex 代码审查 - 质量反馈、bug检测、安全审计",
+      "promptTriggers": {
+        "keywords": ["review", "审查", "codex", "feedback", "反馈"],
+        "intentPatterns": ["codex.*(review|check)", "(让|用).*codex.*审查"]
+      },
+      "triggerAfter": ["Edit", "Write"],
+      "reviewDimensions": {
+        "correctness": 40,
+        "security": 30,
+        "performance": 20,
+        "maintainability": 10
+      }
+    },
+    "codex-test-gen": {
+      "type": "dual-engine",
+      "enforcement": "auto",
+      "priority": "high",
+      "backend": "codex",
+      "description": "Codex 测试生成 - 单元测试、边界测试、异常测试",
+      "promptTriggers": {
+        "keywords": ["generate test", "生成测试", "test case", "测试用例"],
+        "intentPatterns": ["(generate|create).*test", "(生成|创建).*测试"]
+      },
+      "testDimensions": ["unit", "boundary", "exception", "integration"]
+    },
+    "codex-doc-reviewer": {
+      "type": "dual-engine",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "backend": "codex",
+      "description": "Codex 文档审查 - 技术准确性、完整性、示例补充",
+      "promptTriggers": {
+        "keywords": ["doc review", "文档审查", "document feedback"],
+        "intentPatterns": ["review.*doc", "审查.*文档"]
+      },
+      "docDimensions": ["accuracy", "completeness", "clarity", "examples"]
     }
   }
 }

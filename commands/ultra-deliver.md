@@ -76,7 +76,14 @@ Task(subagent_type="ultra-performance-agent",
 
 Run `npm audit` and review results. For high/critical issues, apply fixes or document exceptions.
 
-### Step 4: Documentation Update
+### Step 4: Documentation Update (Dual-Engine Collaboration)
+
+**Documentation Workflow**:
+```
+Claude Code (draft) → Codex (review) → Codex (enhance) → Claude Code (final)
+```
+
+**Step 4.1: Claude Code Drafts Documentation**
 
 **CHANGELOG.md**:
 1. Run `git log --oneline` since last release tag
@@ -86,6 +93,53 @@ Run `npm audit` and review results. For high/critical issues, apply fixes or doc
 **Technical Debt**:
 1. Use Grep to find TODO/FIXME/HACK markers in code
 2. Generate `.ultra/docs/technical-debt.md` with categorized items
+
+**API Documentation / README updates**:
+1. Draft based on code changes
+2. Include basic usage examples
+
+**Step 4.2: Codex Reviews Documentation**
+
+```bash
+codex -q <<EOF
+Review the following documentation for quality:
+
+$(cat {doc_file})
+
+Check for:
+1. Technical accuracy (code examples work)
+2. Completeness (all APIs documented)
+3. Clarity (no ambiguity)
+4. Practical examples
+
+Provide specific issues and fixes.
+EOF
+```
+
+**Step 4.3: Codex Enhances Documentation**
+
+```bash
+codex -q <<EOF
+Enhance the following documentation:
+
+$(cat {doc_file})
+
+Add:
+1. More code examples (covering edge cases)
+2. FAQ section (common questions)
+3. Best practices
+4. Troubleshooting guide
+5. Migration notes (if applicable)
+
+Output the enhanced documentation.
+EOF
+```
+
+**Step 4.4: Claude Code Final Review**
+
+- Ensure consistent style and tone
+- Verify accuracy of Codex additions
+- Final approval before commit
 
 ### Step 5: Final Quality Check
 
@@ -115,7 +169,8 @@ Run `npm audit` and review results. For high/critical issues, apply fixes or doc
 ## Integration
 
 - **Agents**: ultra-performance-agent for optimization
-- **Skills**: syncing-docs auto-activates
+- **Skills**: syncing-docs, syncing-status, **codex-doc-reviewer**
+- **Dual-Engine**: Claude Code (draft/final) + Codex (review/enhance)
 - **Next**: Deploy or create release PR
 
 ## Output Format

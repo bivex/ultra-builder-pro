@@ -200,7 +200,7 @@ Every merged feature works end-to-end. Partial implementations stay in feature b
 | `/ultra-test` | Quality validation |
 | `/ultra-deliver` | Deployment prep |
 | `/ultra-status` | Progress report |
-| `/max-think` | Deep analysis (6D) |
+| `/ultra-think` | Deep analysis (6D) |
 
 **Workflow**: init → research → plan → dev → test → deliver
 
