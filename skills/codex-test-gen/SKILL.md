@@ -1,255 +1,341 @@
 ---
 name: codex-test-gen
-description: Codex 测试生成 Agent - 为 Claude Code 的实现生成全面的测试用例
+description: Codex test generation agent - generates production-grade tests with 6-dimensional coverage, enforcing real implementation without TODO/mock/demo patterns
 backend: codex
 trigger: auto
-priority: high
+priority: critical
 ---
 
 # Codex Test Generator
 
-## 职责
+## Purpose
 
-为 Claude Code 的实现生成**高质量、全覆盖**的测试用例。
+Generate **production-grade, comprehensive tests** that verify real business functionality. Tests must exercise actual code paths, not mock implementations.
 
-**核心原则**：测试是第二道防线，必须覆盖 Claude Code 可能遗漏的边界。
-
----
-
-## 触发条件
-
-1. **命令绑定**：`/ultra-test` 执行时自动触发
-2. **GREEN Phase 后**：TDD 流程中 GREEN 阶段完成后
-3. **手动触发**：用户请求生成测试
+**Core Principle**: Tests are production code. No shortcuts, no placeholders, no demonstrations.
 
 ---
 
-## 测试维度（6D 覆盖）
+## CRITICAL: Production-Grade Requirements
 
-### 1. 功能测试 (Functional)
+### Absolute Prohibitions
+
+These patterns are **NEVER ALLOWED** in generated tests or implementation code:
+
+| Prohibited Pattern | Detection | Consequence |
+|-------------------|-----------|-------------|
+| `// TODO` comments | `grep -r "TODO"` | Immediate rejection |
+| `// FIXME` markers | `grep -r "FIXME"` | Immediate rejection |
+| Mock internal modules | `jest.mock('../` | TAS penalty -30 |
+| Static/hardcoded data | Inline literals without source | TAS penalty -20 |
+| Empty test bodies | `it('...', () => {})` | Immediate rejection |
+| Tautology tests | `expect(true).toBe(true)` | Immediate rejection |
+| Skipped tests | `.skip()` or `.todo()` | TAS penalty -15 |
+| Demo/placeholder code | `console.log('demo')` | Immediate rejection |
+| Degraded functionality | Simplified logic vs spec | Immediate rejection |
+
+### What Production-Grade Means
 
 ```typescript
-// 验证核心功能正确性
-describe('UserService', () => {
-  it('should create user with valid data', async () => {
-    const user = await service.create({ name: 'Test', email: 'test@test.com' });
-    expect(user.id).toBeDefined();
-    expect(user.name).toBe('Test');
+// WRONG: Demo code - tests nothing real
+it('should work', () => {
+  const result = true;  // Static data
+  expect(result).toBe(true);  // Tautology
+});
+
+// WRONG: Over-mocked - doesn't test real code
+it('should create user', async () => {
+  jest.mock('../services/user');  // Mocking internal module
+  const mockCreate = jest.fn().mockResolvedValue({ id: 1 });
+  await mockCreate({ name: 'test' });
+  expect(mockCreate).toHaveBeenCalled();  // Only verifies mock was called
+});
+
+// CORRECT: Production-grade - tests real behavior
+it('should create user with valid data', async () => {
+  // Arrange - real service with only external deps mocked
+  const db = createTestDatabase();  // Real in-memory DB
+  const service = new UserService(db);
+
+  // Act - real code path
+  const user = await service.create({
+    email: 'test@example.com',
+    name: 'Test User',
+    password: 'SecurePass123!'
+  });
+
+  // Assert - verifies actual behavior
+  expect(user.id).toBeDefined();
+  expect(user.email).toBe('test@example.com');
+  expect(user.password).not.toBe('SecurePass123!');  // Should be hashed
+  expect(user.password).toMatch(/^\$2[aby]?\$/);  // Bcrypt pattern
+
+  // Verify persistence
+  const found = await db.users.findById(user.id);
+  expect(found).toEqual(user);
+});
+```
+
+---
+
+## Trigger Conditions
+
+1. **Command binding**: Auto-triggers with `/ultra-test`
+2. **Coverage gap**: Coverage < 80% detected
+3. **GREEN phase**: After TDD GREEN phase completion
+4. **Manual**: User requests test generation
+
+---
+
+## Test Dimensions (6D Coverage)
+
+### 1. Functional Tests
+
+Verify core business logic with real data flows:
+
+```typescript
+describe('PaymentService', () => {
+  it('should process valid payment and update order status', async () => {
+    const order = await createTestOrder({ total: 99.99 });
+    const payment = await service.process(order.id, validCard);
+
+    expect(payment.status).toBe('completed');
+    expect(payment.transactionId).toMatch(/^txn_/);
+
+    const updatedOrder = await orderRepo.findById(order.id);
+    expect(updatedOrder.status).toBe('paid');
   });
 });
 ```
 
-### 2. 边界测试 (Boundary)
+### 2. Boundary Tests
+
+Test edge cases with actual boundary values:
 
 ```typescript
-// 验证边界条件处理
 describe('pagination', () => {
-  it('should handle page=0', () => { /* ... */ });
-  it('should handle page=MAX_INT', () => { /* ... */ });
-  it('should handle negative page', () => { /* ... */ });
-  it('should handle empty result set', () => { /* ... */ });
+  it('should return empty array for page beyond data', async () => {
+    await seedTestData(10);  // Real data
+    const result = await service.list({ page: 999, limit: 10 });
+    expect(result.items).toHaveLength(0);
+    expect(result.hasMore).toBe(false);
+  });
+
+  it('should handle limit at maximum allowed value', async () => {
+    await seedTestData(200);
+    const result = await service.list({ page: 1, limit: 100 });
+    expect(result.items).toHaveLength(100);  // Capped at max
+  });
 });
 ```
 
-### 3. 异常测试 (Exception)
+### 3. Exception Tests
+
+Verify error handling with real error conditions:
 
 ```typescript
-// 验证错误处理
 describe('error handling', () => {
-  it('should throw ValidationError for invalid email', async () => {
-    await expect(service.create({ email: 'invalid' }))
-      .rejects.toThrow(ValidationError);
+  it('should throw ValidationError with field details', async () => {
+    const invalid = { email: 'not-an-email', name: '' };
+
+    await expect(service.create(invalid)).rejects.toMatchObject({
+      name: 'ValidationError',
+      fields: {
+        email: 'Invalid email format',
+        name: 'Name is required'
+      }
+    });
   });
 
-  it('should handle database connection failure', async () => {
-    mockDb.connect.mockRejectedValue(new Error('Connection failed'));
-    await expect(service.create(validData))
-      .rejects.toThrow('Database unavailable');
+  it('should handle database timeout gracefully', async () => {
+    // Simulate real timeout condition
+    db.setQueryTimeout(1);
+
+    await expect(service.create(validData)).rejects.toMatchObject({
+      name: 'ServiceUnavailableError',
+      retryable: true
+    });
   });
 });
 ```
 
-### 4. 性能测试 (Performance)
+### 4. Performance Tests
+
+Verify performance with real workloads:
 
 ```typescript
-// 验证性能基准
 describe('performance', () => {
-  it('should process 1000 items within 100ms', async () => {
-    const start = Date.now();
-    await service.batchProcess(items1000);
-    expect(Date.now() - start).toBeLessThan(100);
+  it('should process batch within SLA', async () => {
+    const items = generateTestItems(1000);  // Real test data
+
+    const start = performance.now();
+    await service.batchProcess(items);
+    const duration = performance.now() - start;
+
+    expect(duration).toBeLessThan(500);  // 500ms SLA
+  });
+
+  it('should handle concurrent requests', async () => {
+    const requests = Array(100).fill(null).map(() =>
+      service.process(generateTestOrder())
+    );
+
+    const results = await Promise.all(requests);
+    expect(results.every(r => r.success)).toBe(true);
   });
 });
 ```
 
-### 5. 安全测试 (Security)
+### 5. Security Tests
+
+Verify security controls with real attack vectors:
 
 ```typescript
-// 验证安全防护
 describe('security', () => {
-  it('should reject SQL injection attempts', async () => {
+  it('should reject SQL injection in search', async () => {
     const malicious = "'; DROP TABLE users; --";
-    await expect(service.findByName(malicious))
-      .rejects.toThrow('Invalid input');
+
+    // Should sanitize or reject, not execute
+    await expect(service.search(malicious)).resolves.toEqual([]);
+
+    // Verify table still exists
+    const count = await db.users.count();
+    expect(count).toBeGreaterThan(0);
   });
 
-  it('should sanitize XSS in user input', () => {
-    const input = '<script>alert("xss")</script>';
-    const sanitized = service.sanitize(input);
-    expect(sanitized).not.toContain('<script>');
+  it('should rate limit login attempts', async () => {
+    const attempts = Array(10).fill(null).map(() =>
+      service.login('user@test.com', 'wrong')
+    );
+
+    const results = await Promise.allSettled(attempts);
+    const blocked = results.filter(r =>
+      r.status === 'rejected' && r.reason.code === 'RATE_LIMITED'
+    );
+
+    expect(blocked.length).toBeGreaterThan(0);
   });
 });
 ```
 
-### 6. 兼容性测试 (Compatibility)
+### 6. Compatibility Tests
+
+Verify cross-environment behavior:
 
 ```typescript
-// 验证跨环境兼容
 describe('compatibility', () => {
-  it('should work with Node 18', () => { /* ... */ });
-  it('should work with Node 20', () => { /* ... */ });
-  it('should handle different timezones', () => { /* ... */ });
+  it('should handle different date formats', () => {
+    const formats = [
+      '2024-01-15',
+      '01/15/2024',
+      '15-01-2024',
+      new Date('2024-01-15').toISOString()
+    ];
+
+    formats.forEach(input => {
+      const result = service.parseDate(input);
+      expect(result.getFullYear()).toBe(2024);
+      expect(result.getMonth()).toBe(0);  // January
+      expect(result.getDate()).toBe(15);
+    });
+  });
 });
 ```
 
 ---
 
-## 执行流程
-
-```
-Step 1: 分析实现代码
-        - 提取函数签名
-        - 识别分支路径
-        - 检测外部依赖
-        ↓
-Step 2: 生成测试策略
-        - 确定测试维度优先级
-        - 规划 Mock 策略
-        - 设计测试数据
-        ↓
-Step 3: 调用 Codex 生成测试
-        ↓
-Step 4: 验证测试质量
-        - TAS 评分 ≥ 70
-        - 覆盖率检查
-        ↓
-Step 5: 输出测试文件
-```
-
----
-
-## Codex 调用模板
+## Codex Call Template
 
 ```bash
 codex -q --json <<EOF
-你是一个测试专家。为以下代码生成全面的测试用例：
+You are a test engineering expert. Generate production-grade tests for:
 
-实现代码：
+Implementation Code:
 \`\`\`typescript
 {implementation_code}
 \`\`\`
 
-要求：
-1. 覆盖所有公开方法
-2. 覆盖所有分支路径
-3. 包含 6 个维度的测试：
-   - Functional: 核心功能
-   - Boundary: 边界条件（null, empty, max, min）
-   - Exception: 错误处理
-   - Performance: 性能基准（如适用）
-   - Security: 安全防护（输入验证、注入防护）
-   - Compatibility: 兼容性（如适用）
+CRITICAL REQUIREMENTS:
 
-4. Mock 策略：
-   - 只 Mock 外部依赖（数据库、API、文件系统）
-   - 不要 Mock 内部模块
-   - Mock 比例 ≤ 30%
+1. **Production-Grade Only**
+   - NO TODO/FIXME comments
+   - NO empty test bodies
+   - NO tautology tests (expect(true).toBe(true))
+   - NO static/hardcoded data without source
+   - NO demo or placeholder code
+   - NO degraded or simplified functionality
 
-5. 断言要求：
-   - 使用行为断言（toBe, toEqual, toThrow）
-   - 避免 Mock 断言（toHaveBeenCalled 仅作为辅助）
-   - 每个测试至少 1 个有意义的断言
+2. **Mock Strategy**
+   - ONLY mock external dependencies (database, HTTP, filesystem)
+   - NEVER mock internal modules (../services/*, ./utils/*)
+   - Mock ratio must be <= 30%
+   - Every mock must have corresponding real behavior test
 
-输出完整的测试文件代码。
+3. **Assertion Quality**
+   - Use behavioral assertions (toBe, toEqual, toThrow)
+   - Verify actual outcomes, not just that code ran
+   - Each test must have >= 1 meaningful assertion
+   - Avoid mock-only assertions (toHaveBeenCalled without behavioral check)
+
+4. **6-Dimensional Coverage**
+   - Functional: Core business logic
+   - Boundary: null, empty, max, min, edge values
+   - Exception: Error paths with recovery verification
+   - Performance: SLA verification where applicable
+   - Security: Input validation, injection prevention
+   - Compatibility: Cross-environment behavior
+
+5. **Confidence Level**
+   - Output tests only with >= 90% confidence
+   - Mark any uncertainty explicitly
+   - Prefer fewer high-quality tests over many weak tests
+
+Output complete test file with NO placeholders.
 EOF
 ```
 
 ---
 
-## 输出格式
+## Quality Gates
 
-```typescript
-// {filename}.test.ts
-// Generated by Codex Test Generator
-// Dimensions: Functional, Boundary, Exception, Security
-
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { TargetClass } from './target';
-
-describe('TargetClass', () => {
-  let instance: TargetClass;
-
-  beforeEach(() => {
-    instance = new TargetClass();
-  });
-
-  // ========== Functional Tests ==========
-  describe('core functionality', () => {
-    it('should ...', () => { /* ... */ });
-  });
-
-  // ========== Boundary Tests ==========
-  describe('boundary conditions', () => {
-    it('should handle null input', () => { /* ... */ });
-    it('should handle empty array', () => { /* ... */ });
-    it('should handle max value', () => { /* ... */ });
-  });
-
-  // ========== Exception Tests ==========
-  describe('error handling', () => {
-    it('should throw on invalid input', () => { /* ... */ });
-  });
-
-  // ========== Security Tests ==========
-  describe('security', () => {
-    it('should prevent injection', () => { /* ... */ });
-  });
-});
-```
+| Metric | Requirement | Detection |
+|--------|-------------|-----------|
+| TAS Score | >= 70% | Calculated per file |
+| Coverage | >= 80% | `npm test -- --coverage` |
+| Mock Ratio | <= 30% | Internal mocks / total imports |
+| Tautologies | 0 | `expect(true/false).toBe()` |
+| Empty Tests | 0 | Test body has no assertions |
+| TODO Count | 0 | `grep -c TODO` |
 
 ---
 
-## 质量门槛
+## TAS Calculation
 
-| 指标 | 要求 |
-|------|------|
-| TAS (Test Authenticity Score) | ≥ 70% |
-| 覆盖率 | ≥ 80% |
-| Mock 比例 | ≤ 30% |
-| 空测试 | 0 |
-| 重言测试 | 0 |
+Test Authenticity Score (TAS) formula:
+
+```
+TAS = (Mock_Score × 0.25) + (Assertion_Score × 0.35) +
+      (Execution_Score × 0.25) + (Pattern_Score × 0.15)
+
+Mock_Score = 100 - (internal_mocks / total_imports × 100)
+Assertion_Score = behavioral_assertions / total_assertions × 100
+Execution_Score = real_code_lines / total_test_lines × 100
+Pattern_Score = 100 - (anti_patterns × 15)
+```
+
+### Grade Thresholds
+
+| Grade | TAS Range | Status |
+|-------|-----------|--------|
+| A | 85-100 | Pass |
+| B | 70-84 | Pass with minor issues |
+| C | 50-69 | **BLOCKED** - Needs improvement |
+| D | 30-49 | **BLOCKED** - Major issues |
+| F | 0-29 | **BLOCKED** - Fake tests detected |
 
 ---
 
-## 与 Claude Code 的协作
-
-```
-Claude Code RED (写失败测试)
-        ↓
-Claude Code GREEN (实现通过)
-        ↓
-Codex 补充测试 (边界、异常、安全)
-        ↓
-运行全部测试
-        ↓
-覆盖率 < 80%? → Codex 补充更多测试
-        ↓
-Claude Code REFACTOR
-```
-
----
-
-## 配置
+## Configuration
 
 ```json
 {
@@ -257,54 +343,62 @@ Claude Code REFACTOR
     "minCoverage": 80,
     "minTAS": 70,
     "maxMockRatio": 0.3,
-    "dimensions": ["functional", "boundary", "exception", "security"],
+    "dimensions": ["functional", "boundary", "exception", "security", "performance", "compatibility"],
     "testFramework": "vitest",
-    "outputPattern": "{filename}.test.ts"
+    "outputPattern": "{filename}.test.ts",
+    "prohibitedPatterns": [
+      "TODO",
+      "FIXME",
+      "expect(true).toBe(true)",
+      "expect(false).toBe(false)",
+      "jest.mock('../",
+      "vi.mock('../",
+      ".skip(",
+      ".todo("
+    ],
+    "confidenceThreshold": 0.9
   }
 }
 ```
 
 ---
 
-## 示例交互
+## Integration with TDD Workflow
 
-**输入**：Claude Code 实现了 `UserService.create()` 方法
+```
+Claude Code RED (write failing test)
+        ↓
+Claude Code GREEN (minimum passing code)
+        ↓
+Codex generates additional tests
+        ↓
+        Coverage >= 80%?
+        ├─ No  → Codex generates more tests
+        └─ Yes → TAS >= 70%?
+                 ├─ No  → Codex regenerates with feedback
+                 └─ Yes → Claude Code REFACTOR
+```
 
-**Codex 生成输出**：
+---
 
-```typescript
-// user-service.test.ts
-describe('UserService.create', () => {
-  // Functional
-  it('should create user with valid data', async () => {
-    const user = await service.create(validUserData);
-    expect(user.id).toBeDefined();
-    expect(user.email).toBe(validUserData.email);
-  });
+## Honest Output
 
-  // Boundary
-  it('should handle name at max length (255 chars)', async () => {
-    const user = await service.create({ ...validUserData, name: 'a'.repeat(255) });
-    expect(user.name.length).toBe(255);
-  });
+When generating tests, always include confidence assessment:
 
-  it('should reject name exceeding max length', async () => {
-    await expect(service.create({ ...validUserData, name: 'a'.repeat(256) }))
-      .rejects.toThrow('Name too long');
-  });
+```markdown
+## Test Generation Report
 
-  // Exception
-  it('should throw on duplicate email', async () => {
-    await service.create(validUserData);
-    await expect(service.create(validUserData))
-      .rejects.toThrow('Email already exists');
-  });
+**Confidence**: 92%
 
-  // Security
-  it('should hash password before storing', async () => {
-    const user = await service.create({ ...validUserData, password: 'secret' });
-    expect(user.password).not.toBe('secret');
-    expect(user.password).toMatch(/^\$2[aby]?\$/); // bcrypt pattern
-  });
-});
+**Generated Tests**: 12
+**Coverage Impact**: +15% (65% → 80%)
+**TAS Score**: 78% (Grade B)
+
+**Uncertainty Notes**:
+- Line 45-48: Edge case behavior inferred from similar patterns
+- Line 82: Error message format assumed from code structure
+
+**Verification Required**:
+- Run `npm test` to confirm all tests pass
+- Review security tests against actual threat model
 ```

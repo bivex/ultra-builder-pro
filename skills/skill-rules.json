@@ -1,6 +1,6 @@
 {
-  "version": "4.3",
-  "description": "UltraBuild Pro 4.3 技能自动触发规则 - 双引擎协作版",
+  "version": "4.3.1",
+  "description": "UltraBuild Pro 4.3 Skill Auto-Trigger Rules - Dual-Engine Collaborative Edition",
   "dualEngineConfig": {
     "enabled": true,
     "primaryBackend": "claude",
@@ -10,16 +10,28 @@
       "sameErrorThreshold": 2,
       "roleSwapEnabled": true
     },
+    "researchCollaboration": {
+      "initiatorBackend": "claude",
+      "verifierBackend": "codex",
+      "minConfidence": 0.9,
+      "requireSources": true
+    },
     "documentCollaboration": {
       "draftBackend": "claude",
       "reviewBackend": "codex",
       "enhanceBackend": "codex",
       "finalBackend": "claude"
+    },
+    "productionGradeRequirements": {
+      "prohibitedPatterns": ["TODO", "FIXME", "demo", "placeholder", "example only"],
+      "minTestConfidence": 0.9,
+      "minResearchConfidence": 0.9,
+      "requireRealImplementation": true
     }
   },
   "commandSkillBindings": {
     "/ultra-init": [],
-    "/ultra-research": ["syncing-docs", "guiding-workflow"],
+    "/ultra-research": ["syncing-docs", "guiding-workflow", "codex-research-gen"],
     "/ultra-plan": ["guarding-quality"],
     "/ultra-dev": ["guarding-quality", "guarding-git-workflow", "guarding-test-quality", "codex-reviewer"],
     "/ultra-test": ["guarding-test-quality", "guarding-quality", "codex-test-gen"],
@@ -32,10 +44,10 @@
       "type": "guard",
       "enforcement": "auto",
       "priority": "high",
-      "description": "代码质量守护 - SOLID原则、复杂度限制",
+      "description": "Code quality guard - SOLID principles, complexity limits",
       "promptTriggers": {
-        "keywords": ["refactor", "重构", "code review", "代码审查", "quality", "质量"],
-        "intentPatterns": ["(fix|improve|optimize).*code", "(检查|分析|审查).*代码"]
+        "keywords": ["refactor", "code review", "quality"],
+        "intentPatterns": ["(fix|improve|optimize).*code"]
       },
       "fileTriggers": {
         "pathPatterns": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.py", "**/*.go", "**/*.vue"],
@@ -46,10 +58,10 @@
       "type": "guard",
       "enforcement": "auto",
       "priority": "high",
-      "description": "测试质量守护 - TAS评分、Mock比例",
+      "description": "Test quality guard - TAS scoring, mock ratio enforcement",
       "promptTriggers": {
-        "keywords": ["test", "测试", "TAS", "coverage", "覆盖率", "spec"],
-        "intentPatterns": ["(write|add|fix).*test", "(编写|添加|修复).*测试"]
+        "keywords": ["test", "TAS", "coverage", "spec"],
+        "intentPatterns": ["(write|add|fix).*test"]
       },
       "fileTriggers": {
         "pathPatterns": ["**/*.test.ts", "**/*.spec.ts", "**/*.test.js", "**/__tests__/**"]
@@ -59,50 +71,50 @@
       "type": "guard",
       "enforcement": "auto",
       "priority": "critical",
-      "description": "Git操作守护 - 安全提交、分支策略",
+      "description": "Git workflow guard - safe commits, branch strategy",
       "promptTriggers": {
-        "keywords": ["commit", "push", "merge", "rebase", "branch", "git", "提交", "合并"],
-        "intentPatterns": ["git (commit|push|merge|rebase)", "(提交|推送|合并).*代码"]
+        "keywords": ["commit", "push", "merge", "rebase", "branch", "git"],
+        "intentPatterns": ["git (commit|push|merge|rebase)"]
       }
     },
     "syncing-status": {
       "type": "sync",
       "enforcement": "auto",
       "priority": "medium",
-      "description": "状态同步 - 任务进度、测试结果",
+      "description": "Status sync - task progress, test results",
       "promptTriggers": {
-        "keywords": ["status", "进度", "任务", "progress", "完成", "done"],
-        "intentPatterns": ["(what|show|check).*status", "(查看|检查|显示).*(状态|进度)"]
+        "keywords": ["status", "progress", "task", "done"],
+        "intentPatterns": ["(what|show|check).*status"]
       }
     },
     "syncing-docs": {
       "type": "sync",
       "enforcement": "suggest",
       "priority": "medium",
-      "description": "文档同步 - ADR、研究报告",
+      "description": "Documentation sync - ADR, research reports",
       "promptTriggers": {
-        "keywords": ["document", "文档", "ADR", "research", "研究", "architecture"],
-        "intentPatterns": ["(update|write|create).*doc", "(更新|编写|创建).*文档"]
+        "keywords": ["document", "ADR", "research", "architecture"],
+        "intentPatterns": ["(update|write|create).*doc"]
       }
     },
     "guiding-workflow": {
       "type": "utility",
       "enforcement": "suggest",
       "priority": "low",
-      "description": "工作流指导 - 下一步建议",
+      "description": "Workflow guidance - next step suggestions",
       "promptTriggers": {
-        "keywords": ["next", "下一步", "workflow", "工作流", "what should", "该做什么"],
-        "intentPatterns": ["what.*next", "下一步.*做什么"]
+        "keywords": ["next", "workflow", "what should"],
+        "intentPatterns": ["what.*next"]
       }
     },
     "frontend": {
       "type": "domain",
       "enforcement": "suggest",
       "priority": "high",
-      "description": "前端开发 - React/Vue/Next.js模式",
+      "description": "Frontend development - React/Vue/Next.js patterns",
       "promptTriggers": {
-        "keywords": ["React", "Vue", "Next.js", "component", "组件", "UI", "CSS", "前端", "frontend"],
-        "intentPatterns": ["(build|create|fix).*component", "(构建|创建|修复).*组件"]
+        "keywords": ["React", "Vue", "Next.js", "component", "UI", "CSS", "frontend"],
+        "intentPatterns": ["(build|create|fix).*component"]
       },
       "fileTriggers": {
         "pathPatterns": ["**/*.tsx", "**/*.vue", "**/components/**", "**/pages/**"]
@@ -112,10 +124,10 @@
       "type": "domain",
       "enforcement": "suggest",
       "priority": "high",
-      "description": "后端开发 - API/数据库/安全",
+      "description": "Backend development - API/database/security",
       "promptTriggers": {
-        "keywords": ["API", "REST", "GraphQL", "database", "数据库", "server", "auth", "认证", "后端", "backend"],
-        "intentPatterns": ["(create|build|fix).*api", "(创建|构建|修复).*接口"]
+        "keywords": ["API", "REST", "GraphQL", "database", "server", "auth", "backend"],
+        "intentPatterns": ["(create|build|fix).*api"]
       },
       "fileTriggers": {
         "pathPatterns": ["**/api/**", "**/server/**", "**/controllers/**", "**/routes/**"]
@@ -125,10 +137,10 @@
       "type": "domain",
       "enforcement": "suggest",
       "priority": "high",
-      "description": "智能合约开发 - EVM/Solana/安全审计",
+      "description": "Smart contract development - EVM/Solana/security audit",
       "promptTriggers": {
-        "keywords": ["contract", "solidity", "ERC", "web3", "blockchain", "合约", "区块链"],
-        "intentPatterns": ["(write|audit|deploy).*contract", "(编写|审计|部署).*合约"]
+        "keywords": ["contract", "solidity", "ERC", "web3", "blockchain"],
+        "intentPatterns": ["(write|audit|deploy).*contract"]
       },
       "fileTriggers": {
         "pathPatterns": ["**/*.sol", "**/contracts/**", "**/foundry/**"]
@@ -139,10 +151,10 @@
       "enforcement": "auto",
       "priority": "critical",
       "backend": "codex",
-      "description": "Codex 代码审查 - 质量反馈、bug检测、安全审计",
+      "description": "Codex code review - quality feedback, bug detection, security audit",
       "promptTriggers": {
-        "keywords": ["review", "审查", "codex", "feedback", "反馈"],
-        "intentPatterns": ["codex.*(review|check)", "(让|用).*codex.*审查"]
+        "keywords": ["review", "codex", "feedback"],
+        "intentPatterns": ["codex.*(review|check)"]
       },
       "triggerAfter": ["Edit", "Write"],
       "reviewDimensions": {
@@ -150,31 +162,52 @@
         "security": 30,
         "performance": 20,
         "maintainability": 10
-      }
+      },
+      "qualityThreshold": 80
     },
     "codex-test-gen": {
       "type": "dual-engine",
       "enforcement": "auto",
-      "priority": "high",
+      "priority": "critical",
       "backend": "codex",
-      "description": "Codex 测试生成 - 单元测试、边界测试、异常测试",
+      "description": "Codex test generation - production-grade tests with 6D coverage, no TODO/mock/demo",
       "promptTriggers": {
-        "keywords": ["generate test", "生成测试", "test case", "测试用例"],
-        "intentPatterns": ["(generate|create).*test", "(生成|创建).*测试"]
+        "keywords": ["generate test", "test case"],
+        "intentPatterns": ["(generate|create).*test"]
       },
-      "testDimensions": ["unit", "boundary", "exception", "integration"]
+      "testDimensions": ["functional", "boundary", "exception", "performance", "security", "compatibility"],
+      "prohibitedPatterns": ["TODO", "FIXME", "expect(true).toBe(true)", "jest.mock('../", "vi.mock('../", ".skip(", ".todo("],
+      "minTAS": 70,
+      "minCoverage": 80,
+      "maxMockRatio": 0.3
     },
     "codex-doc-reviewer": {
       "type": "dual-engine",
       "enforcement": "suggest",
       "priority": "medium",
       "backend": "codex",
-      "description": "Codex 文档审查 - 技术准确性、完整性、示例补充",
+      "description": "Codex documentation review - technical accuracy, completeness, examples",
       "promptTriggers": {
-        "keywords": ["doc review", "文档审查", "document feedback"],
-        "intentPatterns": ["review.*doc", "审查.*文档"]
+        "keywords": ["doc review", "document feedback"],
+        "intentPatterns": ["review.*doc"]
       },
-      "docDimensions": ["accuracy", "completeness", "clarity", "examples"]
+      "docDimensions": ["accuracy", "completeness", "clarity", "practicality"],
+      "qualityThreshold": 80
+    },
+    "codex-research-gen": {
+      "type": "dual-engine",
+      "enforcement": "auto",
+      "priority": "high",
+      "backend": "codex",
+      "description": "Codex research enhancement - evidence-based analysis, 90%+ confidence, production examples",
+      "promptTriggers": {
+        "keywords": ["research", "compare", "technology", "library", "framework"],
+        "intentPatterns": ["(research|compare|analyze).*(technology|library|framework|approach)"]
+      },
+      "researchDimensions": ["feasibility", "risk", "complexity", "production-readiness"],
+      "minConfidence": 0.9,
+      "requireSources": true,
+      "prohibitedPatterns": ["TODO", "demo", "placeholder", "example only"]
     }
   }
 }

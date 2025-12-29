@@ -1,6 +1,6 @@
 ---
 name: codex-doc-reviewer
-description: Codex 文档审查与增强 Agent - 审查 Claude Code 的文档质量，补充示例和细节
+description: Codex documentation review and enhancement agent - reviews Claude Code documentation for technical accuracy, completeness, and adds practical examples
 backend: codex
 trigger: suggest
 priority: medium
@@ -8,125 +8,145 @@ priority: medium
 
 # Codex Document Reviewer
 
-## 职责
+## Purpose
 
-审查并增强 Claude Code 撰写的文档，确保**技术准确性、完整性、清晰度**。
+Review and enhance documentation for **technical accuracy, completeness, clarity, and practical utility**. Good documentation enables users to succeed with the product.
 
-**核心原则**：好文档 = 准确 + 完整 + 清晰 + 实用
-
----
-
-## 触发条件
-
-1. **命令绑定**：`/ultra-deliver` 执行时自动触发
-2. **文档完成后**：检测到 `.md` 文件创建/修改
-3. **手动触发**：用户请求文档审查
+**Core Principle**: Documentation is a product. It must be accurate, complete, and immediately useful.
 
 ---
 
-## 协作流程
+## Trigger Conditions
+
+1. **Command binding**: Auto-triggers with `/ultra-deliver`
+2. **File detection**: After `.md` file creation/modification
+3. **Manual**: User requests documentation review
+
+---
+
+## Collaboration Flow
 
 ```
-Step 1: Claude Code 起草文档
+Step 1: Claude Code drafts documentation
         ↓
-Step 2: Codex 审查文档质量
-        - 技术准确性
-        - 完整性
-        - 清晰度
+Step 2: Codex reviews for quality
+        - Technical accuracy
+        - Completeness
+        - Clarity
         ↓
-Step 3: Codex 补充内容
-        - 更多代码示例
-        - 常见问题解答
-        - 最佳实践
-        - 注意事项
+Step 3: Codex enhances content
+        - More code examples
+        - FAQ section
+        - Best practices
+        - Troubleshooting
         ↓
-Step 4: Claude Code 最终审定
-        - 风格统一
-        - 语言润色
-        - 最终确认
+Step 4: Claude Code final review
+        - Style consistency
+        - Language polish
+        - Final approval
 ```
 
 ---
 
-## 审查维度（100分制）
+## Review Dimensions (100-Point Scale)
 
-### 1. 技术准确性 (35%)
+### 1. Technical Accuracy (35%)
 
-| 检查项 | 说明 |
-|--------|------|
-| 代码示例正确 | 示例代码可运行、无语法错误 |
-| API 描述准确 | 参数、返回值、异常描述正确 |
-| 版本匹配 | 文档与当前代码版本一致 |
-| 术语准确 | 技术术语使用正确 |
+| Check | Description |
+|-------|-------------|
+| Code examples correct | Examples run without errors |
+| API descriptions accurate | Parameters, returns, exceptions correct |
+| Version match | Documentation matches current code version |
+| Terminology accurate | Technical terms used correctly |
 
-### 2. 完整性 (30%)
+### 2. Completeness (30%)
 
-| 检查项 | 说明 |
-|--------|------|
-| 功能覆盖 | 所有公开 API 都有文档 |
-| 场景覆盖 | 常见使用场景都有说明 |
-| 错误处理 | 错误情况和处理方式有文档 |
-| 配置说明 | 配置项和默认值有文档 |
+| Check | Description |
+|-------|-------------|
+| Feature coverage | All public APIs documented |
+| Scenario coverage | Common use cases explained |
+| Error handling | Error conditions and handling documented |
+| Configuration | All config options with defaults documented |
 
-### 3. 清晰度 (20%)
+### 3. Clarity (20%)
 
-| 检查项 | 说明 |
-|--------|------|
-| 结构清晰 | 层次分明、易于导航 |
-| 语言简洁 | 无冗余、易于理解 |
-| 无歧义 | 描述明确、不会误解 |
-| 格式规范 | Markdown 格式正确 |
+| Check | Description |
+|-------|-------------|
+| Structure clear | Well-organized, easy to navigate |
+| Language concise | No redundancy, easy to understand |
+| No ambiguity | Descriptions precise, no misinterpretation |
+| Format correct | Proper Markdown formatting |
 
-### 4. 实用性 (15%)
+### 4. Practicality (15%)
 
-| 检查项 | 说明 |
-|--------|------|
-| 快速开始 | 有简洁的快速开始指南 |
-| 代码示例 | 示例充足、可复制粘贴 |
-| 常见问题 | FAQ 覆盖常见问题 |
-| 最佳实践 | 有推荐的使用模式 |
+| Check | Description |
+|-------|-------------|
+| Quick start | Concise getting-started guide |
+| Code examples | Sufficient, copy-paste ready |
+| FAQ | Common questions answered |
+| Best practices | Recommended usage patterns |
 
 ---
 
-## Codex 调用模板
+## Production-Grade Documentation Requirements
 
-### Phase 1: 审查
+### Documentation Must Include
+
+1. **Working Code Examples**: Every API must have runnable examples
+2. **Error Scenarios**: Document what can go wrong and how to fix it
+3. **Configuration Reference**: All options with types, defaults, descriptions
+4. **Migration Guide**: For breaking changes between versions
+5. **Performance Considerations**: When operations are expensive
+
+### Documentation Must NOT Include
+
+1. **Placeholder text**: "TODO: add description"
+2. **Broken examples**: Code that doesn't compile/run
+3. **Outdated information**: References to removed features
+4. **Vague descriptions**: "This does stuff"
+5. **Missing error handling**: Examples that ignore errors
+
+---
+
+## Codex Call Templates
+
+### Phase 1: Review
 
 ```bash
 codex -q --json <<EOF
-你是一个技术文档审查专家。审查以下文档：
+You are a technical documentation expert. Review this documentation:
 
-文档内容：
+Document Content:
 \`\`\`markdown
 {document_content}
 \`\`\`
 
-相关代码：
+Related Code:
 \`\`\`typescript
 {related_code}
 \`\`\`
 
-请按以下维度审查：
+Review across these dimensions:
 
-1. **技术准确性** (35分)
-   - 代码示例是否正确
-   - API 描述是否准确
-   - 版本是否匹配
+1. **Technical Accuracy** (35 points)
+   - Do code examples work?
+   - Are API descriptions correct?
+   - Does it match current code?
 
-2. **完整性** (30分)
-   - 是否覆盖所有功能
-   - 是否包含错误处理说明
-   - 是否有配置说明
+2. **Completeness** (30 points)
+   - Are all features covered?
+   - Is error handling documented?
+   - Are configuration options listed?
 
-3. **清晰度** (20分)
-   - 结构是否清晰
-   - 是否有歧义
+3. **Clarity** (20 points)
+   - Is structure clear?
+   - Any ambiguity?
 
-4. **实用性** (15分)
-   - 示例是否充足
-   - 是否易于上手
+4. **Practicality** (15 points)
+   - Sufficient examples?
+   - Easy to get started?
 
-输出格式：
+Output format:
 {
   "score": {
     "accuracy": X,
@@ -136,128 +156,126 @@ codex -q --json <<EOF
     "total": X
   },
   "issues": [
-    {"location": "Section X", "issue": "描述", "suggestion": "建议"}
+    {"location": "Section X", "issue": "description", "suggestion": "fix"}
   ],
   "missing": [
-    "缺少的内容1",
-    "缺少的内容2"
+    "Missing content 1",
+    "Missing content 2"
   ],
   "verdict": "PASS|ENHANCE|REWRITE"
 }
 EOF
 ```
 
-### Phase 2: 增强
+### Phase 2: Enhancement
 
 ```bash
 codex -q <<EOF
-基于审查结果，补充以下内容：
+Based on review results, enhance this documentation:
 
-原文档：
+Original Document:
 \`\`\`markdown
 {document_content}
 \`\`\`
 
-需要补充：
-1. 更多代码示例（覆盖 {missing_scenarios}）
-2. 常见问题解答（针对 {common_issues}）
-3. 最佳实践建议
-4. 注意事项和陷阱
+Add the following:
+1. More code examples covering {missing_scenarios}
+2. FAQ section for {common_issues}
+3. Best practices recommendations
+4. Troubleshooting guide
+5. Common pitfalls to avoid
 
-请输出增强后的完整文档。
+Requirements:
+- All code examples must be production-grade (no TODO, no placeholders)
+- Examples must handle errors properly
+- Include realistic use cases, not toy examples
+- Confidence level >= 90% for all content
+
+Output the enhanced complete document.
 EOF
 ```
 
 ---
 
-## 输出格式
+## Output Format (Runtime: Chinese)
 
-### 审查报告
+### Review Report
 
 ```markdown
-## Codex 文档审查报告
+## Codex Documentation Review Report
 
-**审查时间**: {timestamp}
-**文档**: {document_path}
+**Review Time**: {timestamp}
+**Document**: {document_path}
 
-### 评分
+### Scores
 
-| 维度 | 得分 | 权重 | 加权分 |
-|------|------|------|--------|
-| 技术准确性 | X/100 | 35% | X |
-| 完整性 | X/100 | 30% | X |
-| 清晰度 | X/100 | 20% | X |
-| 实用性 | X/100 | 15% | X |
-| **总分** | - | - | **X/100** |
+| Dimension | Score | Weight | Weighted |
+|-----------|-------|--------|----------|
+| Technical Accuracy | X/100 | 35% | X |
+| Completeness | X/100 | 30% | X |
+| Clarity | X/100 | 20% | X |
+| Practicality | X/100 | 15% | X |
+| **Total** | - | - | **X/100** |
 
-### 问题
+### Issues
 
-#### 技术错误
-- [ ] Section X: {问题描述} → {修复建议}
+#### Technical Errors
+- [ ] Section X: {issue} → {fix suggestion}
 
-#### 缺失内容
-- [ ] 缺少 {内容描述}
+#### Missing Content
+- [ ] Missing {content description}
 
-### 判定
+### Verdict
 
 **{PASS | ENHANCE | REWRITE}**
 ```
 
-### 增强内容
+### Enhancement Output
 
 ```markdown
-## 补充内容 (Codex Generated)
+## Enhanced Content (Codex Generated)
 
-### 更多示例
+### Additional Examples
 
-#### 示例 1: {场景名}
+#### Example 1: {scenario}
 \`\`\`typescript
-{code}
+{production_grade_code}
 \`\`\`
 
 ### FAQ
 
-**Q: {常见问题}**
-A: {解答}
+**Q: {common question}**
+A: {detailed answer with code if applicable}
 
-### 最佳实践
+### Best Practices
 
-1. **{实践名}**: {说明}
+1. **{practice name}**: {explanation}
 
-### 注意事项
+### Troubleshooting
 
-- {注意事项1}
-- {注意事项2}
+| Problem | Cause | Solution |
+|---------|-------|----------|
+| {symptom} | {cause} | {fix} |
+
+### Common Pitfalls
+
+- **{pitfall}**: {how to avoid}
 ```
 
 ---
 
-## 与 Claude Code 的协作
+## Quality Gates
 
-### 正常流程
-
-```
-Claude Code 起草
-        ↓
-Codex 审查 (评分)
-        ↓
-    总分 ≥ 80?
-    ├─ Yes → Codex 增强 → Claude Code 审定 → 完成
-    └─ No  → Codex 提供修改建议 → Claude Code 修改 → 重新审查
-```
-
-### 文档协作细节
-
-| 阶段 | 执行者 | 职责 |
-|------|--------|------|
-| 起草 | Claude Code | 结构设计、核心内容 |
-| 审查 | Codex | 准确性验证、问题发现 |
-| 增强 | Codex | 示例补充、FAQ、最佳实践 |
-| 审定 | Claude Code | 风格统一、最终确认 |
+| Metric | Requirement |
+|--------|-------------|
+| Total Score | >= 80 |
+| No broken examples | Code must run |
+| No TODO markers | 0 placeholders |
+| Version match | Docs match code |
 
 ---
 
-## 配置
+## Configuration
 
 ```json
 {
@@ -266,79 +284,37 @@ Codex 审查 (评分)
     "autoEnhance": true,
     "enhanceIfScoreBelow": 90,
     "docTypes": [".md", ".mdx", ".rst"],
-    "skipPaths": ["**/node_modules/**", "**/dist/**"]
+    "skipPaths": ["**/node_modules/**", "**/dist/**"],
+    "requiredSections": ["Quick Start", "API Reference", "Error Handling"],
+    "confidenceThreshold": 0.9
   }
 }
 ```
 
 ---
 
-## 示例交互
+## Honest Output
 
-**输入**：Claude Code 完成了 API 文档
-
-**Codex 审查输出**：
-
-```
-## 审查报告
-
-### 评分
-| 维度 | 得分 |
-|------|------|
-| 技术准确性 | 85/100 |
-| 完整性 | 70/100 |
-| 清晰度 | 90/100 |
-| 实用性 | 65/100 |
-| 总分 | 78/100 |
-
-### 问题
-- [ ] API Reference: `createUser` 缺少 `options` 参数说明
-- [ ] 错误处理部分缺少 `RateLimitError` 说明
-
-### 缺失内容
-- 缺少快速开始指南
-- 缺少常见问题解答
-- 缺少批量操作示例
-
-### 判定
-**ENHANCE** - 需要补充示例和 FAQ
-```
-
-**Codex 增强输出**：
+All documentation output includes confidence assessment:
 
 ```markdown
-## Quick Start
+## Documentation Enhancement Report
 
-### 安装
-\`\`\`bash
-npm install @mylib/sdk
-\`\`\`
+**Confidence**: 94%
 
-### 基础用法
-\`\`\`typescript
-import { Client } from '@mylib/sdk';
+**Sections Enhanced**: 4
+**Examples Added**: 8
+**FAQ Items**: 5
 
-const client = new Client({ apiKey: 'your-key' });
-const user = await client.users.create({ name: 'Test' });
-\`\`\`
+**High Confidence** (>95%):
+- API Reference examples (verified against code)
+- Error codes and messages (extracted from source)
 
-## FAQ
+**Medium Confidence** (85-95%):
+- Best practices (based on common patterns)
+- Performance tips (inferred from implementation)
 
-**Q: 如何处理 Rate Limit？**
-A: SDK 内置了自动重试机制，默认最多重试 3 次...
-
-**Q: 如何批量创建用户？**
-A: 使用 `client.users.createMany()` 方法...
-
-## 最佳实践
-
-1. **使用环境变量存储 API Key**
-   \`\`\`typescript
-   const client = new Client({ apiKey: process.env.API_KEY });
-   \`\`\`
-
-2. **启用请求日志以便调试**
-   \`\`\`typescript
-   const client = new Client({ debug: true });
-   \`\`\`
+**Verification Required**:
+- Run all code examples before publishing
+- Review troubleshooting steps with actual error scenarios
 ```

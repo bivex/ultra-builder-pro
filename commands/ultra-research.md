@@ -1,16 +1,16 @@
 ---
-description: Think-Driven Interactive Discovery - Deep research with 6-dimensional analysis
+description: Think-Driven Interactive Discovery - Deep research with 6-dimensional analysis and Dual-Engine collaboration
 argument-hint: [topic]
 allowed-tools: TodoWrite, Task, Read, Write, WebSearch, WebFetch, Grep, Glob
 ---
 
 # Ultra Research
 
-Transform vague ideas into complete specifications through progressive interactive discovery.
+Transform vague ideas into complete specifications through progressive interactive discovery with **Dual-Engine collaboration** (Claude Code + Codex).
 
-**Philosophy**: Research is collaborative. Each decision validated with user before proceeding.
+**Philosophy**: Research is collaborative. Each decision validated with user before proceeding. All findings must have 90%+ confidence.
 
-**ROI**: 85 min investment → 80-90% accuracy → 10+ hours rework avoided
+**ROI**: 85 min investment → 90%+ accuracy → 10+ hours rework avoided
 
 ---
 
@@ -35,11 +35,38 @@ Use AskUserQuestion to determine research scope:
 
 ---
 
+## Dual-Engine Research Flow
+
+```
+Claude Code initiates research
+        ↓
+Claude Code gathers context & asks questions
+        ↓
+Codex deepens research (codex-research-gen)
+        - Verifies claims against official sources
+        - Adds production-ready examples
+        - Rates confidence levels (must be 90%+)
+        ↓
+Claude Code reviews Codex findings
+        ↓
+Combined high-confidence output
+        ↓
+Write to specs/
+```
+
+**Key Principle**: All research output must be:
+- Evidence-based (verified sources)
+- Production-focused (no demo code)
+- High-confidence (90%+ for recommendations)
+- Actionable (clear next steps)
+
+---
+
 ## Mode 1: Progressive Interactive Discovery
 
 **When**: After /ultra-init, specs need clarification
 
-**Structure**: 4 rounds, each following 6-step cycle
+**Structure**: 4 rounds, each following 6-step cycle with Codex enhancement
 
 ### 6-Step Cycle (Every Round)
 
@@ -47,35 +74,85 @@ See @config/research/6-step-template.md for detailed steps:
 
 ```
 Step 1: Requirement Clarification (AskUserQuestion)
-Step 2: Deep Analysis (/max-think with 6D framework)
-Step 3: Analysis Validation (show summary, check satisfaction)
-Step 4: Iteration Decision (satisfied → continue, else → retry)
+Step 2: Deep Analysis (/ultra-think with 6D framework)
+Step 2.5: Codex Research Enhancement (NEW)
+        - Verify claims against sources
+        - Add production examples
+        - Rate confidence levels
+Step 3: Analysis Validation (show summary with confidence)
+Step 4: Iteration Decision (satisfied AND confidence ≥90% → continue)
 Step 5: Generate Spec Content (Write to specs/)
 Step 6: Round Satisfaction Rating (1-5 stars)
 ```
 
 ### Round Overview
 
-| Round | Focus | Questions | Output |
-|-------|-------|-----------|--------|
-| 1: Problem Discovery | Problem space, users | Q1-5 | specs/product.md §1-2 |
-| 2: Solution Exploration | MVP features, stories | Q6-8 | specs/product.md §3-5 |
-| 3: Technology Selection | Tech stack, architecture | Q9-11 | specs/architecture.md |
-| 4: Risk & Constraints | Risks, hard constraints | Q12-13 | Risk sections in both |
+| Round | Focus | Questions | Codex Role | Output |
+|-------|-------|-----------|------------|--------|
+| 1: Problem Discovery | Problem space, users | Q1-5 | Verify market data | specs/product.md §1-2 |
+| 2: Solution Exploration | MVP features, stories | Q6-8 | Add implementation patterns | specs/product.md §3-5 |
+| 3: Technology Selection | Tech stack, architecture | Q9-11 | **Deep tech comparison** | specs/architecture.md |
+| 4: Risk & Constraints | Risks, hard constraints | Q12-13 | Risk quantification | Risk sections |
 
 **Questions Reference**: @config/research/round-questions.md
 
 ---
 
-## Mode 2: Focused Technology Research
+## Mode 2: Focused Technology Research (Codex-Enhanced)
 
 **When**: Specific tech decision during development
 
 **Duration**: 10-15 minutes
 
-**Process**: Single-round 6D comparison, auto-update architecture.md
+**Process**: Single-round 6D comparison with Codex verification
+
+### Codex Technology Research Template
+
+```bash
+codex -q --json <<EOF
+Research technology options for: {topic}
+Context: {project_context}
+
+Requirements:
+1. Compare top 3 options with evidence
+2. Include official documentation references
+3. Provide production-ready code examples
+4. Rate each option with confidence percentage
+5. Minimum 90% confidence for recommendation
+
+Output comparison matrix with:
+- Performance benchmarks
+- Security considerations
+- Maintenance/community status
+- Integration complexity
+- Production readiness score
+EOF
+```
 
 Delegate to ultra-research-agent for deep technical analysis.
+
+---
+
+## Research Quality Standards
+
+### All Research Must Include
+
+| Element | Requirement |
+|---------|-------------|
+| Sources | Every claim has verifiable source |
+| Confidence | 90%+ for recommendations |
+| Code | Production-ready (no TODO/demo) |
+| Trade-offs | Quantified pros/cons |
+| Next steps | Specific, actionable items |
+
+### Research Must NOT Include
+
+| Prohibited | Detection |
+|------------|-----------|
+| Unverified claims | No source cited |
+| Low-confidence recommendations | <90% |
+| Demo/placeholder code | TODO, FIXME, "example only" |
+| Speculation without disclosure | Not marked as uncertain |
 
 ---
 
@@ -87,6 +164,8 @@ Delegate to ultra-research-agent for deep technical analysis.
 - ✅ All selected rounds completed
 - ✅ Research reports saved to `.ultra/docs/research/`
 - ✅ Overall rating ≥4 stars, no round <3 stars
+- ✅ **All recommendations have 90%+ confidence**
+- ✅ **All code examples are production-ready**
 
 ---
 
@@ -97,15 +176,40 @@ Delegate to ultra-research-agent for deep technical analysis.
 | `specs/product.md` | Problem, Users, Stories, Requirements, NFRs |
 | `specs/architecture.md` | Tech stack with rationale |
 | `.ultra/docs/research/*.md` | Round-specific analysis reports |
-| `.ultra/docs/research/metadata.json` | Quality metrics |
+| `.ultra/docs/research/metadata.json` | Quality metrics + confidence scores |
 
 ---
 
 ## Integration
 
-- **Think**: Each round invokes /max-think for 6D analysis
+- **Skills**: codex-research-gen (research enhancement)
+- **Think**: Each round invokes /ultra-think for 6D analysis
 - **MCP**: Round 3 uses Context7 (docs) + Exa (code examples)
+- **Dual-Engine**: Claude Code (questions) + Codex (verification)
 - **Next**: guiding-workflow suggests /ultra-plan when complete
+
+---
+
+## Honest Output Requirements
+
+Every research output must include confidence assessment:
+
+```markdown
+## Research Confidence Summary
+
+**Overall**: 93%
+
+**High Confidence (95%+)**:
+- Technology comparison (verified against official docs)
+- Performance benchmarks (reproduced locally)
+
+**Medium Confidence (90-95%)**:
+- Effort estimates (based on similar projects)
+- Risk probabilities (industry data)
+
+**Uncertainty (<90%)**:
+- {item}: {confidence}% - Marked as speculation
+```
 
 ---
 
@@ -114,3 +218,4 @@ Delegate to ultra-research-agent for deep technical analysis.
 - @config/research/6-step-template.md - Detailed 6-step cycle
 - @config/research/round-questions.md - All core questions
 - @config/ultra-mcp-guide.md - MCP tool usage
+- @skills/codex-research-gen/SKILL.md - Codex research enhancement
