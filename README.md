@@ -2,13 +2,13 @@
 
 <div align="center">
 
-**Version 4.2.0 (Production Ready)**
+**Version 4.2.1 (Production Ready)**
 
 *Production-Grade AI-Powered Development System for Claude Code*
 
 ---
 
-[![Version](https://img.shields.io/badge/version-4.2.0-blue)](docs/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-4.2.1-blue)](docs/CHANGELOG.md)
 [![Status](https://img.shields.io/badge/status-production--ready-green)](tests/verify-documentation-consistency.sh)
 [![Skills](https://img.shields.io/badge/skills-10-orange)](config/ultra-skills-guide.md)
 [![Official Compliance](https://img.shields.io/badge/official-100%25%20native-brightgreen)](https://docs.claude.com/claude-code)
@@ -132,9 +132,15 @@ Ultra Builder Pro 4.2.0
 ├── settings.json                      # Claude Code settings
 │   ├── permissions.allow              # Official tool permissions
 │   ├── permissions.deny               # Sensitive file protection
-│   └── alwaysThinkingEnabled          # Extended thinking enabled
+│   └── hooks                          # UserPromptSubmit + PostToolUse hooks
+│
+├── hooks/                             # Hook implementations
+│   ├── skill-activation-prompt.ts     # Command-skill binding logic
+│   ├── skill-activation-prompt.sh     # Hook shell wrapper
+│   └── post-tool-use-tracker.sh       # File modification tracker
 │
 ├── skills/                            # 10 Automated Skills (native activation)
+│   ├── skill-rules.json               # Command-skill bindings + trigger rules
 │   ├── guarding-quality/              # SOLID principles + code quality
 │   ├── guarding-test-quality/         # TAS + fake test detection
 │   ├── guarding-git-workflow/         # Git safety + parallel workflow
@@ -160,7 +166,7 @@ Ultra Builder Pro 4.2.0
 │   ├── ultra-test.md                  # /ultra-test
 │   ├── ultra-deliver.md               # /ultra-deliver
 │   ├── ultra-status.md                # /ultra-status
-│   └── max-think.md                   # /max-think
+│   └── ultra-think.md                 # /ultra-think
 │
 ├── guidelines/                        # Development guidelines
 │   ├── ultra-solid-principles.md      # SOLID/DRY/KISS/YAGNI
@@ -258,13 +264,35 @@ Ultra Builder Pro 4.2.0
 | **smart-contract** | Solidity code | Security audit, gas optimization, Foundry tests |
 | **skill-creator** | Creating new skills | Skill structure guide, packaging scripts |
 
-### Native Auto-Activation
+### Command-Skill Binding (Hook-Based Auto-Activation)
 
 ```
-User Prompt → Claude analyzes request → Match SKILL.md descriptions → Auto-invoke
+User runs /ultra-dev
+       ↓
+UserPromptSubmit Hook triggers
+       ↓
+skill-activation-prompt.ts detects command
+       ↓
+Loads bound skills from skill-rules.json
+       ↓
+Outputs: "🚀 SKILLS AUTO-ACTIVATED for /ultra-dev"
+       ↓
+Claude follows skill specifications during execution
 ```
 
-Skills activate based on their `description` field - no external rules needed.
+**Command-Skill Bindings:**
+
+| Command | Auto-Activated Skills |
+|---------|----------------------|
+| `/ultra-dev` | guarding-quality, guarding-git-workflow, guarding-test-quality |
+| `/ultra-test` | guarding-test-quality, guarding-quality |
+| `/ultra-deliver` | syncing-docs, syncing-status, guarding-quality |
+| `/ultra-status` | syncing-status, guiding-workflow |
+| `/ultra-research` | syncing-docs, guiding-workflow |
+| `/ultra-plan` | guarding-quality |
+| `/ultra-think` | guiding-workflow |
+
+Skills also activate via keyword/file triggers for non-command contexts.
 
 ---
 
@@ -350,6 +378,14 @@ claude
 
 ## Version History
 
+### v4.2.1 (2025-12-30) - Command-Skill Binding System
+
+- **Hook-Based Activation**: UserPromptSubmit hook triggers skill auto-activation
+- **Command Bindings**: `/ultra-dev` → `[guarding-quality, guarding-git-workflow, guarding-test-quality]`
+- **skill-rules.json**: New config for command-skill mappings + keyword/file triggers
+- **Workflow Integration**: Skills now truly integrated into command execution
+- **New Command**: `/ultra-think` for 6-dimensional deep analysis
+
 ### v4.2.0 (2025-12-28) - Anthropic Compliance + Domain Skills
 
 - **Prompt Engineering**: All prompts rewritten following Anthropic best practices
@@ -416,7 +452,7 @@ claude
 
 <div align="center">
 
-**Ultra Builder Pro 4.2.0** - Production-Grade Claude Code Development System
+**Ultra Builder Pro 4.2.1** - Production-Grade Claude Code Development System
 
 *Truth over comfort. Precision over confidence.*
 

@@ -1,0 +1,122 @@
+{
+  "version": "4.2",
+  "description": "UltraBuild Pro 4.2 技能自动触发规则",
+  "commandSkillBindings": {
+    "/ultra-init": [],
+    "/ultra-research": ["syncing-docs", "guiding-workflow"],
+    "/ultra-plan": ["guarding-quality"],
+    "/ultra-dev": ["guarding-quality", "guarding-git-workflow", "guarding-test-quality"],
+    "/ultra-test": ["guarding-test-quality", "guarding-quality"],
+    "/ultra-deliver": ["syncing-docs", "syncing-status", "guarding-quality"],
+    "/ultra-status": ["syncing-status", "guiding-workflow"],
+    "/ultra-think": ["guiding-workflow"]
+  },
+  "skills": {
+    "guarding-quality": {
+      "type": "guard",
+      "enforcement": "auto",
+      "priority": "high",
+      "description": "代码质量守护 - SOLID原则、复杂度限制",
+      "promptTriggers": {
+        "keywords": ["refactor", "重构", "code review", "代码审查", "quality", "质量"],
+        "intentPatterns": ["(fix|improve|optimize).*code", "(检查|分析|审查).*代码"]
+      },
+      "fileTriggers": {
+        "pathPatterns": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.py", "**/*.go", "**/*.vue"],
+        "pathExclusions": ["**/node_modules/**", "**/*.test.*", "**/*.spec.*"]
+      }
+    },
+    "guarding-test-quality": {
+      "type": "guard",
+      "enforcement": "auto",
+      "priority": "high",
+      "description": "测试质量守护 - TAS评分、Mock比例",
+      "promptTriggers": {
+        "keywords": ["test", "测试", "TAS", "coverage", "覆盖率", "spec"],
+        "intentPatterns": ["(write|add|fix).*test", "(编写|添加|修复).*测试"]
+      },
+      "fileTriggers": {
+        "pathPatterns": ["**/*.test.ts", "**/*.spec.ts", "**/*.test.js", "**/__tests__/**"]
+      }
+    },
+    "guarding-git-workflow": {
+      "type": "guard",
+      "enforcement": "auto",
+      "priority": "critical",
+      "description": "Git操作守护 - 安全提交、分支策略",
+      "promptTriggers": {
+        "keywords": ["commit", "push", "merge", "rebase", "branch", "git", "提交", "合并"],
+        "intentPatterns": ["git (commit|push|merge|rebase)", "(提交|推送|合并).*代码"]
+      }
+    },
+    "syncing-status": {
+      "type": "sync",
+      "enforcement": "auto",
+      "priority": "medium",
+      "description": "状态同步 - 任务进度、测试结果",
+      "promptTriggers": {
+        "keywords": ["status", "进度", "任务", "progress", "完成", "done"],
+        "intentPatterns": ["(what|show|check).*status", "(查看|检查|显示).*(状态|进度)"]
+      }
+    },
+    "syncing-docs": {
+      "type": "sync",
+      "enforcement": "suggest",
+      "priority": "medium",
+      "description": "文档同步 - ADR、研究报告",
+      "promptTriggers": {
+        "keywords": ["document", "文档", "ADR", "research", "研究", "architecture"],
+        "intentPatterns": ["(update|write|create).*doc", "(更新|编写|创建).*文档"]
+      }
+    },
+    "guiding-workflow": {
+      "type": "utility",
+      "enforcement": "suggest",
+      "priority": "low",
+      "description": "工作流指导 - 下一步建议",
+      "promptTriggers": {
+        "keywords": ["next", "下一步", "workflow", "工作流", "what should", "该做什么"],
+        "intentPatterns": ["what.*next", "下一步.*做什么"]
+      }
+    },
+    "frontend": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "前端开发 - React/Vue/Next.js模式",
+      "promptTriggers": {
+        "keywords": ["React", "Vue", "Next.js", "component", "组件", "UI", "CSS", "前端", "frontend"],
+        "intentPatterns": ["(build|create|fix).*component", "(构建|创建|修复).*组件"]
+      },
+      "fileTriggers": {
+        "pathPatterns": ["**/*.tsx", "**/*.vue", "**/components/**", "**/pages/**"]
+      }
+    },
+    "backend": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "后端开发 - API/数据库/安全",
+      "promptTriggers": {
+        "keywords": ["API", "REST", "GraphQL", "database", "数据库", "server", "auth", "认证", "后端", "backend"],
+        "intentPatterns": ["(create|build|fix).*api", "(创建|构建|修复).*接口"]
+      },
+      "fileTriggers": {
+        "pathPatterns": ["**/api/**", "**/server/**", "**/controllers/**", "**/routes/**"]
+      }
+    },
+    "smart-contract": {
+      "type": "domain",
+      "enforcement": "suggest",
+      "priority": "high",
+      "description": "智能合约开发 - EVM/Solana/安全审计",
+      "promptTriggers": {
+        "keywords": ["contract", "solidity", "ERC", "web3", "blockchain", "合约", "区块链"],
+        "intentPatterns": ["(write|audit|deploy).*contract", "(编写|审计|部署).*合约"]
+      },
+      "fileTriggers": {
+        "pathPatterns": ["**/*.sol", "**/contracts/**", "**/foundry/**"]
+      }
+    }
+  }
+}
