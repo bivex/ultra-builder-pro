@@ -19,7 +19,7 @@ This skill activates during:
 | Resource | Purpose |
 |----------|---------|
 | `scripts/git_safety_check.py` | Analyze git commands for risk |
-| `REFERENCE.md` | Detailed branch strategies and conventions |
+| `references/complete-reference.md` | Detailed branch strategies and conventions |
 
 ## Parallel Development Workflow
 

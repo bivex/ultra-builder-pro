@@ -23,7 +23,7 @@ This skill activates when:
 | Resource | Purpose |
 |----------|---------|
 | `scripts/quality_analyzer.py` | Analyze code metrics |
-| `REFERENCE.md` | SOLID principles and detailed examples |
+| `references/complete-reference.md` | SOLID principles and detailed examples |
 
 ## Quality Analysis
 
@@ -133,7 +133,7 @@ Provide guidance in Chinese at runtime:
 改进建议：
 - {具体修改方案}
 
-参考：REFERENCE.md {section}
+参考：references/complete-reference.md {section}
 ========================
 ```
 

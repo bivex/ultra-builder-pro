@@ -19,7 +19,7 @@ This skill activates during:
 | Resource | Purpose |
 |----------|---------|
 | `scripts/tas_analyzer.py` | Calculate TAS scores |
-| `REFERENCE.md` | Detailed test patterns and examples |
+| `references/complete-reference.md` | Detailed test patterns and examples |
 
 ## TAS Analysis
 

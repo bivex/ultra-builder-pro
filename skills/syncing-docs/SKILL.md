@@ -21,7 +21,7 @@ This skill activates during:
 | Resource | Purpose |
 |----------|---------|
 | `scripts/doc_sync.py` | Check and manage documentation |
-| `templates/adr-template.md` | ADR creation template |
+| `assets/adr-template.md` | ADR creation template |
 
 ## Documentation Management
 
