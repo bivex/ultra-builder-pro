@@ -33,6 +33,7 @@ Temporary Items
 *.tmp
 *.temp
 .cache/
+cache/
 tmp/
 temp/
 
