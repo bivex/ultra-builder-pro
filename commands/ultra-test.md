@@ -152,7 +152,7 @@ EOF
 Design comprehensive strategy covering all six dimensions:
 **Functional, Boundary, Exception, Performance, Security, Compatibility**
 
-**Reference**: See `guidelines/quality-standards.md#six-dimensional-test-coverage` for complete details.
+**Reference**: See `guidelines/ultra-quality-standards.md#six-dimensional-test-coverage` for complete details.
 
 ### 2. Execute Tests
 
@@ -372,11 +372,15 @@ If feature-status.json update fails:
 ## Integration
 
 - **Skills**:
-  - **guarding-test-quality** (TAS analysis, anti-pattern detection)
-  - **codex-test-gen** (Codex test generation and review)
-  - guarding-quality (six-dimensional coverage enforcement)
-  - automating-e2e-tests (E2E testing, auto-activates on keywords)
+  - Guards: **guarding-test-quality** (TAS analysis), guarding-quality (6D coverage)
+  - Sync: **syncing-status** (feature-status.json), **syncing-docs** (CLAUDE.md)
+  - Codex: **codex-test-gen** (test generation/review)
+  - E2E: automating-e2e-tests (auto-activates on keywords)
 - **Dual-Engine**: Claude Code (test design) + Codex (test generation/review)
+- **Output files**:
+  - `.ultra/docs/feature-status.json` (test results)
+  - `.ultra/docs/test-coverage-gaps.md` (gap analysis)
+  - `CLAUDE.md` (status update if tests fail)
 - **Next**: `/ultra-deliver` for deployment prep
 
 ## Output Format
