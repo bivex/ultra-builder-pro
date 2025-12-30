@@ -1,6 +1,6 @@
 # Skills Mode Configuration Guide
 
-**Ultra Builder Pro 4.0** - Skills documentation style control
+**Ultra Builder Pro 4.3** - Skills documentation style control
 
 ---
 
@@ -16,7 +16,7 @@ Skills.mode controls how Skills documentation is structured. Two modes are suppo
 
 **System default**: `slim`
 
-All 9 Skills in Ultra Builder Pro 4.0 are currently configured in **slim mode**:
+All 14 Skills in Ultra Builder Pro 4.3 are currently configured in **slim mode**:
 - Average SKILL.md size: 20-94 lines
 - External references: Used via `@import` pattern or reference links
 - Token efficiency: ~60% better than verbose mode

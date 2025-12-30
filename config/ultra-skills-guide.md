@@ -1,6 +1,6 @@
 # Skills System - Complete Guide
 
-**Ultra Builder Pro 4.1.1** - Automated quality enforcement through model-invoked skills (native description matching, no external rules file).
+**Ultra Builder Pro 4.3** - Automated quality enforcement through model-invoked skills (native description matching, no external rules file).
 
 ---
 
@@ -40,7 +40,7 @@ allowed-tools: Tool1, Tool2   # Optional: restrict tool access
 
 ---
 
-## Available Skills (8 total)
+## Available Skills (14 total)
 
 ### 1. guarding-quality
 

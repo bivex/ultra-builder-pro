@@ -1,6 +1,6 @@
 # Context Management - Efficiency Guide
 
-**Ultra Builder Pro 4.0** - Keep sessions efficient through smart context management.
+**Ultra Builder Pro 4.3** - Keep sessions efficient through smart context management.
 
 ---
 
