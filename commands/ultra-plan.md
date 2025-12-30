@@ -140,7 +140,7 @@ Generate tasks with:
 Save to `.ultra/tasks/tasks.json`:
 ```json
 {
-  "version": "4.0",
+  "version": "4.3",
   "created": "YYYY-MM-DD HH:mm:ss",
   "tasks": [
     {
@@ -161,7 +161,19 @@ Save to `.ultra/tasks/tasks.json`:
 
 **Note**: `type` and `trace_to` are optional for backward compatibility
 
-### 5. Report & Suggest Next Step
+### 5. Update Project Context
+
+**After tasks saved, trigger documentation sync:**
+
+1. **Update CLAUDE.md** (via syncing-docs skill):
+   - Update "Current Focus" section with first pending task
+   - Ensure project context reflects new task list
+
+2. **Initialize feature-status.json** (via syncing-status skill):
+   - Create entries for each task in `.ultra/docs/feature-status.json`
+   - Set initial status to "pending" for all tasks
+
+### 6. Report & Suggest Next Step
 
 Output summary in Chinese:
 - Total tasks generated
@@ -190,13 +202,19 @@ Output summary in Chinese:
 - **Prerequisites**:
   - `/ultra-research` must complete first (creates specs 100% complete)
   - OR specs manually created and complete (old workflow)
+- **Skills**:
+  - `syncing-docs`: Updates CLAUDE.md "Current Focus" section
+  - `syncing-status`: Initializes feature-status.json entries
+  - `guarding-quality`: Validates task structure
 - **Input**:
   - `specs/product.md` (new projects, created by /ultra-research)
   - `specs/architecture.md` (new projects, created by /ultra-research)
   - `docs/prd.md` (old projects, backward compatibility)
   - `docs/tech.md` (old projects, backward compatibility)
 - **Output**:
-  - `.ultra/tasks/tasks.json` (always)
+  - `.ultra/tasks/tasks.json` (task definitions)
+  - `.ultra/docs/feature-status.json` (status tracking)
+  - `CLAUDE.md` (updated "Current Focus")
 - **Context**: Research reports in `.ultra/docs/research/` (created by /ultra-research)
 - **Next**: `/ultra-dev` to start development
 
