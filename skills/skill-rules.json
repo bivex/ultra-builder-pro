@@ -185,7 +185,7 @@
     },
     "syncing-docs": {
       "type": "sync",
-      "enforcement": "suggest",
+      "enforcement": "auto",
       "priority": "medium",
       "description": "Documentation sync - ADR, research reports",
       "promptTriggers": {
@@ -195,7 +195,7 @@
     },
     "guiding-workflow": {
       "type": "utility",
-      "enforcement": "suggest",
+      "enforcement": "auto",
       "priority": "low",
       "description": "Workflow guidance - next step suggestions",
       "promptTriggers": {
@@ -205,7 +205,7 @@
     },
     "frontend": {
       "type": "domain",
-      "enforcement": "suggest",
+      "enforcement": "auto",
       "priority": "high",
       "description": "Frontend development - React/Vue/Next.js patterns",
       "promptTriggers": {
@@ -249,7 +249,7 @@
     },
     "backend": {
       "type": "domain",
-      "enforcement": "suggest",
+      "enforcement": "auto",
       "priority": "high",
       "description": "Backend development - API/database/security",
       "promptTriggers": {
@@ -303,7 +303,7 @@
     },
     "smart-contract": {
       "type": "domain",
-      "enforcement": "suggest",
+      "enforcement": "auto",
       "priority": "high",
       "description": "Smart contract development - EVM/Solana/security audit",
       "promptTriggers": {
@@ -384,8 +384,8 @@
     },
     "codex-doc-reviewer": {
       "type": "dual-engine",
-      "enforcement": "suggest",
-      "priority": "medium",
+      "enforcement": "auto",
+      "priority": "high",
       "backend": "codex",
       "description": "Codex documentation review - technical accuracy, completeness, examples",
       "promptTriggers": {
@@ -412,7 +412,7 @@
     },
     "ultra-think": {
       "type": "analysis",
-      "enforcement": "suggest",
+      "enforcement": "auto",
       "priority": "high",
       "description": "Deep analysis with 6D framework - multi-dimensional thinking for complex decisions",
       "promptTriggers": {
