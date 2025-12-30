@@ -43,25 +43,39 @@ interface SkillTriggerLog {
 
 /**
  * Load skill rules from skill-rules.json
+ * Tries project-level config first, then falls back to global config
  */
 function loadSkillRules(): SkillRules {
   const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
-  // If projectDir already ends with .claude, don't add it again
-  const claudeDir = projectDir.endsWith('.claude') ? projectDir : path.join(projectDir, '.claude');
-  const rulesPath = path.join(claudeDir, 'skills/skill-rules.json');
+  const homeDir = process.env.HOME || '/Users/rocky243';
 
-  if (!fs.existsSync(rulesPath)) {
-    // No rules file, return empty
-    return { version: '1.0', description: '', skills: {} };
+  // Build list of paths to try (project-level first, then global)
+  const pathsToTry: string[] = [];
+
+  // 1. Project-level: /project/.claude/skills/skill-rules.json
+  if (projectDir) {
+    const claudeDir = projectDir.endsWith('.claude') ? projectDir : path.join(projectDir, '.claude');
+    pathsToTry.push(path.join(claudeDir, 'skills/skill-rules.json'));
   }
 
-  try {
-    const content = fs.readFileSync(rulesPath, 'utf-8');
-    return JSON.parse(content);
-  } catch (error) {
-    console.error(`⚠️ Error loading skill-rules.json: ${error}`);
-    return { version: '1.0', description: '', skills: {} };
+  // 2. Global: ~/.claude/skills/skill-rules.json
+  pathsToTry.push(path.join(homeDir, '.claude/skills/skill-rules.json'));
+
+  // Try each path in order
+  for (const rulesPath of pathsToTry) {
+    if (fs.existsSync(rulesPath)) {
+      try {
+        const content = fs.readFileSync(rulesPath, 'utf-8');
+        return JSON.parse(content);
+      } catch (error) {
+        // Continue to next path
+        continue;
+      }
+    }
   }
+
+  // No rules file found anywhere
+  return { version: '1.0', description: '', skills: {} };
 }
 
 /**
