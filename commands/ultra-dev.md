@@ -95,13 +95,16 @@ Where `{slug}` is a 2-3 word lowercase hyphenated description of the task.
 
 ### Step 3: Create Changes Directory
 
-Create the OpenSpec workspace:
+Create task workspace (if not exists):
 ```
 .ultra/changes/task-{id}/
-├── proposal.md     # Feature overview and rationale
-├── tasks.md        # Copy task details from tasks.json
-└── specs/          # Only if modifying specifications
+├── proposal.md     # Feature overview, rationale, and completion status
+└── tasks.md        # Task details from tasks.json
 ```
+
+**On completion**: Add `## Status: Completed` section to proposal.md with completion date and summary.
+
+**On spec changes**: Document changes in proposal.md, do not create new files.
 
 ### Step 4: TDD Development Cycle
 
@@ -207,7 +210,7 @@ Stuck:   Claude → fail(x3) → Codex fix → Claude review → pass
 7. Push: `git push origin main`
 8. Delete branch: `git branch -d feat/task-{id}-{slug}`
 9. Update task status to `"completed"` in tasks.json
-10. Archive changes: `mv .ultra/changes/task-{id} .ultra/changes/archive/`
+10. Mark completion in `.ultra/changes/task-{id}/proposal.md` (add Status section)
 
 **Conflict resolution**: If rebase has conflicts, resolve them before merging. Never merge unresolved conflicts.
 
