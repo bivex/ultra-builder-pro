@@ -10,7 +10,7 @@
 
 [![Version](https://img.shields.io/badge/version-4.3.4-blue)](docs/CHANGELOG.md)
 [![Status](https://img.shields.io/badge/status-production--ready-green)](tests/verify-documentation-consistency.sh)
-[![Skills](https://img.shields.io/badge/skills-14-orange)](config/ultra-skills-guide.md)
+[![Skills](https://img.shields.io/badge/skills-14-orange)](skills/)
 [![Dual-Engine](https://img.shields.io/badge/dual--engine-Claude%20%2B%20Codex-purple)](skills/codex-reviewer/SKILL.md)
 [![Official Compliance](https://img.shields.io/badge/official-100%25%20native-brightgreen)](https://docs.claude.com/claude-code)
 
@@ -370,12 +370,11 @@ Ultra Builder Pro 4.3.2 (Dual-Engine)
 │   └── ultra-think.md                 # /ultra-think
 │
 ├── config/                            # Tool configuration
-│   ├── ultra-skills-guide.md          # Skills guide
 │   ├── ultra-mcp-guide.md             # MCP decision tree
-│   └── research/                      # Research modes
+│   └── research/                      # Research templates
 │
-├── workflows/                         # Workflow processes
-│   └── ultra-development-workflow.md  # 7-phase complete flow
+├── docs/                              # Documentation
+│   └── CHANGELOG.md                   # Version history
 │
 └── .ultra-template/                   # Project template
     ├── constitution.md                # Project principles
@@ -718,14 +717,14 @@ claude
 ### Essential Reading
 
 1. **This README** - System overview (5 min)
-2. **[Development Workflow](workflows/ultra-development-workflow.md)** - 7-phase guide (30 min)
+2. **[CLAUDE.md](CLAUDE.md)** - Core configuration and principles
 
 ### Reference
 
-- **[Skills Guide](config/ultra-skills-guide.md)** - All Skills detailed
 - **[MCP Guide](config/ultra-mcp-guide.md)** - MCP decision tree
-- **[Code Quality](skills/guarding-quality/SKILL.md)** - SOLID/DRY/KISS/YAGNI + 6D Testing
-- **[Test Quality](skills/guarding-test-quality/SKILL.md)** - Anti-patterns + TAS
+- **[Code Quality](skills/guarding-quality/SKILL.md)** - SOLID/DRY/KISS/YAGNI + Production Absolutism
+- **[Test Quality](skills/guarding-test-quality/SKILL.md)** - TAS + ZERO MOCK Policy
+- **[Codex Reviewer](skills/codex-reviewer/SKILL.md)** - 100-point code review
 
 ---
 
@@ -742,6 +741,6 @@ claude
 
 *Claude Code + Codex: No mock. No demo. No MVP. Production-grade only.*
 
-[Skills Guide](config/ultra-skills-guide.md) | [MCP Guide](config/ultra-mcp-guide.md) | [Workflow](workflows/ultra-development-workflow.md) | [Codex Integration](skills/codex-reviewer/SKILL.md)
+[MCP Guide](config/ultra-mcp-guide.md) | [Codex Reviewer](skills/codex-reviewer/SKILL.md) | [Quality Guard](skills/guarding-quality/SKILL.md) | [Test Guard](skills/guarding-test-quality/SKILL.md)
 
 </div>
