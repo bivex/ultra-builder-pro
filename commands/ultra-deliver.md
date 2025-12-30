@@ -47,20 +47,20 @@ If found:
 **Purpose**: Merge completed feature proposals to main specs.
 
 **Process**:
-1. List directories in `.ultra/changes/feat-*`
+1. List directories in `.ultra/changes/task-*`
 2. For each, read the task ID and check if task status is "completed" in tasks.json
-3. If completed and has `specs/` subdirectory:
-   - Read spec deltas (product.md, architecture.md)
-   - Append ADDED sections to main specs
-   - Apply MODIFIED sections
-4. Archive completed changes to `.ultra/changes/archive/`
+3. If completed:
+   - Read proposal.md for spec changes documented during development
+   - Apply relevant changes to main specs (specs/product.md, specs/architecture.md)
+   - Verify proposal.md has `## Status: Completed` section
+4. Mark as processed (no separate archive - completion tracked in proposal.md)
 
 **Output** (Chinese):
 ```
 📋 OpenSpec 合并报告
 ====================
 已处理：{count} 个变更提案
-已归档：{archive_list}
+已合并到主规范：{merged_list}
 ```
 
 ### Step 2: Performance Optimization
@@ -153,6 +153,17 @@ EOF
 2. Update version: `npm version {type}`
 3. Report release readiness
 
+### Step 7: Update Project Context
+
+**Update CLAUDE.md** (via syncing-docs):
+- Add release version to project overview
+- Clear "Current Focus" (all tasks completed)
+- Update any changed development rules
+
+**Update feature-status.json** (via syncing-status):
+- Mark all features as released
+- Add release version to metadata
+
 ---
 
 ## Deliverables Checklist
@@ -163,6 +174,8 @@ EOF
 - [ ] Documentation updated
 - [ ] Specs merged from changes/
 - [ ] Production build successful
+- [ ] CLAUDE.md updated with release info
+- [ ] feature-status.json marked as released
 
 ---
 
