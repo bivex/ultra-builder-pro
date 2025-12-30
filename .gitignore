@@ -60,6 +60,7 @@ file-history/
 ide/
 shell-snapshots/
 scripts/
+!skills/*/scripts/
 session-env/
 
 # Statistics and logs

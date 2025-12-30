@@ -13,6 +13,24 @@ Provide **independent, critical code review** after Claude Code implementations.
 
 ---
 
+## Resources
+
+| Resource | Purpose |
+|----------|---------|
+| `scripts/review.sh` | Execute codex review via CLI |
+
+### Quick Start
+
+```bash
+# Review a single file
+./scripts/review.sh path/to/file.ts
+
+# Enable auto-review (runs after every Edit/Write)
+export CODEX_AUTO_REVIEW=true
+```
+
+---
+
 ## Trigger Conditions
 
 1. **Command binding**: Auto-triggers with `/ultra-dev`

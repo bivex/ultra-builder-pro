@@ -8,9 +8,11 @@ set -e
 # Get project directory
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-.}"
 if [[ "$PROJECT_DIR" == */.claude ]]; then
+  CLAUDE_DIR="$PROJECT_DIR"
   CACHE_DIR="$PROJECT_DIR/cache"
   LOGS_DIR="$PROJECT_DIR/logs"
 else
+  CLAUDE_DIR="$PROJECT_DIR/.claude"
   CACHE_DIR="$PROJECT_DIR/.claude/cache"
   LOGS_DIR="$PROJECT_DIR/.claude/logs"
 fi
@@ -23,6 +25,12 @@ REVIEW_TRIGGER_FILE="$CACHE_DIR/codex-review-pending.json"
 ERROR_HISTORY_FILE="$CACHE_DIR/error-history.json"
 MAX_RETRIES=3
 SAME_ERROR_THRESHOLD=2
+
+# Auto-execution settings (set via environment or config)
+# CODEX_AUTO_REVIEW=true  - Enable automatic codex review
+# CODEX_AUTO_REVIEW=false - Only show reminder (default)
+AUTO_REVIEW="${CODEX_AUTO_REVIEW:-false}"
+REVIEW_SCRIPT="$CLAUDE_DIR/skills/codex-reviewer/scripts/review.sh"
 
 # Tool information from Claude Code
 TOOL_NAME="${CLAUDE_TOOL_NAME:-}"
@@ -128,6 +136,30 @@ is_stuck() {
   fi
 }
 
+# Execute auto review if enabled
+execute_auto_review() {
+  local file="$1"
+
+  if [ "$AUTO_REVIEW" != "true" ]; then
+    return 1
+  fi
+
+  if [ ! -x "$REVIEW_SCRIPT" ]; then
+    echo "⚠️ Review script not found or not executable: $REVIEW_SCRIPT"
+    return 1
+  fi
+
+  echo ""
+  echo "🤖 AUTO-EXECUTING CODEX REVIEW..."
+  echo ""
+
+  # Run review script in background to not block
+  "$REVIEW_SCRIPT" "$file" --auto >> "$LOGS_DIR/codex-review.log" 2>&1 &
+
+  echo "📋 Review started in background. Check logs: $LOGS_DIR/codex-review.log"
+  return 0
+}
+
 # Generate review reminder
 generate_review_reminder() {
   local file="$1"
@@ -148,12 +180,16 @@ generate_review_reminder() {
 
 **To trigger Codex review**, run:
 \`\`\`bash
+# Using skill script (recommended)
+$REVIEW_SCRIPT "$file"
+
+# Or using codex CLI directly
 codex -q "Review the following file for bugs and security issues: $file"
 \`\`\`
 
-**Or use codeagent-wrapper**:
+**To enable auto-review**, set environment variable:
 \`\`\`bash
-codeagent-wrapper --backend codex - <<< "Review $file for quality issues"
+export CODEX_AUTO_REVIEW=true
 \`\`\`
 
 EOF
@@ -178,11 +214,14 @@ main() {
     # Add to review queue
     add_to_review_queue "$modified_file" "$TOOL_NAME"
 
-    # Generate reminder
-    generate_review_reminder "$modified_file"
-
     # Log the trigger
     echo "[$(date -Iseconds)] Codex review triggered for: $modified_file" >> "$LOGS_DIR/codex-review.log"
+
+    # Try auto-review first, fall back to reminder
+    if ! execute_auto_review "$modified_file"; then
+      # Auto-review disabled or failed, show reminder
+      generate_review_reminder "$modified_file"
+    fi
   fi
 
   # Check for stuck state

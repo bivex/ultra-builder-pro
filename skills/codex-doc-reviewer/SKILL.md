@@ -13,6 +13,27 @@ Review and enhance documentation for **technical accuracy, completeness, clarity
 
 ---
 
+## Resources
+
+| Resource | Purpose |
+|----------|---------|
+| `scripts/review-docs.sh` | Review documentation via codex CLI |
+
+### Quick Start
+
+```bash
+# Review a document
+./scripts/review-docs.sh docs/api-reference.md
+
+# Review with enhancement
+./scripts/review-docs.sh docs/api-reference.md --enhance
+
+# Review with related code for accuracy
+./scripts/review-docs.sh docs/api-reference.md --related src/api/index.ts
+```
+
+---
+
 ## Trigger Conditions
 
 1. **Command binding**: Auto-triggers with `/ultra-deliver`

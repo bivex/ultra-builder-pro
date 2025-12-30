@@ -13,6 +13,24 @@ Generate **production-grade, comprehensive tests** that verify real business fun
 
 ---
 
+## Resources
+
+| Resource | Purpose |
+|----------|---------|
+| `scripts/generate.sh` | Generate tests via codex CLI |
+
+### Quick Start
+
+```bash
+# Generate tests for a source file
+./scripts/generate.sh src/services/payment.ts
+
+# Specify output file
+./scripts/generate.sh src/services/payment.ts --output src/services/payment.test.ts
+```
+
+---
+
 ## CRITICAL: Production-Grade Requirements
 
 ### Absolute Prohibitions

@@ -13,6 +13,27 @@ Enhance technical research with **evidence-based analysis, verified information,
 
 ---
 
+## Resources
+
+| Resource | Purpose |
+|----------|---------|
+| `scripts/research.sh` | Generate research reports via codex CLI |
+
+### Quick Start
+
+```bash
+# Research a topic
+./scripts/research.sh "React Server Components vs traditional SSR"
+
+# With context
+./scripts/research.sh "Database selection" --context "E-commerce platform, 10K daily users"
+
+# Custom output
+./scripts/research.sh "API Gateway patterns" --output .ultra/docs/research/api-gateway.md
+```
+
+---
+
 ## Trigger Conditions
 
 1. **Command binding**: Auto-triggers with `/ultra-research`
