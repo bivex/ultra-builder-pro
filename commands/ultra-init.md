@@ -284,7 +284,6 @@ TDD workflow with quality gates and automatic git integration.
 
 ## Output Format
 
-**Standard output structure**: See `@config/ultra-command-output-template.md` for the complete 6-section format.
 
 **Command icon**: 🏗️
 

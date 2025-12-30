@@ -245,7 +245,6 @@ Output summary in Chinese:
 
 ## Output Format
 
-**Standard output structure**: See `@config/ultra-command-output-template.md` for the complete 6-section format.
 
 **Command icon**: 📋
 

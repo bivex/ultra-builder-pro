@@ -176,7 +176,6 @@ When you mention "E2E test" or "browser automation":
 lighthouse http://localhost:3000 --only-categories=performance --output=json
 ```
 
-**Reference**: `@config/ultra-mcp-guide.md` for complete testing tools guide
 
 ### 3. Analyze Results
 
@@ -386,7 +385,6 @@ If feature-status.json update fails:
 
 ## Output Format
 
-**Standard output structure**: See `@config/ultra-command-output-template.md` for the complete 6-section format.
 
 **Command icon**: 🧪
 
@@ -395,4 +393,3 @@ If feature-status.json update fails:
 ## References
 
 - @skills/guarding-quality/SKILL.md - Complete testing standards
-- @config/ultra-mcp-guide.md - Testing tools and strategy guide

@@ -369,8 +369,7 @@ Ultra Builder Pro 4.3.2 (Dual-Engine)
 │   ├── ultra-status.md                # /ultra-status
 │   └── ultra-think.md                 # /ultra-think
 │
-├── config/                            # Tool configuration
-│   ├── ultra-mcp-guide.md             # MCP decision tree
+├── config/
 │   └── research/                      # Research templates
 │
 └── .ultra-template/                   # Project template
@@ -718,10 +717,10 @@ claude
 
 ### Reference
 
-- **[MCP Guide](config/ultra-mcp-guide.md)** - MCP decision tree
 - **[Code Quality](skills/guarding-quality/SKILL.md)** - SOLID/DRY/KISS/YAGNI + Production Absolutism
 - **[Test Quality](skills/guarding-test-quality/SKILL.md)** - TAS + ZERO MOCK Policy
 - **[Codex Reviewer](skills/codex-reviewer/SKILL.md)** - 100-point code review
+- **[Codex Test Gen](skills/codex-test-gen/SKILL.md)** - 6D test generation
 
 ---
 
@@ -738,6 +737,6 @@ claude
 
 *Claude Code + Codex: No mock. No demo. No MVP. Production-grade only.*
 
-[MCP Guide](config/ultra-mcp-guide.md) | [Codex Reviewer](skills/codex-reviewer/SKILL.md) | [Quality Guard](skills/guarding-quality/SKILL.md) | [Test Guard](skills/guarding-test-quality/SKILL.md)
+[Codex Reviewer](skills/codex-reviewer/SKILL.md) | [Quality Guard](skills/guarding-quality/SKILL.md) | [Test Guard](skills/guarding-test-quality/SKILL.md) | [CLAUDE.md](CLAUDE.md)
 
 </div>

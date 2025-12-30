@@ -243,5 +243,4 @@ Every research output must include confidence assessment:
 
 - @config/research/6-step-template.md - Detailed 6-step cycle
 - @config/research/round-questions.md - All core questions
-- @config/ultra-mcp-guide.md - MCP tool usage
 - @skills/codex-research-gen/SKILL.md - Codex research enhancement
