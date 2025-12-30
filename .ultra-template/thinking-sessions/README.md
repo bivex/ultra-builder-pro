@@ -1,6 +1,6 @@
 # Thinking Sessions Archive
 
-This directory stores archived thinking sessions from /max-think and /ultra-research.
+This directory stores archived thinking sessions from /ultra-think.
 
 ## Purpose
 
@@ -46,11 +46,8 @@ thinking-sessions/
 
 ## Usage
 
-### Auto-Archive (via /ultra-research)
-After Round 3 (technology selection), thinking sessions are automatically archived.
-
-### Manual Archive (via /max-think)
-Use `--archive` flag to save session: `/max-think --archive "complex problem"`
+### Auto-Archive (via /ultra-think)
+High-confidence decisions (≥0.9) or critical-impact decisions are automatically archived.
 
 ### Retrieval
 ```typescript
@@ -63,6 +60,5 @@ Read(".ultra/thinking-sessions/session-2025-12-07-database-selection.md")
 
 ## Integration
 
-- **compressing-context**: Summarizes sessions during compression
 - **syncing-docs**: Links sessions to ADRs in docs/decisions/
 - **guiding-workflow**: Suggests reviewing past decisions
