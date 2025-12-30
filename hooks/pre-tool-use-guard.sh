@@ -1,16 +1,47 @@
 #!/bin/bash
 # Ultra Builder Pro 4.3.3 - PreToolUse Guard Hook
-# Intercepts dangerous operations before execution
-# Protects against: force push, hard reset, clean -fd, etc.
+# Intercepts dangerous operations and triggers guard skills
+# Skills: guarding-git-workflow (Bash), guarding-quality (Edit/Write)
 
-set -e
+# Source core functions
+source "$(dirname "$0")/skill-trigger-core.sh"
 
-# Tool information from Claude Code
-TOOL_NAME="${CLAUDE_TOOL_NAME:-}"
-TOOL_INPUT="${CLAUDE_TOOL_INPUT:-}"
+# Read JSON input from stdin
+INPUT_JSON=$(read_stdin_json)
 
-# Only guard Bash tool
+# Tool information from JSON or env
+TOOL_NAME=$(echo "$INPUT_JSON" | jq -r '.tool_name // empty' 2>/dev/null)
+TOOL_NAME="${TOOL_NAME:-${CLAUDE_TOOL_NAME:-}}"
+TOOL_INPUT=$(echo "$INPUT_JSON" | jq -r '.tool_input // empty' 2>/dev/null)
+TOOL_INPUT="${TOOL_INPUT:-${CLAUDE_TOOL_INPUT:-}}"
+
+TRIGGERED_SKILLS=()
+
+# ============================================
+# Edit/Write → guarding-quality
+# ============================================
+if [[ "$TOOL_NAME" =~ ^(Edit|Write|MultiEdit)$ ]]; then
+  # Extract file path
+  FILE_PATH=$(echo "$TOOL_INPUT" | jq -r '.file_path // .path // empty' 2>/dev/null)
+
+  if [ -n "$FILE_PATH" ]; then
+    # Check if it's a code file (not test, not config)
+    if [[ "$FILE_PATH" =~ \.(ts|tsx|js|jsx|py|go|rs|java|cpp|c|sol)$ ]] && \
+       [[ ! "$FILE_PATH" =~ (\.test\.|\.spec\.|__tests__|node_modules) ]]; then
+      TRIGGERED_SKILLS+=("guarding-quality")
+      log_skill_trigger "guarding-quality" "pre-edit" "$FILE_PATH" "PreToolUse"
+    fi
+  fi
+fi
+
+# ============================================
+# Bash → guarding-git-workflow
+# ============================================
 if [ "$TOOL_NAME" != "Bash" ]; then
+  # Output triggered skills and exit
+  if [ ${#TRIGGERED_SKILLS[@]} -gt 0 ]; then
+    output_skill_activation "${TRIGGERED_SKILLS[@]}"
+  fi
   exit 0
 fi
 
@@ -27,9 +58,16 @@ if [ -z "$COMMAND" ]; then
 fi
 
 # ============================================
-# Dangerous Git Commands Detection
+# Git Commands → guarding-git-workflow
 # ============================================
 
+# Trigger guarding-git-workflow for any git command
+if echo "$COMMAND" | grep -qE "^git |git "; then
+  TRIGGERED_SKILLS+=("guarding-git-workflow")
+  log_skill_trigger "guarding-git-workflow" "git-command" "$COMMAND" "PreToolUse"
+fi
+
+# Dangerous patterns that need extra warning
 DANGEROUS_PATTERNS=(
   # Force push (can lose remote history)
   "git push.*--force"
@@ -185,6 +223,11 @@ EOF
     exit 2  # Block execution
   fi
 done
+
+# Output triggered skills
+if [ ${#TRIGGERED_SKILLS[@]} -gt 0 ]; then
+  output_skill_activation "${TRIGGERED_SKILLS[@]}"
+fi
 
 # All checks passed
 exit 0

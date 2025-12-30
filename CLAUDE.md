@@ -119,21 +119,32 @@ For technical details (APIs, SDKs, configurations):
 
 ## Production-Grade Engineering
 
-> "There is no demo. Every line of code is production code."
+> "There is no test code. There is no demo. There is no MVP.
+> Every line is production code. Every test is production verification."
 
-<production-requirements>
+<production-absolutism>
+
+### The Only Standard
+
+Production Code ≡ Test Code ≡ Architecture — No distinction. All code must run in production unchanged.
 
 ### Absolute Prohibitions
 
-| Pattern | Consequence |
-|---------|-------------|
-| `// TODO` or `// FIXME` | Immediate rejection |
-| `jest.mock('../` (internal modules) | TAS penalty -30 |
-| `expect(true).toBe(true)` | Immediate rejection |
-| Empty test bodies | Immediate rejection |
-| Demo/placeholder code | Immediate rejection |
-| Static/hardcoded data without source | TAS penalty -20 |
-| Degraded functionality vs spec | Immediate rejection |
+| Category | Prohibited Patterns | Consequence |
+|----------|---------------------|-------------|
+| **Mock/Simulation** | `jest.mock()`, `vi.mock()`, `jest.fn()`, `AsyncMock`, any mock | Immediate rejection |
+| **Degradation** | Fallback logic, simplified implementations, feature flags for bypassing | Immediate rejection |
+| **Static Data** | Hardcoded test data, inline fixtures, mock responses | Immediate rejection |
+| **Placeholders** | `TODO`, `FIXME`, `// placeholder`, `// demo` | Immediate rejection |
+| **Test Cheating** | Tests written to pass rather than verify, tautologies, empty bodies | Immediate rejection |
+| **MVP Mindset** | "Good enough for now", partial implementations, demo-quality code | Immediate rejection |
+
+### Quality Formula
+
+```
+Code Quality = Real Implementation × Real Tests × Real Dependencies
+If ANY component is fake/mocked/simulated → Quality = 0
+```
 
 ### What Production-Grade Means
 
@@ -167,27 +178,39 @@ async function processPayment(order: Order): Promise<PaymentResult> {
 ### Production-Grade Tests
 
 ```typescript
-// CORRECT: Tests actual behavior
+// CORRECT: Tests actual behavior with real dependencies
 describe('PaymentService', () => {
   it('processes valid payment and returns confirmation', async () => {
-    const mockGateway = createMockPaymentGateway({ willSucceed: true });
-    const service = new PaymentService(mockGateway);  // Only external dep mocked
+    const db = createTestDatabase();  // Real in-memory DB
+    const gateway = createTestPaymentGateway();  // Real test gateway
+    const service = new PaymentService(db, gateway);
 
     const result = await service.process(validOrder);
 
     expect(result.status).toBe('confirmed');
-    expect(result.transactionId).toBeDefined();
+    expect(result.transactionId).toMatch(/^txn_/);
+
+    // Verify persistence
+    const saved = await db.payments.findById(result.id);
+    expect(saved).toBeDefined();
   });
 });
 ```
 
-**Test requirements:**
-- Mock external boundaries only (APIs, databases)
-- Never mock internal modules
-- TAS ≥ 70%, Coverage ≥ 80%, Mock Ratio ≤ 30%
+**Production Absolutism Test Requirements:**
+
+| Instead Of | Use |
+|------------|-----|
+| Mock database | Real in-memory DB (SQLite, testcontainers) |
+| Mock HTTP | Real test server (supertest, httptest) |
+| Mock filesystem | Real tmp directories |
+| Static fixtures | Real data generators |
+| Simplified logic | Full production implementation |
+
+- TAS ≥ 70%, Coverage ≥ 80%, Mock Count = 0
 - 6D coverage: Functional, Boundary, Exception, Performance, Security, Compatibility
 
-</production-requirements>
+</production-absolutism>
 
 ---
 
@@ -351,7 +374,7 @@ git branch -d <branch>                           # Cleanup
 | Skill | Function |
 |-------|----------|
 | guarding-quality | SOLID principles, complexity limits |
-| guarding-test-quality | TAS scoring, mock ratio |
+| guarding-test-quality | TAS scoring, ZERO MOCK enforcement |
 | guarding-git-workflow | Safe commits, branch strategy |
 
 ### Sync Skills

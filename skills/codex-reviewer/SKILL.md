@@ -3,13 +3,41 @@ name: codex-reviewer
 description: "Provides independent code review after Claude Code implementations. This skill acts as a second pair of eyes with 100-point scoring across correctness, security, performance, and maintainability dimensions."
 ---
 
-# Codex Code Reviewer
+<CRITICAL_REQUIREMENT>
+## ⚠️ MANDATORY: Execute Codex CLI
+
+You MUST execute `codex exec` command to perform the code review. This skill is NOT complete without actual Codex CLI execution.
+
+```bash
+# Required execution (JSONL event stream):
+codex exec --json "Review {file_path} for bugs, security, performance. Output JSON: {score, issues, verdict}" | jq
+
+# Or without jq parsing:
+codex exec "Review {file_path} for correctness, security, performance, maintainability. Score 0-100."
+
+# Or use the script:
+~/.claude/skills/codex-reviewer/scripts/review.sh {file_path}
+```
+
+**DO NOT** just read this skill and provide manual review. **YOU MUST** run Codex CLI.
+</CRITICAL_REQUIREMENT>
+
+# Codex Code Reviewer (Production Absolutism)
+
+> "There is no test code. There is no demo. There is no MVP.
+> Every line is production code. Every review enforces production standards."
 
 ## Purpose
 
 Provide **independent, critical code review** after Claude Code implementations. Act as a second pair of eyes that catches what the primary developer missed.
 
-**Core Principle**: Be a demanding reviewer, not a rubber stamp. Find real issues.
+**Core Principle**: Be a demanding reviewer, not a rubber stamp. Find real issues. Enforce Production Absolutism.
+
+**Quality Formula**:
+```
+Code Quality = Real Implementation × Real Dependencies × Real Tests
+If ANY component is fake/mocked/simulated → Quality = 0 → BLOCK
+```
 
 ---
 
@@ -107,6 +135,10 @@ Changes:
 \`\`\`
 
 Review across these dimensions:
+
+**CRITICAL (Immediate BLOCK if violated)**:
+- Production Absolutism: NO mock/simulation/degradation/placeholder/TODO
+- If ANY mock detected → Score = 0 → BLOCK
 
 1. **Correctness** (40 points)
    - Logic errors
@@ -226,12 +258,25 @@ Claude Code develops → Codex reviews → Claude Code fails fix (x3)
 
 ---
 
-## Quality Standards
+## Quality Standards (Production Absolutism)
 
-The reviewer enforces these production-grade requirements:
+The reviewer enforces these production-grade requirements — violations result in immediate BLOCK:
 
-1. **Real Implementation**: Code handles actual business scenarios
-2. **No Placeholders**: No TODO comments, mock data, or stub implementations
+### Absolute Prohibitions (Immediate BLOCK)
+
+| Violation | Detection | Verdict |
+|-----------|-----------|---------|
+| **Mock/Simulation** | `jest.mock()`, `vi.mock()`, `jest.fn()` | BLOCK |
+| **Degradation** | Fallback logic, simplified implementations | BLOCK |
+| **Static Data** | Hardcoded fixtures, inline test data | BLOCK |
+| **Placeholders** | `TODO`, `FIXME`, `// demo`, `// placeholder` | BLOCK |
+| **MVP Mindset** | "Good enough", partial implementations | BLOCK |
+
+### Required Standards
+
+1. **Real Implementation**: Code handles actual business scenarios with real dependencies
+2. **No Mocking**: All tests use real in-memory implementations (SQLite, testcontainers)
 3. **Complete Error Handling**: All failure paths handled with recovery
 4. **Security by Default**: Input validation, output encoding, secure defaults
 5. **Observable**: Structured logging, metrics exposure
+6. **Production-Ready**: Code deployable unchanged to production

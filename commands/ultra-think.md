@@ -34,6 +34,30 @@ Apply these thinking frameworks throughout analysis:
 | **Inversion** | Consider what to avoid, not just what to do |
 | **Second-Order Thinking** | Consider consequences of consequences |
 | **Cross-Domain** | Borrow solutions from other industries/domains |
+| **Production Absolutism** | Every solution must be production-grade, no mock/demo/MVP |
+
+---
+
+## Production Absolutism Constraint
+
+> "There is no test code. There is no demo. There is no MVP.
+> Every solution is production code. Every recommendation is production verification."
+
+**All analysis outcomes must meet these criteria:**
+
+| Prohibited | Description |
+|------------|-------------|
+| Mock/Simulation solutions | Recommending mocked or simulated approaches |
+| Degraded alternatives | "Simplified version first" or fallback strategies |
+| Demo-quality proposals | Proof-of-concept or MVP-first approaches |
+| Test-only code paths | Code that only works in test environments |
+| Placeholder architectures | "We'll improve this later" patterns |
+
+**Every recommendation must be:**
+- Deployable to production unchanged
+- Testable with real dependencies (no mocks)
+- Scalable to production load
+- Secure for production exposure
 
 ---
 
@@ -268,7 +292,7 @@ Token allocation based on problem complexity:
 
 **Manual override**:
 ```bash
-MAX_THINKING_TOKENS=30000 /ultra-think "your complex problem"
+MAX_THINKING_TOKENS=31999 /ultra-think "your complex problem"
 ```
 
 ---

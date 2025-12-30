@@ -3,13 +3,40 @@ name: codex-test-gen
 description: "Generates production-grade tests with 6-dimensional coverage (functional, boundary, exception, performance, security, compatibility). This skill enforces real implementation without TODO/mock/demo patterns and calculates TAS scores."
 ---
 
+<CRITICAL_REQUIREMENT>
+## ⚠️ MANDATORY: Execute Codex CLI
+
+You MUST execute `codex exec` command to generate tests. This skill is NOT complete without actual Codex CLI execution.
+
+```bash
+# Required execution (JSONL event stream):
+codex exec --json "Generate 6D tests for {file_path}. Coverage: functional, boundary, exception, performance, security, compatibility. No TODO/mock." | jq
+
+# Or without jq parsing:
+codex exec "Generate comprehensive tests for {file_path}. Include edge cases, error handling, performance tests."
+
+# Or use the script:
+~/.claude/skills/codex-test-gen/scripts/generate.sh {source_file_path}
+```
+
+**DO NOT** just read this skill and write tests manually. **YOU MUST** run Codex CLI.
+</CRITICAL_REQUIREMENT>
+
 # Codex Test Generator
 
 ## Purpose
 
-Generate **production-grade, comprehensive tests** that verify real business functionality. Tests must exercise actual code paths, not mock implementations.
+Generate **production-grade, comprehensive tests** that verify real business functionality. Tests must exercise actual code paths with real dependencies.
 
-**Core Principle**: Tests are production code. No shortcuts, no placeholders, no demonstrations.
+**Core Principle (Production Absolutism)**:
+
+> "There is no test code. There is no demo. There is no MVP.
+> Every test is production verification. Every assertion verifies real behavior."
+
+```
+Test Quality = Real Implementation × Real Dependencies × Real Assertions
+If ANY component is fake/mocked/simulated → Quality = 0
+```
 
 ---
 
@@ -33,21 +60,24 @@ Generate **production-grade, comprehensive tests** that verify real business fun
 
 ## CRITICAL: Production-Grade Requirements
 
-### Absolute Prohibitions
+### Absolute Prohibitions (Production Absolutism)
 
-These patterns are **NEVER ALLOWED** in generated tests or implementation code:
+These patterns are **NEVER ALLOWED** — immediate rejection, no exceptions:
 
-| Prohibited Pattern | Detection | Consequence |
-|-------------------|-----------|-------------|
-| `// TODO` comments | `grep -r "TODO"` | Immediate rejection |
-| `// FIXME` markers | `grep -r "FIXME"` | Immediate rejection |
-| Mock internal modules | `jest.mock('../` | TAS penalty -30 |
-| Static/hardcoded data | Inline literals without source | TAS penalty -20 |
-| Empty test bodies | `it('...', () => {})` | Immediate rejection |
-| Tautology tests | `expect(true).toBe(true)` | Immediate rejection |
-| Skipped tests | `.skip()` or `.todo()` | TAS penalty -15 |
-| Demo/placeholder code | `console.log('demo')` | Immediate rejection |
-| Degraded functionality | Simplified logic vs spec | Immediate rejection |
+| Category | Prohibited Patterns | Detection |
+|----------|---------------------|-----------|
+| **Mock/Simulation** | `jest.mock()`, `vi.mock()`, `jest.fn()`, `AsyncMock` | `grep -E "jest\.mock\|vi\.mock\|jest\.fn"` |
+| **Degradation** | Fallback logic, simplified implementations | Code review |
+| **Static Data** | Hardcoded fixtures, inline test data | `grep -E "const.*=.*\[{.*}\]"` |
+| **Placeholders** | `TODO`, `FIXME`, `// demo`, `// placeholder` | `grep -E "TODO\|FIXME\|demo\|placeholder"` |
+| **Test Cheating** | Tautologies, empty bodies, skipped tests | `grep -E "expect\(true\)\|\.skip\(\)\|\.todo\(\)"` |
+| **MVP Mindset** | "Good enough", partial implementations | Code review |
+
+**Quality Formula**:
+```
+If ANY prohibited pattern detected → TAS = 0 → Immediate rejection
+No exceptions. No "just this once". No "we'll fix it later".
+```
 
 ### What Production-Grade Means
 
@@ -280,11 +310,15 @@ CRITICAL REQUIREMENTS:
    - NO demo or placeholder code
    - NO degraded or simplified functionality
 
-2. **Mock Strategy**
-   - ONLY mock external dependencies (database, HTTP, filesystem)
-   - NEVER mock internal modules (../services/*, ./utils/*)
-   - Mock ratio must be <= 30%
-   - Every mock must have corresponding real behavior test
+2. **ZERO MOCK Policy** (严禁模拟)
+   - NO jest.mock() or vi.mock() of ANY module
+   - NO mock functions (jest.fn(), vi.fn()) for business logic
+   - NO static/hardcoded test data - use real data generators
+   - NO simplified or degraded implementations
+   - NO spy on internal modules
+   - USE real in-memory databases (SQLite, testcontainers)
+   - USE real HTTP servers (supertest, nock for external APIs only)
+   - USE real file system (tmp directories)
 
 3. **Assertion Quality**
    - Use behavioral assertions (toBe, toEqual, toThrow)
@@ -317,26 +351,35 @@ EOF
 |--------|-------------|-----------|
 | TAS Score | >= 70% | Calculated per file |
 | Coverage | >= 80% | `npm test -- --coverage` |
-| Mock Ratio | <= 30% | Internal mocks / total imports |
+| Mock Count | **0** | `grep -c "jest.mock\|vi.mock"` - 必须为零 |
 | Tautologies | 0 | `expect(true/false).toBe()` |
 | Empty Tests | 0 | Test body has no assertions |
 | TODO Count | 0 | `grep -c TODO` |
+| Static Data | 0 | Hardcoded literals without factory |
 
 ---
 
 ## TAS Calculation
 
-Test Authenticity Score (TAS) formula:
+Test Authenticity Score (TAS) formula (Zero-Mock Edition):
 
 ```
-TAS = (Mock_Score × 0.25) + (Assertion_Score × 0.35) +
-      (Execution_Score × 0.25) + (Pattern_Score × 0.15)
+TAS = (RealData_Score × 0.30) + (Assertion_Score × 0.35) +
+      (Execution_Score × 0.20) + (Pattern_Score × 0.15)
 
-Mock_Score = 100 - (internal_mocks / total_imports × 100)
+RealData_Score = 100 if no mocks, 0 if any mock detected
 Assertion_Score = behavioral_assertions / total_assertions × 100
 Execution_Score = real_code_lines / total_test_lines × 100
-Pattern_Score = 100 - (anti_patterns × 15)
+Pattern_Score = 100 - (anti_patterns × 20)
 ```
+
+**Anti-Patterns (每项 -20 分)**:
+- jest.mock() / vi.mock()
+- jest.fn() for business logic
+- Static hardcoded data
+- expect(true).toBe(true)
+- Empty test body
+- TODO/FIXME comments
 
 ### Grade Thresholds
 
@@ -357,7 +400,8 @@ Pattern_Score = 100 - (anti_patterns × 15)
   "codex-test-gen": {
     "minCoverage": 80,
     "minTAS": 70,
-    "maxMockRatio": 0.3,
+    "maxMockCount": 0,
+    "zeroMockPolicy": true,
     "dimensions": ["functional", "boundary", "exception", "security", "performance", "compatibility"],
     "testFramework": "vitest",
     "outputPattern": "{filename}.test.ts",

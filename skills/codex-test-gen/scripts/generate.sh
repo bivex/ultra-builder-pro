@@ -78,10 +78,12 @@ CRITICAL REQUIREMENTS:
    - NO static/hardcoded data without source
    - NO demo or placeholder code
 
-2. **Mock Strategy**
-   - ONLY mock external dependencies (database, HTTP, filesystem)
-   - NEVER mock internal modules (../services/*, ./utils/*)
-   - Mock ratio must be <= 30%
+2. **ZERO MOCK Policy** (严禁模拟)
+   - NO jest.mock() or vi.mock() of ANY module
+   - NO mock functions (jest.fn(), vi.fn()) for business logic
+   - NO static/hardcoded test data - use real data generators
+   - USE real in-memory databases (SQLite, testcontainers)
+   - USE real HTTP servers (supertest, nock for external APIs only)
 
 3. **Assertion Quality**
    - Use behavioral assertions (toBe, toEqual, toThrow)
@@ -131,8 +133,11 @@ fi
 if echo "$RESULT" | grep -qE "expect\(true\)\.toBe\(true\)|expect\(false\)\.toBe\(false\)"; then
   VIOLATIONS="$VIOLATIONS\n- Contains tautology tests"
 fi
-if echo "$RESULT" | grep -qE "jest\.mock\('\.\./|vi\.mock\('\.\./"; then
-  VIOLATIONS="$VIOLATIONS\n- Mocks internal modules"
+if echo "$RESULT" | grep -qE "jest\.mock\(|vi\.mock\("; then
+  VIOLATIONS="$VIOLATIONS\n- Contains mock (ZERO MOCK POLICY VIOLATION)"
+fi
+if echo "$RESULT" | grep -qE "jest\.fn\(\)|vi\.fn\(\)"; then
+  VIOLATIONS="$VIOLATIONS\n- Contains mock functions (ZERO MOCK POLICY VIOLATION)"
 fi
 
 if [ -n "$VIOLATIONS" ]; then

@@ -3,9 +3,18 @@ name: guarding-quality
 description: "Validates code quality across SOLID principles, complexity limits, and test coverage. This skill activates when editing any code files, discussing refactoring, quality improvement, or code review."
 ---
 
-# Code Quality Guardian
+# Code Quality Guardian (Production Absolutism)
 
-Ensures production-grade code quality through universal principles.
+> "There is no test code. There is no demo. There is no MVP.
+> Every line is production code. Every component is production-grade."
+
+Ensures production-grade code quality through universal principles — no mock, no degradation, no shortcuts.
+
+**Quality Formula**:
+```
+Code Quality = Real Implementation × Real Dependencies × Real Tests
+If ANY component is fake/mocked/simplified → Quality = 0
+```
 
 > **Note**: Language/framework-specific patterns are in `frontend` and `backend` skills.
 > This skill focuses on **principles** that apply to ALL code.
@@ -86,6 +95,18 @@ python scripts/quality_analyzer.py --summary  # Summary only
 
 ---
 
+## Production Absolutism Violations (Immediate Rejection)
+
+| Violation | Description | Consequence |
+|-----------|-------------|-------------|
+| **Mock/Simulation** | `jest.mock()`, `vi.mock()`, any mock | Immediate rejection |
+| **Degradation** | Fallback logic, simplified implementations | Immediate rejection |
+| **Static Data** | Hardcoded fixtures, inline test data | Immediate rejection |
+| **Placeholders** | `TODO`, `FIXME`, `// demo` | Immediate rejection |
+| **MVP Mindset** | "Good enough", partial implementations | Immediate rejection |
+
+---
+
 ## Test Coverage Standards
 
 | Scope | Target |
@@ -110,10 +131,12 @@ python scripts/quality_analyzer.py --summary  # Summary only
 ## Philosophy Priority
 
 ```
+Production Absolutism > "Good Enough"
 User Value > Technical Showoff
 Code Quality > Development Speed
 Systems Thinking > Fragmented Execution
 Test-First > Ship-Then-Test
+Real Implementation > Mock/Simulation
 ```
 
 ---

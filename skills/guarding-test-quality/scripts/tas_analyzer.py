@@ -38,8 +38,8 @@ class TestFileAnalysis:
     issues: List[str] = field(default_factory=list)
     suggestions: List[str] = field(default_factory=list)
 
-    # TAS score components (0-100)
-    mock_ratio_score: float = 0.0
+    # TAS score components (0-100) - ZERO MOCK Edition
+    real_data_score: float = 0.0  # 100 if no mocks, 0 if any mock
     assertion_quality_score: float = 0.0
     real_execution_score: float = 0.0
     pattern_quality_score: float = 0.0
@@ -184,15 +184,15 @@ class TASAnalyzer:
         return analysis
 
     def _calculate_scores(self, analysis: TestFileAnalysis):
-        """Calculate TAS score components."""
+        """Calculate TAS score components - ZERO MOCK Edition."""
 
-        # 1. Mock Ratio Score (25%)
-        # Lower internal mocks = higher score
+        # 1. Real Data Score (30%) - ZERO MOCK POLICY
+        # Any mock = 0 score, no mocks = 100 score
         if analysis.mock_count > 0:
-            internal_ratio = analysis.internal_mocks / analysis.mock_count
-            analysis.mock_ratio_score = max(0, 100 - (internal_ratio * 150))
+            analysis.real_data_score = 0  # ZERO MOCK POLICY VIOLATION
+            analysis.issues.append(f"ZERO MOCK POLICY VIOLATION: {analysis.mock_count} mocks detected")
         else:
-            analysis.mock_ratio_score = 100
+            analysis.real_data_score = 100
 
         # 2. Assertion Quality Score (35%)
         # Higher behavioral assertions = higher score
@@ -203,7 +203,7 @@ class TASAnalyzer:
         else:
             analysis.assertion_quality_score = 0
 
-        # 3. Real Execution Score (25%)
+        # 3. Real Execution Score (20%)
         # Based on assertion density per test
         if analysis.total_tests > 0:
             assertions_per_test = analysis.assertions_count / analysis.total_tests
@@ -218,13 +218,15 @@ class TASAnalyzer:
             penalty += 30
         if analysis.tautology_tests > 0:
             penalty += 40
+        if analysis.mock_count > 0:
+            penalty += 20  # Additional penalty for any mocking
         analysis.pattern_quality_score = max(0, 100 - penalty)
 
-        # Calculate final weighted score
+        # Calculate final weighted score (ZERO MOCK Edition weights)
         analysis.final_score = (
-            analysis.mock_ratio_score * 0.25 +
+            analysis.real_data_score * 0.30 +
             analysis.assertion_quality_score * 0.35 +
-            analysis.real_execution_score * 0.25 +
+            analysis.real_execution_score * 0.20 +
             analysis.pattern_quality_score * 0.15
         )
 
@@ -243,9 +245,9 @@ class TASAnalyzer:
     def _generate_suggestions(self, analysis: TestFileAnalysis):
         """Generate improvement suggestions."""
 
-        if analysis.internal_mocks > analysis.external_mocks:
+        if analysis.mock_count > 0:
             analysis.suggestions.append(
-                "Reduce internal mocks. Use real implementations for services and utils."
+                "ZERO MOCK POLICY: Remove ALL mocks. Use real in-memory implementations instead."
             )
 
         if analysis.mock_only_assertions > analysis.behavioral_assertions:
@@ -296,10 +298,10 @@ def format_file_report(analysis: TestFileAnalysis) -> str:
         f"  断言数量: {analysis.assertions_count}",
         f"  Mock 数量: {analysis.mock_count} (内部: {analysis.internal_mocks}, 外部: {analysis.external_mocks})",
         f"",
-        f"分项得分:",
-        f"  Mock 比例 (25%): {analysis.mock_ratio_score:.1f}",
+        f"分项得分 (ZERO MOCK Edition):",
+        f"  真实数据 (30%): {analysis.real_data_score:.1f} {'✅' if analysis.real_data_score == 100 else '❌ MOCK DETECTED'}",
         f"  断言质量 (35%): {analysis.assertion_quality_score:.1f}",
-        f"  真实执行 (25%): {analysis.real_execution_score:.1f}",
+        f"  真实执行 (20%): {analysis.real_execution_score:.1f}",
         f"  模式质量 (15%): {analysis.pattern_quality_score:.1f}",
     ]
 
@@ -343,10 +345,14 @@ def format_summary(results: List[TestFileAnalysis]) -> str:
     else:
         overall_grade = "F"
 
+    # Check for any mocks across all files
+    total_mocks = sum(r.mock_count for r in results)
+    mock_status = "✅ 无 Mock" if total_mocks == 0 else f"❌ 检测到 {total_mocks} 个 Mock (ZERO MOCK POLICY VIOLATION)"
+
     lines = [
         "",
         "=" * 50,
-        "📊 测试质量分析报告",
+        "📊 测试质量分析报告 (ZERO MOCK Edition)",
         "=" * 50,
         "",
         f"项目 TAS 分数: {avg_score:.1f}% (等级: {overall_grade})",
@@ -356,6 +362,7 @@ def format_summary(results: List[TestFileAnalysis]) -> str:
         f"  测试用例: {total_tests} 个",
         f"  总断言数: {total_assertions} 个",
         f"  平均断言数: {total_assertions/max(1,total_tests):.1f} 个/测试",
+        f"  Mock 检测: {mock_status}",
         "",
         "等级分布:",
     ]

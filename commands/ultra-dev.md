@@ -4,9 +4,18 @@ argument-hint: [task-id]
 allowed-tools: Read, Write, Edit, Bash, TodoWrite, Grep, Glob, Task
 ---
 
-# /ultra-dev
+# /ultra-dev (Production Absolutism)
+
+> "There is no test code. There is no demo. There is no MVP.
+> Every line is production code. Every test is production verification."
 
 Execute development tasks using TDD workflow with native task management.
+
+**Quality Formula**:
+```
+Code Quality = Real Implementation × Real Tests × Real Dependencies
+If ANY component is fake/mocked/simulated → Quality = 0
+```
 
 ## Arguments
 
@@ -22,7 +31,7 @@ Execute development tasks using TDD workflow with native task management.
 
 **What to check**: Read `.ultra/tasks/tasks.json` and verify the target task has a `trace_to` field pointing to a valid specification file.
 
-**Why this matters**: Development without specification leads to mock code, hardcoded values, and degraded implementations. The spec provides the contract that tests verify against.
+**Why this matters**: Development without specification leads to mock code, hardcoded values, and degraded implementations — all violate Production Absolutism. The spec provides the contract that tests verify against with real dependencies.
 
 **If validation fails**:
 - Report: "❌ 任务 #{id} 没有关联规范 (trace_to 字段缺失)"
@@ -110,21 +119,24 @@ Create task workspace (if not exists):
 
 **You MUST follow RED → GREEN → REFACTOR strictly. Do NOT write implementation before tests.**
 
-**RED Phase**: Write failing tests first
+**RED Phase**: Write failing tests first (Production Absolutism)
 - Cover 6 dimensions: Functional, Boundary, Exception, Performance, Security, Compatibility
+- Tests MUST use real dependencies (no mock, no simulation)
 - Tests MUST fail initially (verifies tests are meaningful)
 - Run tests to confirm failure
 
-**GREEN Phase**: Write minimum code to pass tests
+**GREEN Phase**: Write minimum code to pass tests (Production-Grade Only)
 - Only enough code to make tests pass
+- Code must be production-ready (no TODO, no placeholder, no mock)
 - No premature optimization or extra features
 - Run tests to confirm all pass
 
-**REFACTOR Phase**: Improve code quality
+**REFACTOR Phase**: Improve code quality (No Degradation)
 - Apply SOLID principles
 - Remove duplication (DRY)
 - Simplify complexity (KISS)
 - Remove unused code (YAGNI)
+- Ensure no mock/simulation introduced
 - Tests must still pass after refactoring
 
 ### Step 4.5: Codex Feedback Loop (Dual-Engine)
@@ -187,6 +199,8 @@ Stuck:   Claude → fail(x3) → Codex fix → Claude review → pass
 | G4 | No tautologies | No `expect(true).toBe(true)` patterns |
 | G5 | No skipped tests | Max 1 `.skip()` allowed |
 | G6 | 6D coverage | All dimensions have tests |
+| G7 | **ZERO MOCK** | No `jest.mock()`, `vi.mock()`, `jest.fn()` |
+| G8 | **No Degradation** | No fallback, simplified, or demo code |
 
 **TAS Score Requirement**: guarding-test-quality skill calculates Test Authenticity Score.
 - TAS ≥70% required (Grade A/B)

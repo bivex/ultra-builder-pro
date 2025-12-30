@@ -31,9 +31,9 @@ Execute comprehensive testing with six-dimensional coverage and Core Web Vitals 
 
 | Component | Weight | Detection |
 |-----------|--------|-----------|
-| Mock Ratio | 25% | Internal mocks (`jest.mock('../')`) vs total imports |
+| Real Data | 30% | No mocks = 100, Any mock = 0 (ZERO MOCK Policy) |
 | Assertion Quality | 35% | Behavioral (`toBe`, `toEqual`) vs mock-only (`toHaveBeenCalled`) |
-| Real Execution | 25% | Real code lines vs mock-driven lines |
+| Real Execution | 20% | Real code lines vs mock-driven lines |
 | Pattern Compliance | 15% | 100 - (anti-patterns × 15) |
 
 3. **Grade each file**:
@@ -50,11 +50,13 @@ expect\((true|false|1|0)\)\.toBe\((true|false|1|0)\)
 # Empty test body (CRITICAL)
 it\([^)]+,\s*(async\s*)?\(\)\s*=>\s*\{\s*\}\)
 
-# Over-mocking internal modules (WARNING)
-jest\.mock\(['"]\.\./
-vi\.mock\(['"]\.\./
+# ANY mocking (CRITICAL - ZERO MOCK POLICY)
+jest\.mock\(
+vi\.mock\(
+jest\.fn\(\)
+vi\.fn\(\)
 
-# Mock-only assertions (WARNING)
+# Mock-only assertions (CRITICAL)
 \.toHaveBeenCalled\(\)(?!With)
 ```
 
@@ -72,8 +74,8 @@ Files Analyzed: 15
 
 Issues Found:
 - src/services/auth.test.ts: TAS 62% (C)
-  - Issue: 8 internal module mocks, only 2 behavioral assertions
-  - Recommendation: Remove internal mocks, test real AuthService
+  - Issue: Uses mocking (ZERO MOCK POLICY VIOLATION), only 2 behavioral assertions
+  - Recommendation: Replace all mocks with real in-memory implementations
 
 Quality Gate: ❌ BLOCKED (2 files below 70%)
 ```
@@ -116,7 +118,7 @@ Requirements:
 3. Include exception tests (error handling)
 4. Include security tests (injection, XSS)
 5. Use vitest/jest syntax
-6. Mock only external dependencies (DB, API)
+6. NO MOCKING - use real in-memory implementations
 7. Each test must have meaningful assertions
 
 Output complete test file code.
@@ -132,7 +134,7 @@ $(cat {test_file})
 
 Check for:
 1. Tautology tests (expect(true).toBe(true))
-2. Over-mocking (internal modules mocked)
+2. ANY mocking (ZERO MOCK POLICY - all mocks forbidden)
 3. Missing edge cases
 4. Weak assertions (only toHaveBeenCalled)
 
@@ -350,7 +352,7 @@ If feature-status.json update fails:
 - ✅ **TAS ≥70%** for ALL test files (Grade A/B pass)
 - ✅ **No tautologies** (`expect(true).toBe(true)` = instant fail)
 - ✅ **No empty tests** (test body must have assertions)
-- ✅ **Mock ratio ≤50%** (internal modules should NOT be mocked)
+- ✅ **Mock count = 0** (ZERO MOCK POLICY - all mocking forbidden)
 
 ### Coverage & Execution
 - ✅ Unit coverage ≥80%

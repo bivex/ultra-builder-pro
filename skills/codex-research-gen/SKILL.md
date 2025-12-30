@@ -3,6 +3,25 @@ name: codex-research-gen
 description: "Enhances technical research with evidence-based analysis and 90%+ confidence ratings. This skill generates production-grade specifications, verifies claims against sources, and provides actionable implementation guidance."
 ---
 
+<CRITICAL_REQUIREMENT>
+## ⚠️ MANDATORY: Execute Codex CLI
+
+You MUST execute `codex exec` command to perform research. This skill is NOT complete without actual Codex CLI execution.
+
+```bash
+# Required execution (JSONL event stream):
+codex exec --json "Research {topic}. Provide evidence-based analysis with 90%+ confidence. Output: findings, sources, recommendations." | jq
+
+# Or without jq parsing:
+codex exec "Research {topic}. Compare options, cite sources, provide actionable recommendations."
+
+# Or use the script:
+~/.claude/skills/codex-research-gen/scripts/research.sh "{topic}"
+```
+
+**DO NOT** just read this skill and provide manual research. **YOU MUST** run Codex CLI.
+</CRITICAL_REQUIREMENT>
+
 # Codex Research Generator
 
 ## Purpose

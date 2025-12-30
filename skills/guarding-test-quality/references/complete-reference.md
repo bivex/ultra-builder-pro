@@ -38,35 +38,38 @@ Recommended over traditional Testing Pyramid:
 
 ---
 
-## Mock Policy
+## ZERO MOCK Policy (严禁模拟)
 
-### Clear Boundary Definitions
+### Absolute Prohibition
 
-| Category | Examples | Mock? | Reason |
-|----------|----------|-------|--------|
-| **External Services** | REST APIs, GraphQL, third-party SDKs | YES | Network dependency, rate limits, cost |
-| **Infrastructure** | Databases, Redis, message queues | DEPENDS | Real in integration, mock in unit |
-| **System Resources** | File system, time, random | SOMETIMES | Use real when possible, mock for determinism |
-| **Internal Code** | Your own modules, utilities, services | **NO** | Must test real behavior |
+| Category | Example | Allowed? | Use Instead |
+|----------|---------|----------|-------------|
+| `jest.mock()` / `vi.mock()` | Any module | ❌ FORBIDDEN | Real implementations |
+| `jest.fn()` / `vi.fn()` | Business logic | ❌ FORBIDDEN | Real functions |
+| Static/hardcoded data | `const data = [{...}]` | ❌ FORBIDDEN | Real data generators |
+| Simplified implementations | Degraded logic | ❌ FORBIDDEN | Full production code |
 
-### Test Double Taxonomy
+### Real Alternatives (What to Use)
 
-| Type | Purpose | When to Use |
-|------|---------|-------------|
-| **Stub** | Returns canned answers | Replace external dependency responses |
-| **Mock** | Verifies interactions | When you care HOW something is called |
-| **Spy** | Records calls while preserving behavior | Verify side effects without changing behavior |
-| **Fake** | Working implementation with shortcuts | In-memory database, fake server |
-| **Dummy** | Satisfies parameter requirements | Fill required arguments you don't care about |
+| Instead of Mock | Use This |
+|-----------------|----------|
+| Database mocks | SQLite in-memory, testcontainers |
+| HTTP client mocks | supertest, nock (external APIs only) |
+| File system mocks | Real tmp directories |
+| Time/date mocks | Real clock with controlled inputs |
+| Service mocks | Real in-memory implementations |
 
-### Mock Hierarchy (Prefer Top to Bottom)
+### Why ZERO MOCK?
 
 ```
-1. No mock (real implementation)        ← BEST
-2. Fake (working lightweight alternative)
-3. Stub (controlled responses)
-4. Spy (observe real behavior)
-5. Mock (full control + verification)   ← LAST RESORT
+Mocked tests = False confidence
+Real tests = Real bugs caught
+
+Mock tests often:
+- Pass with broken code
+- Miss integration issues
+- Give 100% coverage with 0% real testing
+- Create maintenance burden
 ```
 
 ---
@@ -99,34 +102,31 @@ it('should show loading spinner while fetching users', async () => {
 
 ---
 
-### 2. Over-Mocking (The "Mock Everything" Trap)
+### 2. ANY Mocking (BANNED - ZERO MOCK POLICY)
 
-**BAD**:
+**BAD** (FORBIDDEN):
 ```typescript
-// Mocks even internal utilities
-jest.mock('../utils/formatDate')
-jest.mock('../utils/validateEmail')
-jest.mock('../services/userService')
-jest.mock('../hooks/useAuth')
+// ALL mocking is forbidden - not just "over-mocking"
+jest.mock('../utils/formatDate')     // ❌ REJECTED
+jest.mock('../services/userService') // ❌ REJECTED
+jest.fn().mockResolvedValue({})      // ❌ REJECTED
+vi.mock('../hooks/useAuth')          // ❌ REJECTED
 
 it('should register user', async () => {
   await register('user@example.com', 'password')
   expect(mockUserService.create).toHaveBeenCalled()
-  // Tests literally nothing - all behavior is mocked away
+  // ZERO MOCK POLICY VIOLATION - Tests nothing real
 })
 ```
 
-**GOOD**:
+**GOOD** (Use real implementations):
 ```typescript
-// Only mock external HTTP calls
-const server = setupServer(
-  rest.post('/api/users', (req, res, ctx) => {
-    return res(ctx.json({ id: '123', email: req.body.email }))
-  })
-)
+// Real in-memory database, real server
+const db = createTestDatabase();
+const server = createTestServer(db);
 
 it('should register user and show success message', async () => {
-  render(<RegistrationForm />)
+  render(<RegistrationForm db={db} />)
 
   await userEvent.type(screen.getByLabelText(/email/i), 'user@example.com')
   await userEvent.type(screen.getByLabelText(/password/i), 'SecurePass123!')
@@ -382,16 +382,18 @@ it('should return default config when input is null', () => {
 
 ---
 
-## Test Authenticity Score (TAS)
+## Test Authenticity Score (TAS) - ZERO MOCK Edition
 
 Automated detection of fake tests based on:
 
 | Component | Weight | Good | Bad |
 |-----------|--------|------|-----|
-| Mock Ratio | 25% | <30% internal mocks | >50% internal mocks |
+| Real Data | 30% | No mocks (100) | Any mock detected (0) |
 | Assertion Quality | 35% | Behavioral assertions | Mock-only assertions |
-| Real Execution | 25% | Real code paths | Mock-driven paths |
+| Real Execution | 20% | Real code paths | Mock-driven paths |
 | Pattern Compliance | 15% | No anti-patterns | Multiple anti-patterns |
+
+**CRITICAL**: Any `jest.mock()` or `vi.mock()` = RealData_Score = 0
 
 **Grade Thresholds**:
 - A (85-100): High quality tests

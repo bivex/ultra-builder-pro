@@ -3,9 +3,12 @@ name: guarding-test-quality
 description: "Validates test authenticity using TAS (Test Authenticity Score). This skill activates during /ultra-test, test file edits (*.test.ts, *.spec.ts), or task completion with tests."
 ---
 
-# Test Quality Guardian
+# Test Quality Guardian (Production Absolutism)
 
-Ensures tests verify real behavior, not just achieve coverage numbers.
+> "There is no test code. There is no demo. There is no MVP.
+> Every test is production verification. Every assertion verifies real behavior."
+
+Ensures tests verify real behavior with real dependencies — no mock, no simulation, no degradation.
 
 ## Activation Context
 
@@ -31,14 +34,16 @@ python scripts/tas_analyzer.py src/  # All tests
 python scripts/tas_analyzer.py --summary  # Summary only
 ```
 
-## TAS Score Components
+## TAS Score Components (ZERO MOCK Edition)
 
 | Component | Weight | High Score | Low Score |
 |-----------|--------|------------|-----------|
-| Mock Ratio | 25% | <30% internal mocks | >50% internal mocks |
+| Real Data | 30% | No mocks (100) | Any mock detected (0) |
 | Assertion Quality | 35% | Behavioral assertions | Mock-only assertions |
-| Real Execution | 25% | >60% real code paths | <30% real code |
+| Real Execution | 20% | >60% real code paths | <30% real code |
 | Pattern Quality | 15% | Clean test structure | Anti-patterns present |
+
+**CRITICAL**: Any `jest.mock()` or `vi.mock()` = RealData_Score = 0
 
 ## Grade Thresholds
 
@@ -49,37 +54,56 @@ python scripts/tas_analyzer.py --summary  # Summary only
 | C | 50-69% | Needs improvement |
 | D/F | <50% | Significant issues |
 
+## Production Absolutism Standards
+
+**Quality Formula**:
+```
+Test Quality = Real Implementation × Real Dependencies × Real Assertions
+If ANY component is fake/mocked/simulated → Quality = 0
+```
+
 ## Good Test Characteristics
 
-### Behavioral Assertions
+### Behavioral Assertions with Real Dependencies
 
-Tests verify outcomes, not implementation:
+Tests verify outcomes using real implementations:
 
 ```typescript
-// Good: Tests actual behavior
+// Good: Tests actual behavior with REAL dependencies
 describe('PaymentService', () => {
   it('confirms successful payment with transaction ID', async () => {
-    const gateway = createMockGateway({ willSucceed: true });
-    const service = new PaymentService(gateway);
+    const db = createTestDatabase();  // Real in-memory DB
+    const gateway = createTestPaymentGateway();  // Real test gateway
+    const service = new PaymentService(db, gateway);
 
     const result = await service.process(validOrder);
 
     expect(result.status).toBe('confirmed');
     expect(result.transactionId).toMatch(/^txn_/);
+
+    // Verify real persistence
+    const saved = await db.payments.findById(result.id);
+    expect(saved.status).toBe('confirmed');
   });
 });
 ```
 
-### Appropriate Mocking
+### ZERO MOCK Policy (严禁模拟)
 
-Mock external boundaries only:
+**Absolutely NO mocking allowed:**
 
-| External (mock) | Internal (use real) |
-|-----------------|---------------------|
-| HTTP clients | Your services |
-| Databases | Your utilities |
-| Third-party SDKs | Business logic |
-| File system | Custom hooks |
+| Prohibited | Use Instead |
+|------------|-------------|
+| `jest.mock()` / `vi.mock()` | Real in-memory implementations |
+| `jest.fn()` for business logic | Real functions |
+| Static/hardcoded data | Real data generators |
+| Simplified implementations | Full production code |
+
+**Real alternatives:**
+- Databases → SQLite in-memory, testcontainers
+- HTTP → supertest, nock (external APIs only)
+- File system → tmp directories
+- Time → real clock with controlled inputs
 
 ## Anti-Patterns to Detect
 
@@ -102,24 +126,25 @@ it('should process payment', () => {
 
 **Fix:** Add behavioral assertions
 
-### 3. Mock-Only Assertions
+### 3. Mock-Only Assertions (BANNED)
 
 ```typescript
-// Only verifies call, not outcome
+// PROHIBITED: Only verifies call, not outcome
 expect(mockService.process).toHaveBeenCalled();
 ```
 
-**Fix:** Add outcome assertions
+**Fix:** Test real outcomes with real implementations
 
-### 4. Over-Mocking
+### 4. ANY Mocking (BANNED)
 
 ```typescript
-// Mocking internal modules
-jest.mock('../services/UserService');
-jest.mock('../utils/validator');
+// PROHIBITED: All mocking is forbidden
+jest.mock('../services/UserService');  // ❌ REJECTED
+vi.mock('../utils/validator');         // ❌ REJECTED
+jest.fn().mockResolvedValue({});       // ❌ REJECTED
 ```
 
-**Fix:** Use real implementations
+**Fix:** Use real in-memory implementations, never mock
 
 ### 5. Testing Implementation Details
 
@@ -194,7 +219,7 @@ expect(screen.getByText('Success')).toBeInTheDocument()
 Provide analysis in Chinese at runtime:
 
 ```
-📊 测试质量分析报告
+📊 测试质量分析报告 (ZERO MOCK Edition)
 ========================
 
 项目 TAS 分数：{score}% (等级：{grade})
@@ -202,7 +227,7 @@ Provide analysis in Chinese at runtime:
 分析摘要：
 - 测试文件：{count} 个
 - 平均断言数：{avg} 个/测试
-- Mock 比例：{ratio}%
+- Mock 检测：{mock_count} 个 (必须为 0)
 
 {发现的问题和改进建议}
 

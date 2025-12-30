@@ -181,5 +181,23 @@ if [ -z "$PROJECT_NAME" ] && [ "$PENDING_TASKS" -eq 0 ]; then
   echo "No previous sessions found for this project yet."
 fi
 
+# ============================================
+# Trigger guiding-workflow for session guidance
+# ============================================
+
+# Source core functions for skill triggering
+HOOKS_DIR="$(dirname "$0")"
+if [ -f "$HOOKS_DIR/skill-trigger-core.sh" ]; then
+  source "$HOOKS_DIR/skill-trigger-core.sh"
+
+  # Log skill trigger
+  log_skill_trigger "guiding-workflow" "session-start" "$PROJECT_NAME" "SessionStart"
+
+  # Output skill activation
+  echo ""
+  echo "⚡ USING SKILLS: guiding-workflow"
+  echo "📌 Skill activated for session guidance and workflow suggestions."
+fi
+
 # Always exit successfully
 exit 0

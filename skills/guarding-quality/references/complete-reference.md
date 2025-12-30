@@ -349,9 +349,9 @@ Detects fake/useless tests through static analysis:
 
 | Component | Weight | Pass Threshold |
 |-----------|--------|----------------|
-| Mock Ratio | 25% | ≤50% internal mocks |
+| Real Data | 30% | No mocks = 100, Any mock = 0 (ZERO MOCK) |
 | Assertion Quality | 35% | >50% behavioral assertions |
-| Real Execution | 25% | >50% real code paths |
+| Real Execution | 20% | >50% real code paths |
 | Pattern Compliance | 15% | 0 critical anti-patterns |
 
 **Grade Thresholds**:
@@ -360,14 +360,16 @@ Detects fake/useless tests through static analysis:
 - C (50-69): ❌ **BLOCKED** - Needs improvement
 - D/F (<50): ❌ **BLOCKED** - Fake tests detected
 
-### Realistic Test Execution
+### Realistic Test Execution (ZERO MOCK Policy)
 
 - ✅ Execute tests 100% realistically
-- ❌ Minimal mocking: Only mock external services (APIs, databases, SDKs)
-- ✅ Use real implementations for internal dependencies
+- ❌ NO jest.mock() or vi.mock() - use real implementations
+- ❌ NO jest.fn() for business logic - use real functions
+- ✅ Use real in-memory databases (SQLite, testcontainers)
+- ✅ Use real HTTP servers (supertest, nock for external APIs only)
 - ✅ Test environment approximates production
 
-**Why**: Over-mocked tests give false confidence.
+**Why**: Mocked tests give false confidence. Real tests catch real bugs.
 
 ### Six-Dimensional Test Coverage
 

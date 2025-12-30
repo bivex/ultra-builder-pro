@@ -2,13 +2,13 @@
 
 <div align="center">
 
-**Version 4.3.3 (Bilingual Trigger Support)**
+**Version 4.3.4 (Production Absolutism)**
 
 *Production-Grade AI-Powered Development System for Claude Code + Codex*
 
 ---
 
-[![Version](https://img.shields.io/badge/version-4.3.3-blue)](docs/CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-4.3.4-blue)](docs/CHANGELOG.md)
 [![Status](https://img.shields.io/badge/status-production--ready-green)](tests/verify-documentation-consistency.sh)
 [![Skills](https://img.shields.io/badge/skills-14-orange)](config/ultra-skills-guide.md)
 [![Dual-Engine](https://img.shields.io/badge/dual--engine-Claude%20%2B%20Codex-purple)](skills/codex-reviewer/SKILL.md)
@@ -35,6 +35,77 @@ claude
 ```
 
 **Installation Time**: < 1 minute
+
+---
+
+## What's New in 4.3.4
+
+### 🔥 Production Absolutism (生产绝对主义)
+
+> "There is no test code. There is no demo. There is no MVP.
+> Every line is production code. Every test is production verification."
+
+**Core Formula:**
+```
+Code Quality = Real Implementation × Real Tests × Real Dependencies
+If ANY component is fake/mocked/simulated → Quality = 0
+```
+
+**Absolute Prohibitions:**
+
+| Category | Prohibited Patterns | Consequence |
+|----------|---------------------|-------------|
+| **Mock/Simulation** | `jest.mock()`, `vi.mock()`, `jest.fn()`, `AsyncMock` | Immediate rejection |
+| **Degradation** | Fallback logic, simplified implementations | Immediate rejection |
+| **Static Data** | Hardcoded test data, inline fixtures | Immediate rejection |
+| **Placeholders** | `TODO`, `FIXME`, `// placeholder`, `// demo` | Immediate rejection |
+| **Test Cheating** | Tautologies, empty bodies, `.skip()` | Immediate rejection |
+| **MVP Mindset** | "Good enough for now", partial implementations | Immediate rejection |
+
+### 🛡️ ZERO MOCK Policy
+
+Complete prohibition of mocking in all tests:
+
+```typescript
+// ❌ PROHIBITED - All mocking is banned
+jest.mock('../services/UserService');
+vi.mock('../utils/validator');
+jest.fn().mockResolvedValue({});
+
+// ✅ REQUIRED - Real implementations only
+const db = createTestDatabase();        // Real in-memory DB
+const gateway = createTestPaymentGateway(); // Real test gateway
+const service = new PaymentService(db, gateway);
+```
+
+**TAS Formula Updated:**
+- `real_data_score` (30%): 100 if no mocks, **0 if any mock detected**
+- `assertion_quality_score` (35%): Behavioral assertions
+- `real_execution_score` (20%): Real code path coverage
+- `pattern_quality_score` (15%): No anti-patterns
+
+### 🔧 Hook System Improvements
+
+| Fix | Description |
+|-----|-------------|
+| **TypeScript Type Fix** | Added `requiresCodex` and `hookType` to `SkillRule` interface |
+| **Permission Fix** | Fixed `chmod +r` for hook scripts (source requires read permission) |
+| **Stop Hook Simplified** | Removed `codex-test-gen` from Stop hook (now command-only) |
+| **Codex Detection** | Three-layer enforcement: Hook → SKILL.md → skill-rules.json |
+
+**Codex Skill Trigger Mechanism:**
+
+| Hook | Codex Skill | Trigger |
+|------|-------------|---------|
+| PostToolUse | codex-reviewer | Edit/Write code files |
+| UserPromptSubmit | codex-doc-reviewer, codex-research-gen | Keywords |
+| Command | codex-test-gen | `/ultra-test` only |
+
+**Output Format:**
+```
+🔥 CODEX REQUIRED: codex-reviewer
+⚠️ You MUST execute `codex exec` command. Manual analysis is NOT acceptable.
+```
 
 ---
 
@@ -75,7 +146,7 @@ Each skill now includes specialized configuration with Chinese translations:
 | Skill | Config | Key Settings |
 |-------|--------|--------------|
 | **guarding-quality** | `qualityConfig` | SOLID原则, 函数≤50行, 嵌套≤3层, 圈复杂度≤10 |
-| **guarding-test-quality** | `testConfig` | TAS≥70%, 覆盖率≥80%, Mock比例≤30% |
+| **guarding-test-quality** | `testConfig` | TAS≥70%, 覆盖率≥80%, Mock数量=0 (ZERO MOCK) |
 | **guarding-git-workflow** | `gitConfig` | 危险命令拦截, Conventional Commits |
 | **frontend** | `frontendConfig` | Core Web Vitals, WCAG 2.1 AA, 反模式列表 |
 | **backend** | `backendConfig` | OWASP安全检查, 输入验证, N+1预防 |
@@ -553,6 +624,17 @@ claude
 
 ## Version History
 
+### v4.3.4 (2025-12-30) - Production Absolutism 🔥
+
+- **Production Absolutism**: Core principle - no mock/demo/MVP, every line is production code
+- **ZERO MOCK Policy**: Complete prohibition of all mocking (jest.mock, vi.mock, jest.fn)
+- **TAS Formula Update**: `real_data_score` replaces `mock_ratio_score`, any mock = 0 score
+- **Hook TypeScript Fix**: Added `requiresCodex` and `hookType` to `SkillRule` interface
+- **Hook Permission Fix**: Fixed script permissions for `source` command
+- **Stop Hook Simplified**: Removed `codex-test-gen` from Stop hook (command-only trigger)
+- **Three-Layer Enforcement**: Hook output → SKILL.md CRITICAL block → skill-rules.json
+- **Components Updated**: CLAUDE.md, ultra-think, ultra-dev, guarding-quality, guarding-test-quality, codex-reviewer, codex-test-gen
+
 ### v4.3.3 (2025-12-30) - Bilingual Trigger Support 🌐
 
 - **Chinese Keywords**: All 14 skills now support Chinese keyword triggers
@@ -656,9 +738,9 @@ claude
 
 <div align="center">
 
-**Ultra Builder Pro 4.3.3** - Dual-Engine Collaborative Development System
+**Ultra Builder Pro 4.3.4** - Production Absolutism Edition
 
-*Claude Code + Codex: Truth over comfort. Precision over confidence.*
+*Claude Code + Codex: No mock. No demo. No MVP. Production-grade only.*
 
 [Skills Guide](config/ultra-skills-guide.md) | [MCP Guide](config/ultra-mcp-guide.md) | [Workflow](workflows/ultra-development-workflow.md) | [Codex Integration](skills/codex-reviewer/SKILL.md)
 

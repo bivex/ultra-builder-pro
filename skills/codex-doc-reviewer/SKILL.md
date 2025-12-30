@@ -3,6 +3,25 @@ name: codex-doc-reviewer
 description: "Reviews and enhances documentation for technical accuracy, completeness, and practicality. This skill adds production-grade code examples, FAQ sections, best practices, and troubleshooting guides."
 ---
 
+<CRITICAL_REQUIREMENT>
+## ⚠️ MANDATORY: Execute Codex CLI
+
+You MUST execute `codex exec` command to perform the review. This skill is NOT complete without actual Codex CLI execution.
+
+```bash
+# Required execution (JSONL event stream):
+codex exec --json "Review {document} quality. Output JSON: {accuracy, completeness, clarity, issues, verdict}" | jq
+
+# Or without jq parsing:
+codex exec "Review {document} for accuracy, completeness, clarity. List issues and verdict."
+
+# Or use the script:
+~/.claude/skills/codex-doc-reviewer/scripts/review-docs.sh {document_path}
+```
+
+**DO NOT** just read this skill and provide manual analysis. **YOU MUST** run Codex CLI.
+</CRITICAL_REQUIREMENT>
+
 # Codex Document Reviewer
 
 ## Purpose

@@ -44,6 +44,7 @@
       "type": "guard",
       "enforcement": "auto",
       "priority": "high",
+      "hookType": "PreToolUse",
       "description": "Code quality guard - SOLID principles, complexity limits",
       "promptTriggers": {
         "keywords": ["refactor", "重构", "code review", "代码审查", "代码评审", "quality", "质量", "优化代码", "改进代码"],
@@ -86,7 +87,8 @@
       "type": "guard",
       "enforcement": "auto",
       "priority": "high",
-      "description": "Test quality guard - TAS scoring, mock ratio enforcement",
+      "hookType": "PostToolUse",
+      "description": "Test quality guard - TAS scoring, ZERO MOCK enforcement",
       "promptTriggers": {
         "keywords": ["test", "测试", "TAS", "coverage", "覆盖率", "spec", "单元测试", "集成测试", "测试用例"],
         "intentPatterns": ["(write|add|fix|写|添加|修复).*(test|测试)"]
@@ -98,7 +100,8 @@
         "minTAS": 70,
         "minCoverage": 80,
         "minBranchCoverage": 75,
-        "maxMockRatio": 0.3,
+        "maxMockCount": 0,
+        "zeroMockPolicy": true,
         "requireBoundaryTests": true,
         "requireExceptionTests": true,
         "prohibitedPatterns": [
@@ -117,6 +120,7 @@
       "type": "guard",
       "enforcement": "auto",
       "priority": "critical",
+      "hookType": "PreToolUse",
       "description": "Git workflow guard - safe commits, branch strategy",
       "promptTriggers": {
         "keywords": ["commit", "提交", "push", "推送", "merge", "合并", "rebase", "变基", "branch", "分支", "git"],
@@ -161,6 +165,7 @@
       "type": "sync",
       "enforcement": "auto",
       "priority": "medium",
+      "hookType": "Stop",
       "description": "Status sync - task progress, test results",
       "promptTriggers": {
         "keywords": ["status", "状态", "progress", "进度", "task", "任务", "done", "完成"],
@@ -187,6 +192,7 @@
       "type": "sync",
       "enforcement": "auto",
       "priority": "medium",
+      "hookType": "PostToolUse",
       "description": "Documentation sync - ADR, research reports",
       "promptTriggers": {
         "keywords": ["document", "文档", "ADR", "research", "研究", "architecture", "架构", "说明文档"],
@@ -197,6 +203,7 @@
       "type": "utility",
       "enforcement": "auto",
       "priority": "low",
+      "hookType": "SessionStart",
       "description": "Workflow guidance - next step suggestions",
       "promptTriggers": {
         "keywords": ["next", "下一步", "workflow", "工作流", "what should", "该做什么", "接下来"],
@@ -207,6 +214,7 @@
       "type": "domain",
       "enforcement": "auto",
       "priority": "high",
+      "hookType": "UserPromptSubmit",
       "description": "Frontend development - React/Vue/Next.js patterns",
       "promptTriggers": {
         "keywords": ["frontend", "前端", "React", "Vue", "Next.js", "Nuxt", "Svelte", "component", "组件", "UI", "界面", "CSS", "样式", "页面", "布局", "响应式", "Tailwind", "Sass", "Less"],
@@ -251,6 +259,7 @@
       "type": "domain",
       "enforcement": "auto",
       "priority": "high",
+      "hookType": "UserPromptSubmit",
       "description": "Backend development - API/database/security",
       "promptTriggers": {
         "keywords": ["backend", "后端", "API", "接口", "REST", "GraphQL", "gRPC", "database", "数据库", "server", "服务器", "服务端", "auth", "认证", "鉴权", "登录", "权限", "中间件", "微服务"],
@@ -305,6 +314,7 @@
       "type": "domain",
       "enforcement": "auto",
       "priority": "high",
+      "hookType": "UserPromptSubmit",
       "description": "Smart contract development - EVM/Solana/security audit",
       "promptTriggers": {
         "keywords": ["contract", "合约", "智能合约", "solidity", "ERC", "web3", "blockchain", "区块链", "链上", "DeFi", "NFT", "代币", "钱包", "Foundry", "Hardhat", "ethers", "wagmi"],
@@ -351,7 +361,9 @@
       "type": "dual-engine",
       "enforcement": "auto",
       "priority": "critical",
+      "hookType": "PostToolUse",
       "backend": "codex",
+      "requiresCodex": true,
       "description": "Codex code review - quality feedback, bug detection, security audit",
       "promptTriggers": {
         "keywords": ["review", "审查", "codex", "feedback", "反馈", "代码检查"],
@@ -371,6 +383,7 @@
       "enforcement": "auto",
       "priority": "critical",
       "backend": "codex",
+      "requiresCodex": true,
       "description": "Codex test generation - production-grade tests with 6D coverage, no TODO/mock/demo",
       "promptTriggers": {
         "keywords": ["generate test", "生成测试", "test case", "测试用例", "自动测试"],
@@ -380,13 +393,16 @@
       "prohibitedPatterns": ["TODO", "FIXME", "expect(true).toBe(true)", "jest.mock('../", "vi.mock('../", ".skip(", ".todo("],
       "minTAS": 70,
       "minCoverage": 80,
-      "maxMockRatio": 0.3
+      "maxMockCount": 0,
+      "zeroMockPolicy": true
     },
     "codex-doc-reviewer": {
       "type": "dual-engine",
       "enforcement": "auto",
       "priority": "high",
+      "hookType": "UserPromptSubmit",
       "backend": "codex",
+      "requiresCodex": true,
       "description": "Codex documentation review - technical accuracy, completeness, examples",
       "promptTriggers": {
         "keywords": ["doc review", "文档审查", "document feedback", "文档反馈", "检查文档"],
@@ -399,7 +415,9 @@
       "type": "dual-engine",
       "enforcement": "auto",
       "priority": "high",
+      "hookType": "UserPromptSubmit",
       "backend": "codex",
+      "requiresCodex": true,
       "description": "Codex research enhancement - evidence-based analysis, 90%+ confidence, production examples",
       "promptTriggers": {
         "keywords": ["research", "研究", "调研", "compare", "比较", "对比", "technology", "技术", "library", "库", "framework", "框架", "技术选型"],
@@ -414,6 +432,7 @@
       "type": "analysis",
       "enforcement": "auto",
       "priority": "high",
+      "hookType": "UserPromptSubmit",
       "description": "Deep analysis with 6D framework - multi-dimensional thinking for complex decisions",
       "promptTriggers": {
         "keywords": [

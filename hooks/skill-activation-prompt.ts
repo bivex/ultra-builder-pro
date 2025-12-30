@@ -18,6 +18,8 @@ interface SkillRule {
     contentPatterns?: string[];
   };
   blockMessage?: string;
+  requiresCodex?: boolean;
+  hookType?: string;
 }
 
 interface SkillRules {
@@ -239,9 +241,17 @@ function analyzeAndSuggestSkills(prompt: string): {
   }
 
   // Step 2: Check other triggers (keywords, files) for non-command-bound skills
+  // Only process skills with hookType "UserPromptSubmit" or undefined
   for (const [skillName, rule] of Object.entries(rules.skills)) {
     // Skip if already added via command binding
     if (commandBoundSkills.includes(skillName)) {
+      continue;
+    }
+
+    // Only process skills meant for UserPromptSubmit hook
+    // Skills with other hookTypes are handled by their respective hooks
+    const hookType = (rule as any).hookType;
+    if (hookType && hookType !== 'UserPromptSubmit') {
       continue;
     }
 
@@ -358,14 +368,27 @@ function generateSkillReminder(
     const autoSkills = otherSkills.filter(s => rules.skills[s]?.enforcement === 'auto');
     const suggestSkills = otherSkills.filter(s => rules.skills[s]?.enforcement !== 'auto');
 
-    // Auto enforcement skills - MUST USE
-    if (autoSkills.length > 0) {
+    // Separate Codex skills from regular skills
+    const codexSkills = autoSkills.filter(s => rules.skills[s]?.requiresCodex === true);
+    const regularAutoSkills = autoSkills.filter(s => rules.skills[s]?.requiresCodex !== true);
+
+    // Codex skills - MUST EXECUTE codex exec
+    if (codexSkills.length > 0) {
       if (message === '') {
+        message += '\n';
+      }
+      message += '🔥 CODEX REQUIRED: ' + codexSkills.join(', ') + '\n';
+      message += '⚠️ You MUST execute `codex exec` command. Manual analysis is NOT acceptable.\n';
+    }
+
+    // Regular auto enforcement skills - MUST USE
+    if (regularAutoSkills.length > 0) {
+      if (message === '' || codexSkills.length === 0) {
         message += '\n⚡ USING SKILLS: ';
       } else {
         message += '⚡ USING: ';
       }
-      message += autoSkills.join(', ') + '\n';
+      message += regularAutoSkills.join(', ') + '\n';
       message += '📌 You MUST invoke these skills using the Skill tool before responding.\n';
     }
 
