@@ -1,5 +1,5 @@
 ---
-description: Initialize Ultra Builder Pro 4.3 project with native task management
+description: Initialize Ultra Builder Pro 4.4 project with native task management
 argument-hint: <name> <type> <stack> [git]
 allowed-tools: Read, Write, Bash, TodoWrite, Grep, Glob, AskUserQuestion
 ---
@@ -8,7 +8,7 @@ allowed-tools: Read, Write, Bash, TodoWrite, Grep, Glob, AskUserQuestion
 
 ## Purpose
 
-Initialize Ultra Builder Pro 4.3 project structure with native task management and Dual-Engine support.
+Initialize Ultra Builder Pro 4.4 project structure with native task management.
 
 ## Arguments
 
@@ -184,7 +184,7 @@ Create `.ultra/tasks/tasks.json`:
   - Exclude `CLAUDE.local.md` (personal config, not shared)
   - Exclude secrets, build artifacts
 - Create basic `README.md` (if not exists)
-- Suggest first commit: `git add . && git commit -m "feat: initialize Ultra Builder Pro 4.3"`
+- Suggest first commit: `git add . && git commit -m "feat: initialize Ultra Builder Pro 4.4"`
 
 **If user chose "Keep existing Git repository"** or **"Don't use Git"**:
 - Skip Git operations

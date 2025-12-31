@@ -31,7 +31,7 @@ Execute comprehensive testing with six-dimensional coverage and Core Web Vitals 
 
 | Component | Weight | Detection |
 |-----------|--------|-----------|
-| Real Data | 30% | No mocks = 100, Any mock = 0 (ZERO MOCK Policy) |
+| Real Data | 30% | Core logic uses real deps = 100, Core logic mocked = 0 |
 | Assertion Quality | 35% | Behavioral (`toBe`, `toEqual`) vs mock-only (`toHaveBeenCalled`) |
 | Real Execution | 20% | Real code lines vs mock-driven lines |
 | Pattern Compliance | 15% | 100 - (anti-patterns × 15) |
@@ -50,15 +50,20 @@ expect\((true|false|1|0)\)\.toBe\((true|false|1|0)\)
 # Empty test body (CRITICAL)
 it\([^)]+,\s*(async\s*)?\(\)\s*=>\s*\{\s*\}\)
 
-# ANY mocking (CRITICAL - ZERO MOCK POLICY)
-jest\.mock\(
-vi\.mock\(
-jest\.fn\(\)
-vi\.fn\(\)
+# Core logic mocking (CRITICAL - check if mocking domain/service/state machine)
+# Note: External system test doubles (testcontainers/sandbox) are ALLOWED
+jest\.mock\(.*/(domain|service|core|business)/
+vi\.mock\(.*/(domain|service|core|business)/
 
-# Mock-only assertions (CRITICAL)
+# Mock-only assertions without behavioral verification (WARNING)
 \.toHaveBeenCalled\(\)(?!With)
 ```
+
+**Test Double Policy** (aligned with CLAUDE.md glossary):
+- ❌ **Core Logic**: Domain/service/state machine/funds-permission paths - NO mocking
+- ❌ **Repository interfaces**: Contract cannot be mocked
+- ✅ **Repository storage**: SQLite/testcontainer allowed (real test doubles)
+- ✅ **External systems**: testcontainers/sandbox/stub allowed with rationale
 
 **Output** (Chinese at runtime):
 ```
@@ -74,8 +79,8 @@ Files Analyzed: 15
 
 Issues Found:
 - src/services/auth.test.ts: TAS 62% (C)
-  - Issue: Uses mocking (ZERO MOCK POLICY VIOLATION), only 2 behavioral assertions
-  - Recommendation: Replace all mocks with real in-memory implementations
+  - Issue: Mocks core service logic, only 2 behavioral assertions
+  - Recommendation: Use real implementations for core logic, test doubles only for external systems
 
 Quality Gate: ❌ BLOCKED (2 files below 70%)
 ```
@@ -287,11 +292,11 @@ If feature-status.json update fails:
 
 ## Quality Gates (All Must Pass)
 
-### Test Authenticity (NEW - Mandatory)
-- ✅ **TAS ≥70%** for ALL test files (Grade A/B pass)
+### Test Authenticity (Mandatory)
 - ✅ **No tautologies** (`expect(true).toBe(true)` = instant fail)
 - ✅ **No empty tests** (test body must have assertions)
-- ✅ **Mock count = 0** (ZERO MOCK POLICY - all mocking forbidden)
+- ✅ **No core logic mocking** (domain/service/state machine paths)
+- ✅ **External test doubles allowed** (testcontainers/sandbox/stub with rationale)
 
 ### Coverage & Execution
 - ✅ Unit coverage ≥80%

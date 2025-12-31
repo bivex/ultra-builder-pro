@@ -121,7 +121,8 @@ Create task workspace (if not exists):
 
 **RED Phase**: Write failing tests first (Production Absolutism)
 - Cover 6 dimensions: Functional, Boundary, Exception, Performance, Security, Compatibility
-- Tests MUST use real dependencies (no mock, no simulation)
+- Tests MUST use real dependencies for core logic (no mocking domain/service/state machine)
+- External systems may use test doubles (testcontainers/sandbox/stub) with rationale
 - Tests MUST fail initially (verifies tests are meaningful)
 - Run tests to confirm failure
 
@@ -151,12 +152,14 @@ Create task workspace (if not exists):
 | G4 | No tautologies | No `expect(true).toBe(true)` patterns |
 | G5 | No skipped tests | Max 1 `.skip()` allowed |
 | G6 | 6D coverage | All dimensions have tests |
-| G7 | **ZERO MOCK** | No `jest.mock()`, `vi.mock()`, `jest.fn()` |
+| G7 | **No Core Logic Mock** | No mocking domain/service/state machine (see glossary) |
 | G8 | **No Degradation** | No fallback, simplified, or demo code |
 
-**TAS Score Requirement**: guarding-test-quality skill calculates Test Authenticity Score.
-- TAS ≥70% required (Grade A/B)
-- TAS <70% blocks completion (Grade C/D/F)
+**Test Double Policy** (aligned with CLAUDE.md glossary):
+- ❌ **Core Logic**: Domain/service/state machine/funds-permission paths - NO mocking
+- ❌ **Repository interfaces**: Contract cannot be mocked
+- ✅ **Repository storage**: SQLite/testcontainer allowed (real test doubles)
+- ✅ **External systems**: testcontainers/sandbox/stub allowed with rationale
 
 ### Step 6: Sync, Merge, and Cleanup
 
