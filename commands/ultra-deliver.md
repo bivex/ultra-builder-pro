@@ -61,7 +61,11 @@ Verify build succeeds before proceeding.
 2. Update version using project's version management method
 3. Commit: `chore(release): vX.X.X`
 4. Create git tag: `vX.X.X`
-5. Push to remote (branch + tag)
+5. Push to remote:
+   ```bash
+   git push origin main   # release commit (任务代码已在 /ultra-dev 推送)
+   git push origin vX.X.X # tag
+   ```
 
 ### Step 4: Persist Results
 
