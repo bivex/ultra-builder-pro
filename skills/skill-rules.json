@@ -3,105 +3,15 @@
   "description": "UltraBuild Pro 4.4.0 Skill Rules - Simplified Edition (No Hooks, No Codex)",
   "commandSkillBindings": {
     "/ultra-init": [],
-    "/ultra-research": ["syncing-docs", "guiding-workflow"],
-    "/ultra-plan": ["guarding-quality"],
-    "/ultra-dev": ["guarding-quality", "guarding-git-workflow", "guarding-test-quality"],
-    "/ultra-test": ["guarding-test-quality", "guarding-quality"],
-    "/ultra-deliver": ["syncing-docs", "syncing-status", "guarding-quality"],
-    "/ultra-status": ["syncing-status", "guiding-workflow"],
-    "/ultra-think": ["ultra-think", "guiding-workflow"]
+    "/ultra-research": ["syncing-docs"],
+    "/ultra-plan": [],
+    "/ultra-dev": [],
+    "/ultra-test": [],
+    "/ultra-deliver": ["syncing-docs", "syncing-status"],
+    "/ultra-status": ["syncing-status"],
+    "/ultra-think": ["ultra-think"]
   },
   "skills": {
-    "guarding-quality": {
-      "type": "guard",
-      "enforcement": "auto",
-      "priority": "high",
-      "description": "Code quality guard - SOLID principles, complexity limits",
-      "promptTriggers": {
-        "keywords": ["refactor", "重构", "code review", "代码审查", "代码评审", "quality", "质量", "优化代码", "改进代码"],
-        "intentPatterns": ["(fix|improve|optimize|修复|改进|优化).*(code|代码)"]
-      },
-      "fileTriggers": {
-        "pathPatterns": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.py", "**/*.go", "**/*.vue"],
-        "pathExclusions": ["**/node_modules/**", "**/*.test.*", "**/*.spec.*"]
-      },
-      "qualityConfig": {
-        "solidPrinciples": ["SRP", "OCP", "LSP", "ISP", "DIP"],
-        "solidPrinciples_zh": {
-          "SRP": "单一职责原则",
-          "OCP": "开闭原则",
-          "LSP": "里氏替换原则",
-          "ISP": "接口隔离原则",
-          "DIP": "依赖倒置原则"
-        },
-        "maxFunctionLines": 50,
-        "maxNestingDepth": 3,
-        "maxCyclomaticComplexity": 10,
-        "requireTypeAnnotations": true,
-        "namingConventions": {
-          "functions": "camelCase",
-          "classes": "PascalCase",
-          "constants": "UPPER_SNAKE_CASE"
-        }
-      }
-    },
-    "guarding-test-quality": {
-      "type": "guard",
-      "enforcement": "auto",
-      "priority": "high",
-      "description": "Test quality guard - TAS scoring, Test Double Policy enforcement",
-      "promptTriggers": {
-        "keywords": ["test", "测试", "TAS", "coverage", "覆盖率", "spec", "单元测试", "集成测试", "测试用例"],
-        "intentPatterns": ["(write|add|fix|写|添加|修复).*(test|测试)"]
-      },
-      "fileTriggers": {
-        "pathPatterns": ["**/*.test.ts", "**/*.spec.ts", "**/*.test.js", "**/__tests__/**"]
-      },
-      "testConfig": {
-        "minTAS": 70,
-        "minCoverage": 80,
-        "minBranchCoverage": 75,
-        "maxMockCount": 0,
-        "zeroMockPolicy": true,
-        "requireBoundaryTests": true,
-        "requireExceptionTests": true,
-        "prohibitedPatterns": [
-          "expect(true).toBe(true)",
-          "jest.mock('../",
-          "vi.mock('../",
-          ".skip(",
-          ".todo(",
-          "// TODO"
-        ],
-        "testDimensions": ["functional", "boundary", "exception", "performance", "security", "compatibility"]
-      }
-    },
-    "guarding-git-workflow": {
-      "type": "guard",
-      "enforcement": "auto",
-      "priority": "critical",
-      "description": "Git workflow guard - safe commits, branch strategy",
-      "promptTriggers": {
-        "keywords": ["commit", "提交", "push", "推送", "merge", "合并", "rebase", "变基", "branch", "分支", "git"],
-        "intentPatterns": ["git (commit|push|merge|rebase)", "(提交|推送|合并|拉取).*代码"]
-      },
-      "gitConfig": {
-        "dangerousCommands": [
-          "push --force",
-          "push -f",
-          "reset --hard",
-          "clean -fd",
-          "checkout -- .",
-          "rebase -i"
-        ],
-        "requireConventionalCommits": true,
-        "conventionalTypes": ["feat", "fix", "refactor", "docs", "test", "chore", "perf", "ci"],
-        "branchNamingPattern": "^(feat|fix|refactor|docs|test|hotfix)/[a-z0-9-]+$",
-        "protectedBranches": ["main", "master", "develop", "release/*"],
-        "requireCoAuthor": true,
-        "coAuthorEmail": "noreply@anthropic.com"
-      }
-    },
     "syncing-status": {
       "type": "sync",
       "enforcement": "auto",
@@ -126,16 +36,6 @@
       "promptTriggers": {
         "keywords": ["document", "文档", "ADR", "research", "研究", "architecture", "架构", "说明文档"],
         "intentPatterns": ["(update|write|create|更新|编写|创建).*(doc|文档)"]
-      }
-    },
-    "guiding-workflow": {
-      "type": "utility",
-      "enforcement": "auto",
-      "priority": "low",
-      "description": "Workflow guidance - next step suggestions",
-      "promptTriggers": {
-        "keywords": ["next", "下一步", "workflow", "工作流", "what should", "该做什么", "接下来"],
-        "intentPatterns": ["(what|什么).*(next|下一步|接下来)"]
       }
     },
     "frontend": {
