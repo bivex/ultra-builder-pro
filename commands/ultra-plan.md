@@ -41,10 +41,10 @@ Solution:
 Run /ultra-research to complete specifications
 
 /ultra-research will complete specs through 4-round Think-Driven Discovery:
-- Round 1: Problem Discovery
-- Round 2: Solution Exploration
-- Round 3: Technology Selection
-- Round 4: Risk & Constraint Mapping
+- Round 1: User & Scenario Discovery (product.md §1-3)
+- Round 2: Feature Definition (product.md §4-5)
+- Round 3: Architecture Design (architecture.md §1-6)
+- Round 4: Quality & Deployment (architecture.md §7-12)
 
 After completion, specs will be 100% filled, then run /ultra-plan
 ```
@@ -87,7 +87,7 @@ ELSE:
 **Validate** (should already pass due to Pre-Execution Checks):
 - ✅ No [NEEDS CLARIFICATION] markers remain
 - ✅ All user stories have acceptance criteria
-- ✅ NFRs are measurable
+- ✅ Success metrics are measurable (product.md §6)
 - ✅ All required sections present and complete
 
 **If validation fails**: Output error message (in Chinese) and suggest running /ultra-research
@@ -117,8 +117,8 @@ Generate tasks with:
    - Example: Task "Implement JWT authentication" → `.ultra/specs/product.md#user-authentication`
 
 3. **trace_to format**:
-   - New projects: `.ultra/specs/product.md#section-id`
-   - Architecture tasks: `.ultra/specs/architecture.md#technology-decision`
+   - Product tasks: `.ultra/specs/product.md#section-id` (§1-3 Personas/Scenarios, §4-5 Features)
+   - Architecture tasks: `.ultra/specs/architecture.md#section-id` (§1-6 Design, §7-12 Quality/Deployment)
    - Old projects: Omit trace_to field (backward compatibility)
 
 4. **Validation**:
@@ -140,7 +140,7 @@ Generate tasks with:
 Save to `.ultra/tasks/tasks.json`:
 ```json
 {
-  "version": "4.3",
+  "version": "4.4",
   "created": "YYYY-MM-DD HH:mm:ss",
   "tasks": [
     {
