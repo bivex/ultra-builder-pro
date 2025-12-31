@@ -21,7 +21,6 @@ This skill activates during:
 | Resource | Purpose |
 |----------|---------|
 | `scripts/doc_sync.py` | Check and manage documentation |
-| `assets/adr-template.md` | ADR creation template |
 
 ## Documentation Management
 
@@ -29,19 +28,6 @@ This skill activates during:
 
 ```bash
 python scripts/doc_sync.py check
-```
-
-### Create New ADR
-
-```bash
-python scripts/doc_sync.py create-adr <number> <title>
-python scripts/doc_sync.py create-adr 5 "Use PostgreSQL for primary database"
-```
-
-### List All ADRs
-
-```bash
-python scripts/doc_sync.py list-adrs
 ```
 
 ## Documentation Locations
@@ -55,7 +41,6 @@ python scripts/doc_sync.py list-adrs
 - `docs/tech.md` - Technical decisions
 
 **Always:**
-- `.ultra/docs/decisions/` - ADRs (Architecture Decision Records)
 - `.ultra/docs/research/` - Research reports
 
 ## Synchronization Tasks
@@ -64,7 +49,6 @@ python scripts/doc_sync.py list-adrs
 
 When research introduces new information:
 - Update relevant specification file with findings
-- Create ADR if major decision made
 - Flag `[NEEDS CLARIFICATION]` for unresolved items
 
 ### After Feature Completion
@@ -72,28 +56,6 @@ When research introduces new information:
 Check alignment between:
 - User stories in .ultra/specs/product.md and implemented features
 - Architecture in .ultra/specs/architecture.md and actual code structure
-
-### ADR Creation
-
-Create ADRs for significant decisions:
-
-```markdown
-# ADR-{number}: {Title}
-
-## Status
-Accepted
-
-## Context
-{What situation led to this decision}
-
-## Decision
-{What we decided to do}
-
-## Consequences
-{What this means going forward}
-```
-
-**Auto-create in:** `.ultra/docs/decisions/ADR-{number}-{slug}.md`
 
 ## Drift Detection
 
@@ -106,12 +68,9 @@ Look for misalignment:
 ## Safe Auto-Creation
 
 Create these files automatically:
-- ADRs in `.ultra/docs/decisions/`
 - Tech debt entries in `.ultra/docs/tech-debt.md`
 - Research reports in `.ultra/docs/research/`
 - **Project-level CLAUDE.md** in project root
-
-Number ADRs sequentially (ADR-001, ADR-002, etc.)
 
 ---
 
