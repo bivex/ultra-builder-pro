@@ -65,7 +65,7 @@ Verify build succeeds before proceeding.
 
 ### Step 4: Persist Results
 
-Write `.ultra/delivery-report.json`:
+Update `.ultra/delivery-report.json` with actual values:
 
 ```json
 {
