@@ -45,17 +45,6 @@
         "isLocal": true
       }
     ],
-    "document-skills@anthropic-agent-skills": [
-      {
-        "scope": "user",
-        "installPath": "/Users/rocky243/.claude/plugins/cache/anthropic-agent-skills/document-skills/unknown",
-        "version": "unknown",
-        "installedAt": "2025-12-29T21:20:51.924Z",
-        "lastUpdated": "2025-12-30T11:19:08.213Z",
-        "gitCommitSha": "fe42ea1aa1dff1d74aaa8267e6c3eaa5563c49e5",
-        "isLocal": true
-      }
-    ],
     "gopls-lsp@claude-plugins-official": [
       {
         "scope": "user",
