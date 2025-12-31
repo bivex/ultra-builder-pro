@@ -140,36 +140,16 @@ Create `.ultra/tasks/tasks.json`:
 - Metadata (version, project name, created timestamp)
 - Stats initialization (total: 0, completed: 0)
 
-### 4. Initialize Status Files
+### 4. Copy All Template Files
 
-Create `.ultra/test-report.json`:
-```json
-{
-  "passed": false,
-  "run_count": 0,
-  "gates": {},
-  "blocking_issues": ["Not yet run"]
-}
-```
+**Copy `~/.claude/.ultra-template/` contents to `.ultra/`:**
 
-Create `.ultra/delivery-report.json`:
-```json
-{
-  "version": null,
-  "pushed": false
-}
-```
+- Specs: `specs/product.md`, `specs/architecture.md`
+- Tasks: `tasks/tasks.json`, `tasks/contexts/TEMPLATE.md`
+- Status: `test-report.json`, `delivery-report.json`
+- Docs: `docs/research/README.md`
 
-### 5. Copy All Template Files
-
-**Copy `~/.claude/.ultra-template/` contents:**
-
-**To `.ultra/` directory:**
-- Specs: `.ultra/specs/product.md`, `.ultra/specs/architecture.md`
-- Tasks: `.ultra/tasks/tasks.json`
-- Docs: `.ultra/docs/research/`
-
-### 6. Git Integration (Based on User Choice)
+### 5. Git Integration (Based on User Choice)
 
 **If user chose "Initialize Git repository"** or **"Reinitialize Git"**:
 - If reinitializing: Backup existing `.git/` to `.git.backup.{timestamp}`
@@ -183,7 +163,7 @@ Create `.ultra/delivery-report.json`:
 **If user chose "Keep existing Git repository"** or **"Don't use Git"**:
 - Skip Git operations
 
-### 7. Display Success Summary
+### 6. Display Success Summary
 
 Show in Chinese:
 - Directories created (.ultra/specs/, .ultra/tasks/, .ultra/docs/)
