@@ -70,9 +70,3 @@ Per CLAUDE.md `<evidence_first>`: External claims require verification (Context7
 - **Inference**: Deduced from facts
 - **Speculation**: Needs verification
 
-## When NOT to Use
-
-- Simple questions → direct answer
-- Implementation tasks → `/ultra-dev`
-- Research/exploration → `/ultra-research`
-- Quick status check → `/ultra-status`
