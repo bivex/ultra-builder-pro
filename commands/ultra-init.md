@@ -141,7 +141,7 @@ Create `.ultra/` by copying from template (`~/.claude/.ultra-template/`):
 
 **Documentation**:
 - `.ultra/docs/research/` - Research reports (/ultra-research outputs)
-- `.ultra/docs/decisions/` - Architecture Decision Records (ADRs with template)
+- `.ultra/docs/feature-status.json` - Feature implementation tracking
 
 **Additional Directories**:
 - `.ultra/changes/` - Feature proposals (OpenSpec pattern)
@@ -162,9 +162,9 @@ Create `.ultra/tasks/tasks.json`:
 **Copy `~/.claude/.ultra-template/` contents:**
 
 **To `.ultra/` directory:**
-- Specs: `.ultra/specs/product.md`, `.ultra/specs/architecture.md`, subdirectories
+- Specs: `.ultra/specs/product.md`, `.ultra/specs/architecture.md`
 - Tasks: `.ultra/tasks/tasks.json`
-- Docs: `.ultra/docs/research/`
+- Docs: `.ultra/docs/research/`, `.ultra/docs/feature-status.json`
 - Additional: `.ultra/changes/`
 
 **To project root:**
