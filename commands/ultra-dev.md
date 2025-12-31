@@ -98,7 +98,7 @@ Execute development tasks using TDD workflow.
    ```
    - If conflicts → resolve → `git rebase --continue`
 
-3. **Verify after rebase** (main 可能有新代码):
+3. **Verify after rebase** (main may have new code):
    ```bash
    # Run tests again to ensure compatibility
    ```
