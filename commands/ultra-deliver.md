@@ -1,12 +1,12 @@
 ---
-description: Delivery optimization (performance + security + documentation)
+description: Release preparation (documentation + build + version + publish)
 argument-hint: [version-type]
 allowed-tools: TodoWrite, Task, Read, Write, Edit, Bash, Grep, Glob
 ---
 
 # /ultra-deliver
 
-Prepare for delivery with performance optimization, security audit, and documentation updates.
+Prepare release after `/ultra-test` passes: update documentation, build, bump version, tag, and push.
 
 ---
 
