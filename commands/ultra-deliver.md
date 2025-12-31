@@ -14,12 +14,17 @@ Prepare for delivery with performance optimization, security audit, and document
 
 **Before proceeding, you MUST verify these conditions. If any fails, report and block.**
 
-### Validation 1: All Tests Pass
+### Validation 1: /ultra-test Passed
 
-Run `npm test` and verify exit code is 0 with coverage ≥80%.
+Verify `/ultra-test` was run and all gates passed:
+- No CRITICAL anti-patterns detected
+- No HIGH priority coverage gaps
+- E2E tests pass (if applicable)
+- Core Web Vitals pass (if frontend)
+- No critical/high security vulnerabilities
 
-If failed:
-- Report: "❌ Tests failed: {pass_count}/{total_count}"
+If not run or failed:
+- Report: "❌ Run /ultra-test first"
 - Block delivery
 
 ### Validation 2: No Uncommitted Changes
@@ -54,9 +59,13 @@ Task(subagent_type="ultra-performance-agent",
      prompt="Analyze and optimize performance. Focus on Core Web Vitals (LCP<2.5s, INP<200ms, CLS<0.1) and bottleneck identification.")
 ```
 
-### Step 2: Security Audit
+### Step 2: Verify Security (from /ultra-test)
 
-Run `npm audit` and review results. For high/critical issues, apply fixes or document exceptions.
+Security audit was performed in `/ultra-test`. Review results and ensure no blockers remain.
+
+If new dependencies added after `/ultra-test`:
+- Re-run security check (auto-detect package manager)
+- Block if critical/high issues found
 
 ### Step 3: Documentation Update
 
@@ -98,35 +107,48 @@ Add:
 - Verify accuracy
 - Final approval before commit
 
-### Step 4: Final Quality Check
+### Step 4: Production Build
 
-1. Run full test suite: `npm test`
-2. Build production: `npm run build`
-3. Verify build succeeds
+**Auto-detect build command**:
+- Node.js: Read `scripts.build` from `package.json`
+- Python: `python -m build` or project-specific
+- Go: `go build ./...`
+- Rust: `cargo build --release`
+
+Verify build succeeds before proceeding.
 
 ### Step 5: Prepare Release
 
-1. Determine version bump (patch/minor/major)
-2. Update version: `npm version {type}`
+1. Determine version bump (patch/minor/major) based on commits
+2. Update version (auto-detect):
+   - Node.js: `npm version {type}`
+   - Python: Update `pyproject.toml` or `setup.py`
+   - Go: Create git tag
 3. Report release readiness
 
 ---
 
 ## Deliverables Checklist
 
-- [ ] All tests pass (coverage ≥80%)
-- [ ] Performance optimized (Core Web Vitals pass)
-- [ ] No security vulnerabilities
-- [ ] Documentation updated
+- [ ] `/ultra-test` passed (Anti-Pattern, Coverage, E2E, Perf, Security)
+- [ ] No uncommitted changes
 - [ ] Specs up-to-date (Dual-Write verified)
+- [ ] Documentation updated (CHANGELOG, README)
 - [ ] Production build successful
+- [ ] Version bumped
 
 ---
 
 ## Integration
 
+- **Prerequisites**: `/ultra-test` must pass first
 - **Agents**: ultra-performance-agent for optimization
 - **Next**: Deploy or create release PR
+
+**Workflow**:
+```
+/ultra-dev (tasks) → /ultra-test (audit) → /ultra-deliver (release)
+```
 
 ## Output Format
 

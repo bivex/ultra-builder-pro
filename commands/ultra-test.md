@@ -1,5 +1,5 @@
 ---
-description: Comprehensive testing (six-dimensional coverage + Core Web Vitals)
+description: Pre-delivery quality audit (Anti-Pattern + Coverage Gap + E2E + Performance + Security)
 argument-hint: [scope]
 allowed-tools: TodoWrite, Bash, Read, Write, Task, Grep, Glob
 ---
@@ -8,290 +8,236 @@ allowed-tools: TodoWrite, Bash, Read, Write, Task, Grep, Glob
 
 ## Purpose
 
-Execute comprehensive testing with six-dimensional coverage and Core Web Vitals monitoring.
+Pre-delivery quality audit. Validates test health, coverage gaps, E2E functionality, performance, and security.
+
+**Note**: This is NOT for running unit tests (that's `/ultra-dev` Step 3-4). This is for auditing overall project quality before `/ultra-deliver`.
+
+---
 
 ## Pre-Execution Checks
 
-- Check for code changes via `git status`
-- Assess existing test coverage (read coverage report if available)
-- Detect frontend vs backend: Frontend requires Core Web Vitals testing
-- Verify test frameworks configured
+1. **Detect project type** (for test command reference):
+   - Node.js: `package.json` → read `scripts.test`
+   - Python: `pyproject.toml` or `pytest.ini` → pytest
+   - Go: `go.mod` → `go test`
+   - Rust: `Cargo.toml` → `cargo test`
+
+2. **Check prerequisites**:
+   - At least one task completed in `.ultra/tasks/tasks.json`
+   - Test files exist (`**/*.test.*` or `**/*.spec.*` or `**/test_*.py`)
+
+---
 
 ## Workflow
 
-### 0. Test Authenticity Analysis (TAS)
+### Step 1: Anti-Pattern Detection
 
-**⚠️ MANDATORY: Execute BEFORE running tests to detect fake tests early.**
+**Purpose**: Detect fake/meaningless tests before they waste CI time.
 
-**Execution**: Runs automatically during /ultra-test
+**Scan patterns** (auto-detect based on project type):
+- TypeScript/JavaScript: `**/*.test.ts`, `**/*.spec.ts`, `**/*.test.js`, `**/*.spec.js`
+- Python: `**/test_*.py`, `**/*_test.py`
+- Go: `**/*_test.go`
 
-**Analysis Process**:
-1. **Scan test files**: `**/*.test.ts`, `**/*.spec.ts`, `**/*.test.js`, `**/*.spec.js`
-2. **Calculate TAS** for each file (4 components):
+**Detection Rules**:
 
-| Component | Weight | Detection |
-|-----------|--------|-----------|
-| Real Data | 30% | Core logic uses real deps = 100, Core logic mocked = 0 |
-| Assertion Quality | 35% | Behavioral (`toBe`, `toEqual`) vs mock-only (`toHaveBeenCalled`) |
-| Real Execution | 20% | Real code lines vs mock-driven lines |
-| Pattern Compliance | 15% | 100 - (anti-patterns × 15) |
+| Pattern | Severity | Regex | Example |
+|---------|----------|-------|---------|
+| Tautology | CRITICAL | `expect\((true|false|1|0)\)\.toBe\(\1\)` | `expect(true).toBe(true)` |
+| Empty test | CRITICAL | `(it|test)\([^)]+,\s*\(\)\s*=>\s*\{\s*\}\)` | `it('does something', () => {})` |
+| Core logic mock | CRITICAL | `(mock|jest\.mock)\(['"]\./(domain|core|services)/` | `mock('./domain/user')` |
+| No assertion | WARNING | Test function without `expect`/`assert` | `it('test', () => { doThing() })` |
 
-3. **Grade each file**:
-   - A (85-100): ✅ High quality
-   - B (70-84): ✅ Pass with minor issues
-   - C (50-69): ❌ **BLOCKED** - Needs improvement
-   - D/F (<50): ❌ **BLOCKED** - Fake tests detected
+**Process**:
+1. Use Grep to scan test files for each pattern
+2. Count matches per pattern
+3. Report findings
 
-**Anti-Pattern Detection** (Critical):
-```regex
-# Tautology tests (CRITICAL - automatic F grade)
-expect\((true|false|1|0)\)\.toBe\((true|false|1|0)\)
-
-# Empty test body (CRITICAL)
-it\([^)]+,\s*(async\s*)?\(\)\s*=>\s*\{\s*\}\)
-
-# Core logic mocking (CRITICAL - check if mocking domain/service/state machine)
-# Note: External system test doubles (testcontainers/sandbox) are ALLOWED
-jest\.mock\(.*/(domain|service|core|business)/
-vi\.mock\(.*/(domain|service|core|business)/
-
-# Mock-only assertions without behavioral verification (WARNING)
-\.toHaveBeenCalled\(\)(?!With)
-```
-
-**Test Double Policy** (aligned with CLAUDE.md glossary):
-- ❌ **Core Logic**: Domain/service/state machine/funds-permission paths - NO mocking
-- ❌ **Repository interfaces**: Contract cannot be mocked
-- ✅ **Repository storage**: 1) Preferred: testcontainers with production DB 2) Acceptable: SQLite/in-memory when unavailable
-- ✅ **External systems**: testcontainers/sandbox/stub allowed with rationale
-
-**Output** (Chinese at runtime):
-```
-📊 Test Authenticity Analysis Report
-===================================
-Project TAS: 78% (Grade: B)
-
-Files Analyzed: 15
-- A Grade (85+): 8 files
-- B Grade (70-84): 5 files
-- C Grade (50-69): 2 files ❌ BLOCKED
-- D/F Grade (<50): 0 files
-
-Issues Found:
-- src/services/auth.test.ts: TAS 62% (C)
-  - Issue: Mocks core service logic, only 2 behavioral assertions
-  - Recommendation: Use real implementations for core logic, test doubles only for external systems
-
-Quality Gate: ❌ BLOCKED (2 files below 70%)
-```
-
-**Blocking Conditions**:
-- ❌ Any file TAS < 70% → Tests BLOCKED
-- ❌ Tautology detected (`expect(true).toBe(true)`) → Tests BLOCKED
-- ❌ Empty test body detected → Tests BLOCKED
-
-**Reference**: See anti-pattern examples in TAS Analysis section above
+**Result**:
+- ❌ **BLOCKED**: Any CRITICAL pattern found → must fix before delivery
+- ⚠️ **WARNING**: Only WARNING patterns found → can proceed with note
+- ✅ **PASS**: No anti-patterns detected
 
 ---
 
-### 1. Design Test Strategy
+### Step 2: Coverage Gap Analysis
 
-Design comprehensive strategy covering all six dimensions:
-**Functional, Boundary, Exception, Performance, Security, Compatibility**
+**Purpose**: Find untested code that coverage % misses.
 
-**Reference**: See Quality Gates section below for complete details.
-
-### 2. Execute Tests
-
-**Unit/Integration** (Built-in Bash):
-```bash
-npm test -- --coverage  # JavaScript/TypeScript (≥80% coverage)
-pytest --cov=src --cov-report=html  # Python
-go test -coverprofile=coverage.out ./...  # Go
-```
-
-**E2E Testing** (Playwright Skill auto-activates):
-When you mention "E2E test" or "browser automation":
-1. Playwright Skill generates test code (TypeScript)
-2. Run tests: `npx playwright test`
-3. Reports results in Chinese
-
-**Performance** (Frontend only - Lighthouse CLI):
-```bash
-lighthouse http://localhost:3000 --only-categories=performance --output=json
-```
-
-
-### 3. Analyze Results
-
-- Collect metrics from all test types
-- Identify failures and root causes
-- Generate fix recommendations
-
----
-
-### 3.5 Test Coverage Gap Analysis (AI Automated)
-
-**AI Workflow** (executes automatically after test execution):
-
-```typescript
-// Step 1: Find all exported functions, classes, and methods
-const exports = Grep({
-  pattern: "export (function|const|class)",
-  path: "src/",
-  type: "ts",
-  output_mode: "content",
-  "-n": true
-});
-
-// Step 2: Extract symbol names
-// Example matches:
-// - "export function login(" → "login"
-// - "export class UserService" → "UserService"
-// - "export const getUserById =" → "getUserById"
-const symbolNames = [];
-exports.split('\n').forEach(line => {
-  const match = line.match(/export\s+(function|const|class)\s+(\w+)/);
-  if (match) symbolNames.push(match[2]);
-});
-
-// Step 3: Search for each symbol in test files
-const gaps = [];
-for (const symbol of symbolNames) {
-  const testMatches = Grep({
-    pattern: symbol,
-    path: "**/*.test.ts",
-    output_mode: "count"
-  });
-
-  if (testMatches === 0) {
-    gaps.push({
-      symbol,
-      file: extractFileFromGrep(symbol),  // Helper to get file path
-      status: 'UNTESTED'
-    });
-  }
-}
-
-// Step 4: Generate gap report
-const gapReport = `
-# Test Coverage Gaps Report
-
-Generated: ${new Date().toISOString()}
-
-## Summary
-- Total Exported Symbols: ${symbolNames.length}
-- Untested Symbols: ${gaps.length}
-- Coverage: ${((1 - gaps.length / symbolNames.length) * 100).toFixed(1)}%
-
-## Untested Methods/Functions
-
-${gaps.map(gap => `- ❌ **${gap.symbol}** (\`${gap.file}\`) - 0 test cases found`).join('\n')}
-
-## Recommendations
-
-${gaps.slice(0, 5).map(gap => `
-### ${gap.symbol}
-**File**: \`${gap.file}\`
-**Priority**: ${gap.symbol.includes('delete') || gap.symbol.includes('remove') ? 'HIGH' : 'MEDIUM'}
-**Suggested Test Dimensions**:
-1. Functional: Core logic validation
-2. Boundary: Edge cases (null, empty, max values)
-3. Exception: Error handling
-4. Security: Input validation
-`).join('\n')}
-`;
-
-Write(".ultra/docs/test-coverage-gaps.md", gapReport);
-```
+**Process**:
+1. Find all exported symbols: `export (function|const|class)`
+2. Search for each symbol in test files
+3. Report symbols with 0 test references
 
 **Output**: `.ultra/docs/test-coverage-gaps.md`
 
-**Accuracy**: ~90%
-- ✅ Detects most untested exports
-- ⚠️ May miss: Methods inside classes (requires deeper analysis), private functions (not exported), dynamic exports
+```markdown
+# Test Coverage Gaps Report
 
-**Token cost**: ~8000 tokens
+## Summary
+- Exported Symbols: 45
+- Untested: 8
+- Symbol Coverage: 82%
 
-**When to use**:
-- After running `npm test -- --coverage`
-- Before marking task as complete
-- During /ultra-test Phase 3
-
-**Optional: User Review for Higher Accuracy**:
-- Review AI-generated gap report
-- Compare with coverage report HTML for detailed line-by-line coverage
-- Add missed methods identified by AI to test suite
+## Untested Functions
+- ❌ `deleteUser` (src/services/user.ts) - HIGH priority
+- ❌ `validateInput` (src/utils/validation.ts) - MEDIUM priority
+```
 
 ---
 
-### 4. Fix and Retest
+### Step 3: E2E Testing (if applicable)
 
-Iterate until all tests pass and metrics meet baselines.
+**Trigger**: Project has frontend or web application
 
-### 5. Update Feature Status (MANDATORY)
+**Detection priority**:
+1. Existing framework: `playwright.config.*` or `cypress.config.*`
+2. No framework: Use Claude Code native Chrome capability
 
-**⚠️ CRITICAL: This step is NON-OPTIONAL. Execute AFTER all test results are collected.**
+**Option A: Existing E2E Framework**
 
-**Status Mapping**:
-| Condition | Status |
-|-----------|--------|
-| All tests pass AND coverage ≥80% | "pass" |
-| Any test fails OR coverage <80% | "fail" |
+If project has E2E config, run existing tests:
+- Playwright: `npx playwright test`
+- Cypress: `npx cypress run`
 
-**Step 1: Identify tested tasks**
-Read completed tasks from tasks.json:
+**Option B: Claude Code Chrome Capability**
+
+If no E2E framework but has web UI, use native browser automation:
+1. Start dev server (auto-detect from package.json)
+2. Use `mcp__claude-in-chrome__*` tools for basic smoke tests:
+   - Navigate to key pages
+   - Verify critical elements render
+   - Check for console errors
+   - Test primary user flows
+
+**Process**:
+1. Check for existing E2E framework config
+2. If exists → run framework tests
+3. If not exists but has web UI → use Chrome MCP for smoke tests
+4. Report results
+
+---
+
+### Step 4: Performance Testing (frontend only)
+
+**Trigger**: Project has frontend (React/Vue/Next.js/etc.)
+
+**Core Web Vitals targets**:
+
+| Metric | Target | Tool |
+|--------|--------|------|
+| LCP (Largest Contentful Paint) | <2.5s | Lighthouse |
+| INP (Interaction to Next Paint) | <200ms | Lighthouse |
+| CLS (Cumulative Layout Shift) | <0.1 | Lighthouse |
+
+**Process**:
+1. Detect dev server port from `package.json` (`scripts.dev` or `scripts.start`)
+2. Start dev server if not running
+3. Run Lighthouse:
+   ```bash
+   lighthouse http://localhost:{detected-port} --only-categories=performance --output=json
+   ```
+4. Parse results and compare against targets
+
+---
+
+### Step 5: Security Audit
+
+**Process**:
+1. Run dependency audit
+2. Check for known vulnerabilities
+3. Report findings
+
+**Auto-detect commands**:
 ```bash
-cat .ultra/tasks/tasks.json | jq '.tasks[] | select(.status == "completed")'
+# Node.js
+npm audit --json
+
+# Python
+pip-audit --format json
+
+# Go
+govulncheck ./...
 ```
 
-**Step 2: Report test results** (output in Chinese at runtime):
+**Severity handling**:
+- Critical/High: ❌ BLOCKED
+- Medium: ⚠️ Warning
+- Low: ℹ️ Info
+
+---
+
+## Quality Gates
+
+All must pass for `/ultra-deliver`:
+
+| Gate | Requirement |
+|------|-------------|
+| Anti-Pattern | No CRITICAL patterns detected |
+| Coverage Gaps | No HIGH priority untested functions |
+| E2E | All tests pass (if applicable) |
+| Performance | Core Web Vitals pass (if frontend) |
+| Security | No critical/high vulnerabilities |
+
+---
+
+## Output
+
+**Quality Audit Report** (Chinese at runtime):
+
 ```
-Test summary:
-   - Unit tests: X/Y passed
-   - E2E tests: X/Y passed
-   - Total coverage: X%
-   - Core Web Vitals: LCP, INP, CLS values (frontend only)
-   - Issues to fix (if any)
+🧪 Quality Audit Report
+========================
+
+📊 Anti-Pattern Detection: ✅ PASS
+   - 15 test files scanned
+   - 0 CRITICAL patterns
+   - 1 WARNING (no assertion in 1 test)
+
+📈 Coverage Gaps: 3 untested functions ⚠️
+   - HIGH: 1 (deleteUser)
+   - MEDIUM: 2
+
+🌐 E2E Tests: 12/12 passed ✅
+   - Method: Playwright
+
+⚡ Performance:
+   - LCP: 1.8s ✅
+   - INP: 150ms ✅
+   - CLS: 0.05 ✅
+
+🔒 Security: 0 critical, 2 medium ⚠️
+
+Overall: ⚠️ PASS with warnings
+Action: Fix coverage gaps before /ultra-deliver
 ```
 
-**Note**: Test results are reported in terminal output. Use `/ultra-deliver` when all tests pass.
-
-## Quality Gates (All Must Pass)
-
-### Test Authenticity (Mandatory)
-- ✅ **No tautologies** (`expect(true).toBe(true)` = instant fail)
-- ✅ **No empty tests** (test body must have assertions)
-- ✅ **No core logic mocking** (domain/service/state machine paths)
-- ✅ **External test doubles allowed** (testcontainers/sandbox/stub with rationale)
-
-### Coverage & Execution
-- ✅ Unit coverage ≥80%
-- ✅ All E2E tests pass
-- ✅ All 6 dimensions covered (Functional, Boundary, Exception, Performance, Security, Compatibility)
-
-### Frontend Only (Core Web Vitals)
-- ✅ LCP (Largest Contentful Paint) <2.5s
-- ✅ INP (Interaction to Next Paint) <200ms
-- ✅ CLS (Cumulative Layout Shift) <0.1
-
-### Security
-- ✅ No critical security issues
-
-**References**:
-- CLAUDE.md glossary - Test Double Policy
-- TAS Analysis section above - Anti-pattern examples
+---
 
 ## Integration
 
-- **Output files**:
-  - `.ultra/docs/test-coverage-gaps.md` (gap analysis)
-- **Next**: `/ultra-deliver` for deployment prep
+- **Prerequisites**: At least one task completed via `/ultra-dev`
+- **Input**: Test files, source code, package configs
+- **Output**:
+  - `.ultra/docs/test-coverage-gaps.md`
+  - Quality report (terminal)
+- **Next**: `/ultra-deliver` (if all gates pass)
+
+---
+
+## Comparison with /ultra-dev
+
+| Aspect | /ultra-dev | /ultra-test |
+|--------|------------|-------------|
+| When | Per task | Before delivery |
+| Focus | TDD for single task | Project-wide audit |
+| Unit tests | Run & write | Detect anti-patterns |
+| E2E | ❌ | ✅ (Playwright/Cypress/Chrome MCP) |
+| Performance | ❌ | ✅ (Lighthouse) |
+| Security | ❌ | ✅ (Dependency audit) |
+
+---
 
 ## Output Format
 
 **Command icon**: 🧪
-
-## References
-
-- CLAUDE.md - Complete testing standards
