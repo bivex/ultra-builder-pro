@@ -28,37 +28,14 @@ If validation fails, block delivery.
 Run `git status` and verify working directory is clean.
 
 If unclean:
-- Report: "⚠️ Uncommitted changes exist"
-- Ask user to commit or stash
-
-### Validation 3: Specs Up-to-Date
-
-Run `git diff .ultra/specs/` to check for uncommitted spec changes.
-
-If changes found:
-- Report: "⚠️ Uncommitted spec changes"
-- Ask user to commit or discard
+- Auto-commit with message: `chore: pre-delivery cleanup`
+- If commit fails (conflicts, etc.) → block and report
 
 ---
 
 ## Delivery Workflow
 
-### Step 1: Performance Optimization
-
-Delegate to ultra-performance-agent:
-
-```
-Task(subagent_type="ultra-performance-agent",
-     prompt="Analyze and optimize performance. Focus on Core Web Vitals (LCP<2.5s, INP<200ms, CLS<0.1) and bottleneck identification.")
-```
-
-### Step 2: Verify Security
-
-Security results already in `.ultra/test-report.json` (validated in Pre-Delivery).
-
-If `git_commit` mismatch detected, Validation 1 already blocked.
-
-### Step 3: Documentation Update
+### Step 1: Documentation Update
 
 **CHANGELOG.md**:
 1. Run `git log --oneline` since last release tag
@@ -72,36 +49,55 @@ If `git_commit` mismatch detected, Validation 1 already blocked.
 **README** (if API changed):
 1. Update usage examples to reflect changes
 
-### Step 4: Production Build
+### Step 2: Production Build
 
 Detect and run production build command from project config.
 
 Verify build succeeds before proceeding.
 
-### Step 5: Prepare Release
+### Step 3: Version & Release
 
 1. Determine version bump (patch/minor/major) based on commits
 2. Update version using project's version management method
-3. Report release readiness
+3. Commit: `chore(release): vX.X.X`
+4. Create git tag: `vX.X.X`
+5. Push to remote (branch + tag)
+
+### Step 4: Persist Results
+
+Write `.ultra/delivery-report.json`:
+
+```json
+{
+  "timestamp": "2025-01-01T04:00:00Z",
+  "version": "1.2.0",
+  "git_tag": "v1.2.0",
+  "git_commit": "abc123",
+  "changelog_updated": true,
+  "build_success": true,
+  "pushed": true
+}
+```
 
 ---
 
 ## Deliverables Checklist
 
-- [ ] `/ultra-test` passed (Anti-Pattern, Coverage, E2E, Perf, Security)
-- [ ] No uncommitted changes
-- [ ] Specs up-to-date (Dual-Write verified)
-- [ ] Documentation updated (CHANGELOG, README)
+- [ ] `/ultra-test` passed (verified via test-report.json)
+- [ ] Uncommitted changes auto-committed
+- [ ] Documentation updated (CHANGELOG)
 - [ ] Production build successful
-- [ ] Version bumped
+- [ ] Version bumped, tagged, pushed
+- [ ] delivery-report.json written
 
 ---
 
 ## Integration
 
 - **Prerequisites**: `/ultra-test` must pass first
-- **Agents**: ultra-performance-agent for optimization
-- **Next**: Deploy or create release PR
+- **Input**: `.ultra/test-report.json`
+- **Output**: `.ultra/delivery-report.json`
+- **Next**: Deploy or announce release
 
 **Workflow**:
 ```
@@ -110,9 +106,6 @@ Verify build succeeds before proceeding.
 
 ## Output Format
 
-Display delivery report in Chinese including:
-- Merge status
-- Performance scores
-- Security audit results
-- Documentation updates
-- Release readiness
+Display delivery report in Chinese.
+
+**Command icon**: 📦
