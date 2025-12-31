@@ -28,22 +28,14 @@ Detect project context before initialization:
    - Read existing config for comparison
 
 2. **Detect project code files**
-   - Node.js: `package.json`
-   - Python: `requirements.txt`, `pyproject.toml`
-   - Go: `go.mod`
-   - Rust: `Cargo.toml`
-   - Java: `pom.xml`, `build.gradle`
+   - Look for language-specific config files (package.json, Cargo.toml, go.mod, pyproject.toml, etc.)
 
 3. **Detect Git repository**
    - Check if `.git/` directory exists
    - Use in interactive confirmation (show different Git options based on detection)
 
 4. **Auto-detect project type and tech stack**
-   - Frontend frameworks: React, Vue, Angular, Svelte
-   - Backend frameworks: Express, FastAPI, Django, Gin
-   - Testing: Jest, Playwright, Pytest
-   - Build tools: Vite, Webpack, esbuild
-   - Package managers: npm, yarn, pnpm, pip, go, cargo
+   - Analyze dependencies and config to identify frameworks, testing tools, and build systems
 
 5. **Use detection results in interactive confirmation**
    - Show detected values with labels
@@ -61,12 +53,10 @@ Detect project context before initialization:
 
 **Project type**: $2 or auto-detect from existing files
 
-**Detection sources**:
-- Node.js: package.json dependencies (react/vue/next → web, express/koa → api, bin field → cli, hybrid → fullstack)
-- Python: requirements.txt (flask/django/fastapi → api, streamlit/gradio → web)
-- Go: go.mod (gin/echo/fiber → api)
-- Rust: Cargo.toml (actix-web/rocket → api)
-- Java: pom.xml / build.gradle dependencies
+**Detection logic**:
+- Read project config files and analyze dependencies
+- Infer type from frameworks: web frameworks → web, API frameworks → api, CLI tools → cli
+- Mixed patterns → fullstack
 
 **Fallback**: Use AskUserQuestion with detected context hints
 

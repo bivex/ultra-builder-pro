@@ -109,21 +109,14 @@ Add:
 
 ### Step 4: Production Build
 
-**Auto-detect build command**:
-- Node.js: Read `scripts.build` from `package.json`
-- Python: `python -m build` or project-specific
-- Go: `go build ./...`
-- Rust: `cargo build --release`
+Detect and run production build command from project config.
 
 Verify build succeeds before proceeding.
 
 ### Step 5: Prepare Release
 
 1. Determine version bump (patch/minor/major) based on commits
-2. Update version (auto-detect):
-   - Node.js: `npm version {type}`
-   - Python: Update `pyproject.toml` or `setup.py`
-   - Go: Create git tag
+2. Update version using project's version management method
 3. Report release readiness
 
 ---
