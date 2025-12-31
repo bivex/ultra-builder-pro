@@ -107,13 +107,25 @@ Where `{slug}` is a 2-3 word lowercase hyphenated description of the task.
 Create task workspace (if not exists):
 ```
 .ultra/changes/task-{id}/
-├── proposal.md     # Feature overview, rationale, and completion status
-└── tasks.md        # Task details from tasks.json
+└── proposal.md     # Change history + completion status
 ```
 
-**On completion**: Add `## Status: Completed` section to proposal.md with completion date and summary.
+**Dual-Write Mode**: When requirements change during development:
+1. Update `specs/` immediately (keep specs current)
+2. Record change in `proposal.md` (maintain history)
 
-**On spec changes**: Document changes in proposal.md, do not create new files.
+**Change Record Format** in proposal.md:
+```markdown
+## Change History
+
+### {date}: {change title}
+- **Original**: {original approach}
+- **Changed to**: {new approach}
+- **Reason**: {why the change}
+- **Updated**: specs/{file} §{section}
+```
+
+**On completion**: Add `## Status: Completed` section with date and summary.
 
 ### Step 4: TDD Development Cycle
 

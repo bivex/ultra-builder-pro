@@ -1,30 +1,39 @@
 # Changes Directory
 
-This directory contains **proposed changes** following the OpenSpec pattern.
+This directory contains **task-level change history** for audit and traceability.
 
 ## Structure
 
 ```
 changes/
 ├── README.md           # This file
-└── task-{id}/          # Per-task proposal directory
-    ├── proposal.md     # Feature overview, rationale, and completion status
-    └── tasks.md        # Implementation checklist from tasks.json
+└── task-{id}/          # Per-task change directory
+    └── proposal.md     # Change history + completion status
 ```
 
-## Workflow
+## Dual-Write Mode
 
-1. **Create**: `/ultra-dev` creates `changes/task-{id}/` with proposal.md
-2. **Develop**: Implementation follows proposal, tasks tracked in tasks.md
-3. **Complete**: Add `## Status: Completed` section to proposal.md
-4. **Spec Changes**: Update proposal.md to document any specification changes
+When requirements change during development:
 
-## Key Principle
+1. **Update specs/ immediately** - Keep specifications current
+2. **Record in proposal.md** - Maintain change history
 
-**Changes/ is for proposals. Specs/ is for truth.**
+This ensures:
+- Parallel tasks always read consistent specifications
+- Task-level changes remain traceable for audit
+- No document drift between development and delivery
 
-- `changes/`: What we plan to do (and completion records)
-- `specs/`: What has been done (current system state)
+## Change Record Format
+
+```markdown
+## Change History
+
+### {date}: {change title}
+- **Original**: {original approach}
+- **Changed to**: {new approach}
+- **Reason**: {why the change}
+- **Updated**: specs/{file} §{section}
+```
 
 ## Completion Marking
 
@@ -37,3 +46,10 @@ When a task completes, add to proposal.md:
 - **Commit**: abc123
 - **Summary**: Brief description of what was implemented
 ```
+
+## Key Principle
+
+**Specs/ is always current. Changes/ is the audit trail.**
+
+- `specs/`: Current system state (source of truth)
+- `changes/`: What changed, why, and when (history)

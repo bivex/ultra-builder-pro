@@ -30,40 +30,22 @@ If unclean:
 - Report: "⚠️ 存在未提交的更改"
 - Ask user to commit or stash
 
-### Validation 3: Pending Changes Merged
+### Validation 3: Specs Up-to-Date
 
-Check if `.ultra/changes/` has unmerged proposals for completed tasks.
+Verify specs/ reflects current state (Dual-Write Mode ensures this during development).
 
-If found:
-- List pending proposals
-- Execute OpenSpec Merge (Step 1) first
+Check `.ultra/changes/task-*/proposal.md` for any `## Status: Completed` without corresponding specs update.
+
+If inconsistency found:
+- Report: "⚠️ 发现未同步的变更记录"
+- List affected files
+- Ask user to verify
 
 ---
 
 ## Delivery Workflow
 
-### Step 1: OpenSpec Merge
-
-**Purpose**: Merge completed feature proposals to main specs.
-
-**Process**:
-1. List directories in `.ultra/changes/task-*`
-2. For each, read the task ID and check if task status is "completed" in tasks.json
-3. If completed:
-   - Read proposal.md for spec changes documented during development
-   - Apply relevant changes to main specs (.ultra/specs/product.md, .ultra/specs/architecture.md)
-   - Verify proposal.md has `## Status: Completed` section
-4. Mark as processed (no separate archive - completion tracked in proposal.md)
-
-**Output** (Chinese):
-```
-📋 OpenSpec 合并报告
-====================
-已处理：{count} 个变更提案
-已合并到主规范：{merged_list}
-```
-
-### Step 2: Performance Optimization
+### Step 1: Performance Optimization
 
 Delegate to ultra-performance-agent:
 
@@ -72,13 +54,13 @@ Task(subagent_type="ultra-performance-agent",
      prompt="Analyze and optimize performance. Focus on Core Web Vitals (LCP<2.5s, INP<200ms, CLS<0.1) and bottleneck identification.")
 ```
 
-### Step 3: Security Audit
+### Step 2: Security Audit
 
 Run `npm audit` and review results. For high/critical issues, apply fixes or document exceptions.
 
-### Step 4: Documentation Update
+### Step 3: Documentation Update
 
-**Step 4.1: Draft Documentation**
+**Step 3.1: Draft Documentation**
 
 **CHANGELOG.md**:
 1. Run `git log --oneline` since last release tag
@@ -93,7 +75,7 @@ Run `npm audit` and review results. For high/critical issues, apply fixes or doc
 1. Draft based on code changes
 2. Include basic usage examples
 
-**Step 4.2: Review Documentation**
+**Step 3.2: Review Documentation**
 
 Check for:
 1. Technical accuracy (code examples work)
@@ -101,7 +83,7 @@ Check for:
 3. Clarity (no ambiguity)
 4. Practical examples
 
-**Step 4.3: Enhance Documentation**
+**Step 3.3: Enhance Documentation**
 
 Add:
 1. More code examples (covering edge cases)
@@ -110,25 +92,25 @@ Add:
 4. Troubleshooting guide
 5. Migration notes (if applicable)
 
-**Step 4.4: Final Review**
+**Step 3.4: Final Review**
 
 - Ensure consistent style and tone
 - Verify accuracy
 - Final approval before commit
 
-### Step 5: Final Quality Check
+### Step 4: Final Quality Check
 
 1. Run full test suite: `npm test`
 2. Build production: `npm run build`
 3. Verify build succeeds
 
-### Step 6: Prepare Release
+### Step 5: Prepare Release
 
 1. Determine version bump (patch/minor/major)
 2. Update version: `npm version {type}`
 3. Report release readiness
 
-### Step 7: Update Project Context
+### Step 6: Update Project Context
 
 **Update CLAUDE.md** (via syncing-docs):
 - Add release version to project overview
@@ -147,7 +129,7 @@ Add:
 - [ ] Performance optimized (Core Web Vitals pass)
 - [ ] No security vulnerabilities
 - [ ] Documentation updated
-- [ ] Specs merged from changes/
+- [ ] Specs up-to-date (Dual-Write verified)
 - [ ] Production build successful
 - [ ] CLAUDE.md updated with release info
 - [ ] feature-status.json marked as released
