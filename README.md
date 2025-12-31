@@ -46,6 +46,15 @@ claude
 - Added AskUserQuestion to all commands (except status)
 - Added `.ultra-template/` for project initialization
 
+### Codex Integration
+
+- Added `codex` skill with review templates (research/code/test)
+- Mandatory Codex review at key checkpoints:
+  - `/ultra-research` → after all rounds complete
+  - `/ultra-dev` → after Quality Gates pass
+  - `/ultra-test` → after all gates pass
+- Templates aligned with CLAUDE.md rules
+
 ### Production Absolutism (Preserved)
 
 > "There is no test code. There is no demo. There is no MVP.
@@ -99,6 +108,7 @@ If ANY component is fake/mocked/simulated → Quality = 0
 | E2E | All critical flows pass (Chrome MCP) |
 | Performance | Core Web Vitals pass (if frontend) |
 | Security | No critical/high vulnerabilities |
+| Codex Review | No critical issues from Codex audit |
 
 ### Code Limits
 
@@ -146,16 +156,17 @@ If ANY component is fake/mocked/simulated → Quality = 0
 
 ## Version History
 
-### v4.4.1 (2026-01-01) - Command Refinement
+### v4.4.1 (2026-01-01) - Command Refinement + Codex Integration
 
-- **Added**: `codex` skill for OpenAI Codex CLI integration
-- **Refactored**: `/ultra-test` TAS scoring → Anti-Pattern Detection (executable)
+- **Added**: `codex` skill with 3 review templates (research/code/test)
+- **Added**: Mandatory Codex review in `/ultra-research`, `/ultra-dev`, `/ultra-test`
+- **Added**: Git operation safety (AskUserQuestion before commit/merge/push)
+- **Refactored**: `/ultra-test` TAS scoring → Anti-Pattern Detection
 - **Refactored**: `/ultra-dev` git branch logic with decision tree
-- **Added**: AskUserQuestion to all commands (except status)
+- **Refactored**: `/ultra-deliver` build detection with priority list
 - **Added**: `.ultra-template/` for project initialization
-- **Removed**: `skill-rules.json` (not used by Claude Code)
-- **Removed**: `agents/` (ultra-architect-agent, ultra-performance-agent)
-- **Fixed**: allowed-tools optimization for security
+- **Removed**: `skill-rules.json`, `agents/`
+- **Fixed**: Review templates aligned with CLAUDE.md rules
 
 ### v4.4.0 (2025-12-31) - Simplified Edition
 
