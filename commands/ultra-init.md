@@ -135,8 +135,6 @@ Create `.ultra/` by copying from template (`~/.claude/.ultra-template/`):
 - `.ultra/specs/` - Specification source of truth
   - `product.md` - Product requirements & user stories
   - `architecture.md` - Architecture design & tech stack
-  - `api-contracts/` - API specifications
-  - `data-models/` - Data model definitions
 
 **Task Management**:
 - `.ultra/tasks/tasks.json` - Native task tracking
@@ -167,7 +165,7 @@ Create `.ultra/tasks/tasks.json`:
 - Specs: `.ultra/specs/product.md`, `.ultra/specs/architecture.md`, subdirectories
 - Tasks: `.ultra/tasks/tasks.json`
 - Docs: `.ultra/docs/decisions/`, `.ultra/docs/research/`
-- Additional: `.ultra/changes/`, `.ultra/thinking-sessions/`
+- Additional: `.ultra/changes/`
 
 **To project root:**
 - `CLAUDE.md` - Project-level context file (Claude Code auto-reads this)

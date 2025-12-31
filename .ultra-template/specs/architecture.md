@@ -266,8 +266,6 @@ User {
 
 ### API Contracts
 
-Location: `specs/api-contracts/`
-
 #### REST Endpoints (if applicable)
 
 ```
