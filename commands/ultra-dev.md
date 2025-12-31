@@ -32,12 +32,25 @@ Execute development tasks using TDD workflow.
 ### Step 2: Environment Setup
 
 **Check git branch**:
-- If on `main` or `master` → Create feature branch:
+
+1. Get current branch: `git branch --show-current`
+2. Define expected branch pattern: `feat/task-{id}-*`
+
+**Decision tree**:
+
+- **If on `main` or `master`**:
   ```bash
-  git checkout main && git pull origin main
+  git pull origin main
   git checkout -b feat/task-{id}-{slug}
   ```
-- If already on feature branch → Continue
+
+- **If on `feat/task-{当前id}-*`** (current task's branch):
+  → Continue (断点续作)
+
+- **If on any other branch**:
+  → Use AskUserQuestion:
+    - "切换到 main 并创建新分支"（推荐）
+    - "在当前分支继续"
 
 **Check dependencies** (soft validation):
 - If dependency tasks incomplete → Warn but continue
