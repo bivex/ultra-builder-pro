@@ -143,9 +143,6 @@ Create `.ultra/` by copying from template (`~/.claude/.ultra-template/`):
 - `.ultra/docs/research/` - Research reports (/ultra-research outputs)
 - `.ultra/docs/feature-status.json` - Feature implementation tracking
 
-**Additional Directories**:
-- `.ultra/changes/` - Feature proposals (OpenSpec pattern)
-
 **Template Source**: All files copied from `~/.claude/.ultra-template/`
 
 
@@ -164,7 +161,6 @@ Create `.ultra/tasks/tasks.json`:
 - Specs: `.ultra/specs/product.md`, `.ultra/specs/architecture.md`
 - Tasks: `.ultra/tasks/tasks.json`
 - Docs: `.ultra/docs/research/`, `.ultra/docs/feature-status.json`
-- Additional: `.ultra/changes/`
 
 **To project root:**
 - `CLAUDE.md` - Project-level context file (Claude Code auto-reads this)
@@ -189,7 +185,7 @@ Create `.ultra/tasks/tasks.json`:
 ### 6. Display Success Summary
 
 Show in Chinese:
-- Directories created (.ultra/specs/, .ultra/changes/, .ultra/tasks/, .ultra/docs/)
+- Directories created (.ultra/specs/, .ultra/tasks/, .ultra/docs/)
 - Template files copied
 - Task system initialized (tasks.json)
 - Specification templates ready (product.md, architecture.md with [NEEDS CLARIFICATION] markers)
@@ -276,7 +272,7 @@ TDD workflow with quality gates and automatic git integration.
 - `.ultra/specs/product.md` - WHAT to build (completed in research)
 - `.ultra/specs/architecture.md` - HOW to build (completed in research)
 - `.ultra/tasks/tasks.json` - Task breakdown (generated from specs)
-- `.ultra/changes/` - Feature proposals (during development)
+- `.ultra/tasks/contexts/` - Task context with change history
 
 ## Output Format
 

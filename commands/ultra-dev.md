@@ -29,11 +29,6 @@ Execute development tasks using TDD workflow.
 
 ### Step 2: Environment Setup
 
-**Create task workspace**:
-```bash
-mkdir -p .ultra/changes/task-{id}
-```
-
 **Check git branch**:
 - If on `main` or `master` → Create feature branch:
   ```bash
@@ -134,30 +129,13 @@ Output:
 1. **Update specs immediately** (`.ultra/specs/product.md` or `architecture.md`)
    - Keep specifications current for parallel tasks
 
-2. **Record change in proposal.md** (`.ultra/changes/task-{id}/proposal.md`):
+2. **Record change in context file** (`.ultra/tasks/contexts/task-{id}.md`):
+   - Add entry to Change Log section:
    ```markdown
-   ## Change History
-
-   ### {date}: {change title}
-   - **Original**: {original approach}
-   - **Changed to**: {new approach}
-   - **Reason**: {why the change}
-   - **Updated**: specs/{file} §{section}
+   | {date} | {change description} | {reason} |
    ```
 
-3. **Update context file** (`.ultra/tasks/contexts/task-{id}.md`)
-   - Keep implementation guidance current
-
-**On task completion**, add to proposal.md:
-```markdown
-## Status: Completed
-
-- **Date**: {date}
-- **Commit**: {hash}
-- **Summary**: {brief description}
-```
-
-**Key principle**: `specs/` is source of truth, `changes/` is audit trail.
+**Key principle**: `specs/` is source of truth, `contexts/` tracks implementation history.
 
 ---
 
@@ -168,8 +146,7 @@ Output:
   - `.ultra/tasks/contexts/task-{id}.md` (implementation context)
 - **Output**:
   - `.ultra/tasks/tasks.json` (status update)
-  - `.ultra/tasks/contexts/task-{id}.md` (updated context)
-  - `.ultra/changes/task-{id}/proposal.md` (change history)
+  - `.ultra/tasks/contexts/task-{id}.md` (updated context with change log)
   - `.ultra/docs/feature-status.json` (tracking)
   - `CLAUDE.md` (current focus)
 - **Skills**: syncing-docs, syncing-status

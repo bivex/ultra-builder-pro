@@ -34,11 +34,11 @@ If unclean:
 
 Verify specs/ reflects current state (Dual-Write Mode ensures this during development).
 
-Check `.ultra/changes/task-*/proposal.md` for any `## Status: Completed` without corresponding specs update.
+Check `.ultra/tasks/contexts/task-*.md` Change Log sections for any untracked spec updates.
 
 If inconsistency found:
-- Report: "⚠️ Unsynchronized change records found"
-- List affected files
+- Report: "⚠️ Context files reference spec changes not reflected in specs/"
+- List affected sections
 - Ask user to verify
 
 ---
