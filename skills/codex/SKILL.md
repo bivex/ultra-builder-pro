@@ -90,13 +90,29 @@ Use these predefined templates when commands reference `codex skill with templat
 
 **Prompt**:
 ```
-Review this technical research output for:
-1) Logical gaps or contradictions between sections
-2) Missing risks or edge cases not considered
-3) Unverified claims without cited sources
-4) Overly optimistic assumptions or underestimated complexity
+Review this technical research output against these rules:
+
+[Evidence-First]
+- Every claim must have verifiable source (official docs, benchmarks)
+- Unverified claims must be marked as "Speculation"
+- Priority: 1) Official docs 2) Community practices 3) Inference
+
+[Honesty & Challenge]
+- Detect risk underestimation or wishful thinking
+- Point out logical gaps explicitly
+- No overly optimistic assumptions without evidence
+
+[Architecture Decisions]
+- Critical state requirements addressed?
+- Migration/rollback plan for breaking changes?
+- Persistence/recovery/observability considered?
+
+[Completeness]
+- Missing risks or edge cases not considered
+- Contradictions between sections
 
 Provide specific issues with file:line references.
+Label each finding: Fact | Inference | Speculation
 If no critical issues found, respond with "PASS: No blocking issues".
 ```
 
@@ -112,11 +128,27 @@ If no critical issues found, respond with "PASS: No blocking issues".
 
 **Prompt**:
 ```
-Review this code diff for:
-1) Security vulnerabilities (injection, XSS, CSRF, auth bypass, secrets exposure)
-2) Logic errors, race conditions, or incorrect state handling
-3) Performance issues (N+1 queries, memory leaks, blocking operations)
-4) Spec compliance - does implementation match acceptance criteria?
+Review this code diff against these rules:
+
+[Code Quality]
+- No TODO/FIXME/placeholder in code
+- Modular structure, avoid deep nesting (max 3 levels)
+- No hardcoded secrets or credentials
+
+[Security]
+- No injection vulnerabilities (SQL, XSS, CSRF, command injection)
+- No auth bypass or secrets exposure
+- Input validation at system boundaries
+
+[Architecture]
+- Critical state (funds/permissions/external API) must be persistable/recoverable
+- No in-memory-only storage for critical data
+- Breaking API changes require migration plan
+
+[Logic]
+- No race conditions or incorrect state handling
+- No N+1 queries or memory leaks
+- Spec compliance - implementation matches acceptance criteria
 
 Provide specific issues with file:line references and severity (Critical/High/Medium/Low).
 If no critical/high issues found, respond with "PASS: No blocking issues".
@@ -134,11 +166,27 @@ If no critical/high issues found, respond with "PASS: No blocking issues".
 
 **Prompt**:
 ```
-Review this test suite for:
-1) Missing edge cases (null, empty, boundary values, error paths)
-2) Test anti-patterns (flaky tests, order-dependent, excessive mocking)
-3) Untested critical paths (auth flows, payment, data mutations, deletions)
-4) False confidence - tests that pass but don't actually verify behavior
+Review this test suite against these rules:
+
+[Core Logic Testing - NO MOCKING ALLOWED]
+Core Logic = Domain/service/state machine/funds-permission paths
+- These paths MUST use real implementations, not mocks
+- Repository interfaces: prefer testcontainers with production DB
+- Fallback: SQLite/in-memory only when testcontainers unavailable
+
+[External Systems - Test Doubles ALLOWED]
+- External APIs, third-party services → testcontainers/sandbox/stub OK
+- Must document rationale for each test double
+
+[Coverage]
+- Missing edge cases (null, empty, boundary values, error paths)
+- Untested critical paths (auth flows, payment, data mutations, deletions)
+
+[Anti-Patterns]
+- Flaky tests (time-dependent, order-dependent)
+- Tautology assertions (expect(true).toBe(true))
+- Empty test bodies
+- False confidence - tests that pass but don't verify behavior
 
 Provide specific issues with file:line references.
 If no critical issues found, respond with "PASS: No blocking issues".
