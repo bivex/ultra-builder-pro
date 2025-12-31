@@ -205,7 +205,6 @@ Output summary in Chinese:
 - **Skills**:
   - `syncing-docs`: Updates CLAUDE.md "Current Focus" section
   - `syncing-status`: Initializes feature-status.json entries
-  - `guarding-quality`: Validates task structure
 - **Input**:
   - `.ultra/specs/product.md` (new projects, created by /ultra-research)
   - `.ultra/specs/architecture.md` (new projects, created by /ultra-research)

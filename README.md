@@ -10,7 +10,7 @@
 
 [![Version](https://img.shields.io/badge/version-4.4.0-blue)](README.md#version-history)
 [![Status](https://img.shields.io/badge/status-production--ready-green)](README.md)
-[![Skills](https://img.shields.io/badge/skills-10-orange)](skills/)
+[![Skills](https://img.shields.io/badge/skills-6-orange)](skills/)
 [![Official Compliance](https://img.shields.io/badge/official-100%25%20native-brightgreen)](https://docs.claude.com/claude-code)
 
 </div>
@@ -43,7 +43,7 @@ claude
 
 - Removed hooks system (PostToolUse/PreToolUse stdout doesn't inject to AI context)
 - Removed Codex integration (skill triggering via hooks was ineffective)
-- Streamlined to 10 core skills
+- Streamlined to 6 core skills
 - Cleaner, more maintainable configuration
 
 ### Production Absolutism (Preserved)
@@ -76,15 +76,7 @@ If ANY component is fake/mocked/simulated → Quality = 0
 
 ---
 
-## Skills (10 Total)
-
-### Guard Skills
-
-| Skill | Function |
-|-------|----------|
-| guarding-quality | SOLID principles, complexity limits |
-| guarding-test-quality | TAS scoring, ZERO MOCK enforcement |
-| guarding-git-workflow | Safe commits, branch strategy |
+## Skills (6 Total)
 
 ### Sync Skills
 
@@ -92,7 +84,6 @@ If ANY component is fake/mocked/simulated → Quality = 0
 |-------|----------|
 | syncing-docs | ADR, research reports |
 | syncing-status | Task progress, test results |
-| guiding-workflow | Next step suggestions |
 
 ### Domain Skills
 
@@ -101,6 +92,12 @@ If ANY component is fake/mocked/simulated → Quality = 0
 | frontend | React/Vue/Next.js patterns |
 | backend | API/database/security |
 | smart-contract | EVM/Solana/security audit |
+
+### Utility Skills
+
+| Skill | Function |
+|-------|----------|
+| ultra-think | Deep 6D analysis |
 | skill-creator | Creating new skills |
 
 ---
@@ -137,14 +134,10 @@ If ANY component is fake/mocked/simulated → Quality = 0
 ~/.claude/
 ├── CLAUDE.md                 # Main configuration
 ├── settings.json             # Claude Code settings
-├── skills/                   # 10 Automated Skills
+├── skills/                   # 6 Automated Skills
 │   ├── skill-rules.json      # Skill trigger rules
-│   ├── guarding-quality/
-│   ├── guarding-test-quality/
-│   ├── guarding-git-workflow/
 │   ├── syncing-docs/
 │   ├── syncing-status/
-│   ├── guiding-workflow/
 │   ├── frontend/
 │   ├── backend/
 │   ├── smart-contract/

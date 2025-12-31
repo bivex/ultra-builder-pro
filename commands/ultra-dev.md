@@ -199,7 +199,6 @@ Display completion message in Chinese including:
 ## Integration
 
 - **Skills activated**:
-  - Guards: guarding-quality, guarding-git-workflow, guarding-test-quality
   - Sync: **syncing-docs** (CLAUDE.md), **syncing-status** (feature-status.json)
 - **Agents available**: ultra-architect-agent (for complexity >= 7)
 - **Output files**:

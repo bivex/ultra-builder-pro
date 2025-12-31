@@ -23,7 +23,7 @@ Execute comprehensive testing with six-dimensional coverage and Core Web Vitals 
 
 **⚠️ MANDATORY: Execute BEFORE running tests to detect fake tests early.**
 
-**Auto-triggered by**: `guarding-test-quality` skill
+**Execution**: Runs automatically during /ultra-test
 
 **Analysis Process**:
 1. **Scan test files**: `**/*.test.ts`, `**/*.spec.ts`, `**/*.test.js`, `**/*.spec.js`
@@ -90,7 +90,7 @@ Quality Gate: ❌ BLOCKED (2 files below 70%)
 - ❌ Tautology detected (`expect(true).toBe(true)`) → Tests BLOCKED
 - ❌ Empty test body detected → Tests BLOCKED
 
-**Reference**: `skills/guarding-test-quality/SKILL.md` for anti-pattern examples and fixes
+**Reference**: See anti-pattern examples in TAS Analysis section above
 
 ---
 
@@ -99,7 +99,7 @@ Quality Gate: ❌ BLOCKED (2 files below 70%)
 Design comprehensive strategy covering all six dimensions:
 **Functional, Boundary, Exception, Performance, Security, Compatibility**
 
-**Reference**: See `skills/guarding-quality/SKILL.md` for complete details.
+**Reference**: See Quality Gates section below for complete details.
 
 ### 2. Execute Tests
 
@@ -312,13 +312,12 @@ If feature-status.json update fails:
 - ✅ No critical security issues
 
 **References**:
-- `@skills/guarding-quality/SKILL.md` - Detailed requirements
-- `@skills/guarding-test-quality/SKILL.md` - Anti-pattern examples
+- CLAUDE.md glossary - Test Double Policy
+- TAS Analysis section above - Anti-pattern examples
 
 ## Integration
 
 - **Skills**:
-  - Guards: **guarding-test-quality** (TAS analysis), guarding-quality (6D coverage)
   - Sync: **syncing-status** (feature-status.json), **syncing-docs** (CLAUDE.md)
 - **Output files**:
   - `.ultra/docs/feature-status.json` (test results)
@@ -335,4 +334,4 @@ If feature-status.json update fails:
 
 ## References
 
-- @skills/guarding-quality/SKILL.md - Complete testing standards
+- CLAUDE.md - Complete testing standards

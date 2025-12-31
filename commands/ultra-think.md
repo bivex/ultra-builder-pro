@@ -401,7 +401,7 @@ if (decision.confidence >= 0.9 || decision.impact === 'critical') {
 - If research needed → `/ultra-research` for systematic investigation
 - If prototyping needed → `/ultra-dev` to build proof-of-concept
 
-**guiding-workflow** will suggest appropriate next command based on analysis outcome.
+Based on analysis outcome, suggested next commands: `/ultra-plan`, `/ultra-research`, or `/ultra-dev`.
 
 ---
 

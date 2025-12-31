@@ -195,7 +195,7 @@ Output comparison matrix with:
 - **Skills**: **syncing-docs (CLAUDE.md generation)**
 - **Think**: Each round invokes /ultra-think for 6D analysis
 - **MCP**: Round 3 uses Context7 (docs) + Exa (code examples)
-- **Next**: guiding-workflow suggests /ultra-plan when complete
+- **Next**: Run /ultra-plan when research complete
 - **Output**: syncing-docs generates project CLAUDE.md on completion
 
 ---
