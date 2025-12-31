@@ -148,6 +148,11 @@ Write `.ultra/test-report.json`:
 - `passed` = all gates passed
 - `blocking_issues` = list of reasons for failure
 
+**If failed**:
+1. Display blocking_issues in Chinese
+2. User fixes issues manually
+3. User re-runs `/ultra-test`
+
 ### 2. Display Report
 
 Display Quality Audit Report in Chinese.
