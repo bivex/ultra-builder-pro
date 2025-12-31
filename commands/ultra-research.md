@@ -1,5 +1,5 @@
 ---
-description: Think-Driven Interactive Discovery - Deep research with 6-dimensional analysis
+description: Think-Driven Interactive Discovery - Deep research with structured analysis
 argument-hint: [topic]
 allowed-tools: TodoWrite, Task, Read, Write, WebSearch, WebFetch, Grep, Glob, AskUserQuestion
 ---
@@ -79,11 +79,11 @@ Step 6: Round Satisfaction Rating (1-5 stars)
 
 ### Round Overview
 
-| Round | Focus | Questions | Output |
-|-------|-------|-----------|------------|--------|
+| Round | Focus | Questions | Verification | Output |
+|-------|-------|-----------|--------------|--------|
 | 1: Problem Discovery | Problem space, users | Q1-5 | Verify market data | .ultra/specs/product.md §1-2 |
 | 2: Solution Exploration | MVP features, stories | Q6-8 | Add implementation patterns | .ultra/specs/product.md §3-5 |
-| 3: Technology Selection | Tech stack, architecture | Q9-11 | **Deep tech comparison** | .ultra/specs/architecture.md |
+| 3: Technology Selection | Tech stack, architecture | Q9-11 | Deep tech comparison | .ultra/specs/architecture.md |
 | 4: Risk & Constraints | Risks, hard constraints | Q12-13 | Risk quantification | Risk sections |
 
 
@@ -94,7 +94,7 @@ Step 6: Round Satisfaction Rating (1-5 stars)
 **When**: Specific tech decision during development
 
 
-**Process**: Single-round 6D comparison with verification
+**Process**: Single-round comparison with verification
 
 ### Technology Research Template
 
@@ -189,7 +189,7 @@ Output comparison matrix with:
 ## Integration
 
 - **Skills**: **syncing-docs (CLAUDE.md generation)**
-- **Think**: Each round invokes /ultra-think for 6D analysis
+- **Think**: Each round invokes /ultra-think for deep analysis
 - **MCP**: Round 3 uses Context7 (docs) + Exa (code examples)
 - **Next**: Run /ultra-plan when research complete
 - **Output**: syncing-docs generates project CLAUDE.md on completion

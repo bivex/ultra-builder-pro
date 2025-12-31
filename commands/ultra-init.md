@@ -202,7 +202,7 @@ Show in Chinese:
 
 **Why Research is Essential**:
 - Init creates basic templates with [NEEDS CLARIFICATION] markers
-- Research completes these templates through 6-dimensional interactive discovery
+- Research completes these templates through interactive discovery
 - Skipping research leads to: vague requirements, wrong tech choices, missing constraints
 
 **Think-Driven Interactive Discovery**:
