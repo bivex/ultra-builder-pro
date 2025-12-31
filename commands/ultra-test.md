@@ -39,14 +39,27 @@ Pre-delivery quality audit. Validates test health, coverage gaps, E2E functional
 - Python: `**/test_*.py`, `**/*_test.py`
 - Go: `**/*_test.go`
 
-**Detection Rules**:
+**Detection Rules** (auto-detect based on project type):
 
-| Pattern | Severity | Regex | Example |
-|---------|----------|-------|---------|
-| Tautology | CRITICAL | `expect\((true|false|1|0)\)\.toBe\(\1\)` | `expect(true).toBe(true)` |
-| Empty test | CRITICAL | `(it|test)\([^)]+,\s*\(\)\s*=>\s*\{\s*\}\)` | `it('does something', () => {})` |
-| Core logic mock | CRITICAL | `(mock|jest\.mock)\(['"]\./(domain|core|services)/` | `mock('./domain/user')` |
-| No assertion | WARNING | Test function without `expect`/`assert` | `it('test', () => { doThing() })` |
+**JavaScript/TypeScript (Jest/Vitest)**:
+| Pattern | Severity | Regex |
+|---------|----------|-------|
+| Tautology | CRITICAL | `expect\((true\|false\|1\|0)\)\.toBe\(\1\)` |
+| Empty test | CRITICAL | `(it\|test)\([^)]+,\s*\(\)\s*=>\s*\{\s*\}\)` |
+| Core logic mock | CRITICAL | `(mock\|jest\.mock)\(['"]\.\/(domain\|core\|services)/` |
+
+**Python (pytest)**:
+| Pattern | Severity | Regex |
+|---------|----------|-------|
+| Tautology | CRITICAL | `assert\s+(True\|False\|1\|0)\s*$` |
+| Empty test | CRITICAL | `def test_\w+\([^)]*\):\s*(pass\|\.\.\.)\s*$` |
+| Core logic mock | CRITICAL | `@patch\(['"](domain\|core\|services)` |
+
+**Go**:
+| Pattern | Severity | Regex |
+|---------|----------|-------|
+| Empty test | CRITICAL | `func Test\w+\(t \*testing\.T\)\s*\{\s*\}` |
+| No assertion | WARNING | Test function without `t.Error`/`t.Fatal`/`t.Assert` |
 
 **Process**:
 1. Use Grep to scan test files for each pattern
@@ -64,8 +77,13 @@ Pre-delivery quality audit. Validates test health, coverage gaps, E2E functional
 
 **Purpose**: Find untested code that coverage % misses.
 
-**Process**:
-1. Find all exported symbols: `export (function|const|class)`
+**Process** (auto-detect based on project type):
+
+1. Find all exported symbols:
+   - **JS/TS**: `export (function|const|class) (\w+)`
+   - **Python**: `def (\w+)` (public functions, not starting with `_`)
+   - **Go**: `func ([A-Z]\w+)` (uppercase = exported)
+
 2. Search for each symbol in test files
 3. Report symbols with 0 test references
 
@@ -93,7 +111,10 @@ Pre-delivery quality audit. Validates test health, coverage gaps, E2E functional
 **Method**: Claude Code native Chrome capability (`mcp__claude-in-chrome__*`)
 
 **Process**:
-1. Start dev server (auto-detect from package.json)
+1. Start dev server (auto-detect):
+   - **Node.js**: Read `scripts.dev` or `scripts.start` from `package.json`
+   - **Python**: Check for `manage.py runserver`, `flask run`, `uvicorn`
+   - **Go**: Check for `main.go` with HTTP server
 2. Navigate to key pages
 3. Verify critical elements render (`read_page`, `find`)
 4. Check for console errors (`read_console_messages`)
@@ -119,12 +140,9 @@ Pre-delivery quality audit. Validates test health, coverage gaps, E2E functional
 | CLS (Cumulative Layout Shift) | <0.1 | Lighthouse |
 
 **Process**:
-1. Detect dev server port from `package.json` (`scripts.dev` or `scripts.start`)
+1. Detect dev server (reuse Step 3 detection)
 2. Start dev server if not running
-3. Run Lighthouse:
-   ```bash
-   lighthouse http://localhost:{detected-port} --only-categories=performance --output=json
-   ```
+3. Run Lighthouse on detected URL
 4. Parse results and compare against targets
 
 ---
