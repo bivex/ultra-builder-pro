@@ -92,50 +92,85 @@ ELSE:
 
 **If validation fails**: Output error message (in Chinese) and suggest running /ultra-research
 
-### 2. Task Generation
+### 2. Codebase Analysis (New Projects Only)
 
-Generate tasks with:
-- **Clear title**: Action verb + specific target (e.g., "Implement user authentication with JWT")
-- **Detailed description**: What, why, acceptance criteria
-- **Complexity (1-10)**: Simple (1-3), Medium (4-6), Complex (7-10)
-- **Priority (P0-P3)**: P0 (blockers), P1 (important), P2 (nice-to-have), P3 (future)
-- **Dependencies**: List prerequisite task IDs
-- **Estimated effort**: Days (dev + test + doc)
-- **Type** (NEW): architecture | feature | bugfix
-- **Trace to** (NEW): Auto-generated link to source requirement
+**Analyze existing codebase to provide AI-executable context**:
 
-**Auto-generate trace_to field** (new projects with .ultra/specs/ only):
+1. **Directory structure**: Identify src/, tests/, config/ patterns
+2. **Existing patterns**: Find similar implementations to reference
+3. **Tech stack detection**: Framework versions, test runners, build tools
+4. **Naming conventions**: File naming, function naming, variable naming
 
-1. **Parse specification file** (.ultra/specs/product.md):
-   - Extract all markdown headers with IDs or create IDs from header text
-   - Map functional requirements, user stories, and features to header IDs
-   - Example: "## User Authentication" → `#user-authentication`
+**Output**: Cached analysis for use in task generation
 
-2. **Match task to requirement**:
-   - Analyze task title and description
-   - Find matching section in .ultra/specs/product.md using keyword matching
-   - Example: Task "Implement JWT authentication" → `.ultra/specs/product.md#user-authentication`
+### 3. Task Generation (AI-Optimized)
 
-3. **trace_to format**:
-   - Product tasks: `.ultra/specs/product.md#section-id` (§1-3 Personas/Scenarios, §4-5 Features)
-   - Architecture tasks: `.ultra/specs/architecture.md#section-id` (§1-6 Design, §7-12 Quality/Deployment)
-   - Old projects: Omit trace_to field (backward compatibility)
+**Core principle**: Each task must be **self-contained** - AI can execute without reading external specs.
 
-4. **Validation**:
-   - Verify linked section exists in specification file
-   - Warn if no matching requirement found (manual review needed)
-   - Ensure 100% requirement coverage (every spec section has at least one task)
+**Task structure**:
 
-**For complex tasks** (>6): Consider delegating to `ultra-architect-agent` for breakdown.
+| Field | Purpose | Required |
+|-------|---------|----------|
+| `id`, `title` | Identification | Yes |
+| `type` | architecture / feature / bugfix | Yes |
+| `priority`, `complexity` | Planning | Yes |
+| `dependencies` | Execution order | Yes |
+| `context` | WHAT + WHY (business value) | Yes (new) |
+| `implementation` | WHERE + HOW (technical guidance) | Yes (new) |
+| `acceptance` | DONE criteria (executable tests) | Yes (new) |
+| `trace_to` | Spec linkage for human review | Yes (new) |
 
-### 3. Dependency Analysis
+**context object**:
+```json
+{
+  "what": "Clear description of what to build/change",
+  "why": "Business value linking to Persona + Scenario from specs",
+  "constraints": ["Specific technical or business constraints"]
+}
+```
+
+**implementation object** (auto-generated from codebase analysis):
+```json
+{
+  "target_files": [
+    "src/api/auth/login.ts (create)",
+    "src/api/auth/index.ts (modify: add route)"
+  ],
+  "patterns": "Follow existing pattern in src/api/users/",
+  "tech_notes": "Use jsonwebtoken@9.x, bcrypt for password hashing"
+}
+```
+
+**acceptance object**:
+```json
+{
+  "tests": [
+    "npm test -- --grep 'auth/login'",
+    "Pass: valid credentials → 200 + JWT token",
+    "Pass: invalid password → 401"
+  ],
+  "verification": "curl -X POST localhost:3000/api/auth/login -d '{...}'"
+}
+```
+
+**Task granularity guideline**:
+- Ideal complexity: 3-5 (completable in one session)
+- Too large (>6): Break down using ultra-architect-agent
+- Too small (<3): Merge with related tasks
+
+**trace_to generation**:
+- Product tasks: `.ultra/specs/product.md#section-id` (§1-3 Personas/Scenarios, §4-5 Features)
+- Architecture tasks: `.ultra/specs/architecture.md#section-id` (§1-6 Design, §7-12 Quality/Deployment)
+- Old projects: Omit trace_to field (backward compatibility)
+
+### 4. Dependency Analysis
 
 - Build dependency graph
 - Detect cycles (error if found)
 - Order tasks topologically
 - Identify parallel opportunities
 
-### 4. Save Tasks
+### 5. Save Tasks
 
 Save to `.ultra/tasks/tasks.json`:
 ```json
@@ -145,23 +180,48 @@ Save to `.ultra/tasks/tasks.json`:
   "tasks": [
     {
       "id": "1",
-      "title": "Task title",
-      "description": "Details",
-      "complexity": 5,
+      "title": "Implement JWT login endpoint",
+      "type": "feature",
       "priority": "P0",
+      "complexity": 4,
+      "status": "pending",
       "dependencies": [],
       "estimated_days": 2,
-      "status": "pending",
-      "type": "feature",
-      "trace_to": ".ultra/specs/product.md#user-story-001"
+
+      "context": {
+        "what": "Create POST /api/auth/login endpoint with JWT token generation",
+        "why": "Users need secure authentication to access protected resources (Persona: Developer, Scenario: Daily Login)",
+        "constraints": ["Use bcrypt for password", "JWT expires in 24h", "401 on failure without details"]
+      },
+
+      "implementation": {
+        "target_files": [
+          "src/api/auth/login.ts (create)",
+          "src/api/auth/index.ts (modify: add route)",
+          "src/types/auth.ts (create)"
+        ],
+        "patterns": "Follow src/api/users/ endpoint pattern",
+        "tech_notes": "Express.js + jsonwebtoken + bcrypt"
+      },
+
+      "acceptance": {
+        "tests": [
+          "npm test -- --grep 'POST /api/auth/login'",
+          "Pass: valid credentials → 200 + token",
+          "Pass: invalid password → 401"
+        ],
+        "verification": "curl -X POST localhost:3000/api/auth/login -d '{\"email\":\"test@example.com\",\"password\":\"test\"}'"
+      },
+
+      "trace_to": ".ultra/specs/product.md#user-authentication"
     }
   ]
 }
 ```
 
-**Note**: `type` and `trace_to` are optional for backward compatibility
+**Backward compatibility**: `context`, `implementation`, `acceptance` are optional for old projects
 
-### 5. Update Project Context
+### 6. Update Project Context
 
 **After tasks saved, trigger documentation sync:**
 
@@ -173,7 +233,7 @@ Save to `.ultra/tasks/tasks.json`:
    - Create entries for each task in `.ultra/docs/feature-status.json`
    - Set initial status to "pending" for all tasks
 
-### 6. Report & Suggest Next Step
+### 7. Report & Suggest Next Step
 
 Output summary in Chinese:
 - Total tasks generated

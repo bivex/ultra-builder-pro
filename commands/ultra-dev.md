@@ -76,9 +76,38 @@ If ANY component is fake/mocked/simulated → Quality = 0
 
 1. Read `.ultra/tasks/tasks.json`
 2. If task ID provided, select that task; otherwise select first task with `status: "pending"`
-3. Display task context to user: ID, title, complexity, dependencies, description
+3. **Display full task context** (self-contained, no need to read specs):
+
+```
+📋 Task #{id}: {title}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 Context
+  WHAT: {context.what}
+  WHY:  {context.why}
+  Constraints: {context.constraints}
+
+🛠️ Implementation
+  Target Files:
+    {implementation.target_files}
+  Pattern: {implementation.patterns}
+  Tech: {implementation.tech_notes}
+
+✅ Acceptance
+  Tests: {acceptance.tests}
+  Verify: {acceptance.verification}
+
+📊 Metadata
+  Priority: {priority} | Complexity: {complexity}
+  Dependencies: {dependencies}
+  Trace: {trace_to}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
 4. Update task status to `"in_progress"` in tasks.json
-5. Use TodoWrite to track progress
+5. Use TodoWrite to track progress (create todos from acceptance.tests)
+
+**Backward compatibility**: If task lacks `context`/`implementation`/`acceptance`, read from `trace_to` spec file.
 
 **For complex tasks** (complexity >= 7 AND type == "architecture"):
 Delegate to ultra-architect-agent using the Task tool:
@@ -132,6 +161,7 @@ Create task workspace (if not exists):
 **You MUST follow RED → GREEN → REFACTOR strictly. Do NOT write implementation before tests.**
 
 **RED Phase**: Write failing tests first (Production Absolutism)
+- **Use task.acceptance.tests** as test specification (already defined in task)
 - Cover 6 dimensions: Functional, Boundary, Exception, Performance, Security, Compatibility
 - Tests MUST use real dependencies for core logic (no mocking domain/service/state machine)
 - External systems may use test doubles (testcontainers/sandbox/stub) with rationale
