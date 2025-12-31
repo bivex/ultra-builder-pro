@@ -220,10 +220,35 @@ Output comparison matrix with:
 - ✅ Research reports saved to `.ultra/docs/research/`
 - ✅ **All recommendations have 90%+ confidence**
 - ✅ **All code examples are production-ready**
+- ✅ **Codex review passed**
 
-**Note**: No separate "overall gate" needed - each round requires ≥4 stars to continue, so completing all rounds guarantees overall quality.
+---
 
-**Final Quality Summary** (display after all rounds complete):
+## Codex Review (Mandatory)
+
+**When**: After all rounds complete, before final summary.
+
+**Process**:
+1. Collect research outputs (specs + reports)
+2. Call Codex with review prompt:
+   ```bash
+   codex exec -m gpt-5.2-codex -c model_reasoning_effort="low" \
+     --sandbox read-only --skip-git-repo-check \
+     "Review this technical research for:
+      1) Logical gaps or contradictions
+      2) Missing risks or edge cases
+      3) Unverified claims without sources
+      4) Overly optimistic assumptions
+      Provide specific issues with file:line references."
+   ```
+3. **If issues found** → Display issues, BLOCK, ask user to address
+4. **If passed** → Continue to Final Quality Summary
+
+**Blocking Behavior**: Research cannot proceed to /ultra-plan until Codex review passes or user explicitly overrides.
+
+---
+
+**Final Quality Summary** (display after Codex review passes):
 
 ```
 📊 Research Quality Summary

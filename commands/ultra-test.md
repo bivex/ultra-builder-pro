@@ -115,6 +115,31 @@ All must pass for `/ultra-deliver`:
 | E2E | All tests pass (if applicable) |
 | Performance | Core Web Vitals pass (if frontend) |
 | Security | No critical/high vulnerabilities |
+| Codex Review | No critical issues from Codex |
+
+---
+
+## Step 6: Codex Review (Mandatory)
+
+**When**: After all Quality Gates pass.
+
+**Process**:
+1. Collect test files and coverage report
+2. Call Codex with review prompt:
+   ```bash
+   codex exec -m gpt-5.2-codex -c model_reasoning_effort="low" \
+     --sandbox read-only --skip-git-repo-check \
+     "Review this test suite for:
+      1) Missing edge cases (boundary, null, error paths)
+      2) Test anti-patterns (flaky, order-dependent, over-mocking)
+      3) Untested critical paths (auth, payment, data mutation)
+      4) False confidence (tests that pass but don't verify behavior)
+      Provide specific issues with file:line references."
+   ```
+3. **If issues found** → Display issues, BLOCK, return to Auto-Fix Loop
+4. **If passed** → Continue to Output
+
+**Blocking Behavior**: Cannot proceed to /ultra-deliver until Codex review passes.
 
 ---
 

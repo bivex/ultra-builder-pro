@@ -94,6 +94,28 @@ Execute development tasks using TDD workflow.
 - ❌ Core logic (domain/service/state) → NO mocking
 - ✅ External systems → testcontainers/sandbox/stub allowed
 
+### Step 4.5: Codex Review (Mandatory)
+
+**When**: After Quality Gates pass, before commit.
+
+**Process**:
+1. Collect changed files: `git diff --name-only`
+2. Call Codex with review prompt:
+   ```bash
+   codex exec -m gpt-5.2-codex -c model_reasoning_effort="low" \
+     --sandbox read-only --skip-git-repo-check \
+     "Review this code for:
+      1) Security vulnerabilities (injection, XSS, auth bypass)
+      2) Logic errors or race conditions
+      3) Performance issues (N+1, memory leaks)
+      4) Spec compliance (does it match acceptance criteria?)
+      Provide specific issues with file:line references."
+   ```
+3. **If issues found** → Display issues, BLOCK, return to GREEN phase to fix
+4. **If passed** → Continue to Step 5
+
+**Blocking Behavior**: Cannot commit until Codex review passes.
+
 ### Step 5: Commit and Update
 
 > **Prerequisite**: Step 4 Quality Gates passed (all tests green)
