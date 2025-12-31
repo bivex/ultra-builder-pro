@@ -137,7 +137,7 @@ Solution: Run /ultra-research first
 
 **Task granularity**:
 - Ideal complexity: 3-5 (completable in one session)
-- Too large (>6): Break down using ultra-architect-agent
+- Too large (>6): Break down into subtasks
 - Too small (<3): Merge with related tasks
 
 ### 4. Dependency Analysis

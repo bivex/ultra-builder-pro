@@ -167,7 +167,6 @@ Output:
 - **Output**:
   - `.ultra/tasks/tasks.json` (status update)
   - `.ultra/tasks/contexts/task-{id}.md` (updated context with change log)
-- **Agents**: ultra-architect-agent (for complexity ≥7)
 - **Next**: `/ultra-test` or `/ultra-dev [next-task-id]`
 
 ## Usage
