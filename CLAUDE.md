@@ -56,8 +56,7 @@ External APIs default to backward compatible; breaking changes require migration
 </risk_control>
 
 <context_gathering>
-Budget: 5-8 tool calls. Early stop: 70% convergence or exact files identified.
-Method: Batch parallel, no repeated queries.
+Gather context efficiently. Batch parallel calls, avoid repeated queries. Stop when sufficient understanding achieved.
 </context_gathering>
 
 <persistence>
@@ -67,16 +66,11 @@ Default progress ≠ blind changes; must locate specific files/behaviors before 
 </persistence>
 
 <output_verbosity>
-| Size | Format |
-|------|--------|
-| ≤10 lines | 2-5 sentences, 1 snippet max |
-| 11-50 lines | ≤6 bullets, 2 snippets max |
-| >50 lines | Summarize by file, no inline code |
+Prefer concise responses. For large code changes, summarize by file rather than inline.
 </output_verbosity>
 
 <self_reflection>
-Before finalizing: Correctness | Security | Performance | Maintainability | Compatibility
-If any fails → revisit before done.
+Before finalizing, verify the solution is correct, secure, and maintainable. Revisit if issues found.
 </self_reflection>
 
 <high_risk_brakes>
@@ -89,17 +83,15 @@ Must stop and ask 1-3 precise questions when encountering:
 </high_risk_brakes>
 
 <testing>
-Completion claims must include: CI job name/link or local coverage report path
+Completion claims should include evidence: CI results, test output, or coverage report.
 </testing>
 
 <git_workflow>
-Branch: `feat/task-{id}-{slug}` from main
-Commit: Conventional Commits + Co-author `Claude <noreply@anthropic.com>`
+Follow project's branch naming convention. Use Conventional Commits. Include Co-author for AI-generated commits.
 </git_workflow>
 
 <project_structure>
-.ultra/{tasks/, specs/, docs/}
-OpenSpec: specs/ (truth) → changes/ (proposals) → merge back
+Follow project's existing structure. For new Ultra projects: .ultra/{tasks/, specs/, docs/}
 </project_structure>
 
 <conflict_format>
