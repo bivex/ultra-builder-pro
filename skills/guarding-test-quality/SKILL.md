@@ -34,16 +34,20 @@ python scripts/tas_analyzer.py src/  # All tests
 python scripts/tas_analyzer.py --summary  # Summary only
 ```
 
-## TAS Score Components (ZERO MOCK Edition)
+## TAS Score Components (Test Double Policy)
 
 | Component | Weight | High Score | Low Score |
 |-----------|--------|------------|-----------|
-| Real Data | 30% | No mocks (100) | Any mock detected (0) |
+| Real Data | 30% | Core logic uses real deps (100) | Core logic mocked (0) |
 | Assertion Quality | 35% | Behavioral assertions | Mock-only assertions |
 | Real Execution | 20% | >60% real code paths | <30% real code |
 | Pattern Quality | 15% | Clean test structure | Anti-patterns present |
 
-**CRITICAL**: Any `jest.mock()` or `vi.mock()` = RealData_Score = 0
+**Test Double Policy**:
+- ❌ Core Logic: Domain/service/state machine - NO mocking
+- ❌ Repository interfaces: Contract cannot be mocked
+- ✅ Repository storage: 1) Preferred: testcontainers with production DB 2) Acceptable: SQLite when unavailable
+- ✅ External systems: testcontainers/sandbox/stub allowed with rationale
 
 ## Grade Thresholds
 
@@ -88,20 +92,20 @@ describe('PaymentService', () => {
 });
 ```
 
-### ZERO MOCK Policy (严禁模拟)
+### Test Double Policy (测试替身策略)
 
-**Absolutely NO mocking allowed:**
+**Core logic must use real dependencies:**
 
-| Prohibited | Use Instead |
-|------------|-------------|
-| `jest.mock()` / `vi.mock()` | Real in-memory implementations |
-| `jest.fn()` for business logic | Real functions |
-| Static/hardcoded data | Real data generators |
-| Simplified implementations | Full production code |
+| Category | Policy | Alternatives |
+|----------|--------|--------------|
+| Core Logic (domain/service/state) | ❌ NO mocking | Real implementations |
+| Repository interfaces | ❌ NO mocking | Real contracts |
+| Repository storage | ✅ Test doubles OK | 1) testcontainers 2) SQLite fallback |
+| External systems | ✅ Test doubles OK | testcontainers/sandbox/stub + rationale |
 
-**Real alternatives:**
-- Databases → SQLite in-memory, testcontainers
-- HTTP → supertest, nock (external APIs only)
+**Acceptable test doubles:**
+- Databases → 1) testcontainers with production DB (preferred) 2) SQLite in-memory (fallback)
+- HTTP external APIs → supertest, nock with rationale
 - File system → tmp directories
 - Time → real clock with controlled inputs
 
@@ -135,16 +139,20 @@ expect(mockService.process).toHaveBeenCalled();
 
 **Fix:** Test real outcomes with real implementations
 
-### 4. ANY Mocking (BANNED)
+### 4. Core Logic Mocking (BANNED)
 
 ```typescript
-// PROHIBITED: All mocking is forbidden
-jest.mock('../services/UserService');  // ❌ REJECTED
-vi.mock('../utils/validator');         // ❌ REJECTED
-jest.fn().mockResolvedValue({});       // ❌ REJECTED
+// PROHIBITED: Mocking core logic is forbidden
+jest.mock('../domain/PaymentProcessor');  // ❌ Core logic
+vi.mock('../services/UserService');       // ❌ Service layer
+jest.mock('../state/OrderStateMachine');  // ❌ State machine
+
+// ALLOWED: External system test doubles with rationale
+jest.mock('../external/StripeClient');    // ✅ External API
+vi.mock('../adapters/EmailProvider');     // ✅ External system
 ```
 
-**Fix:** Use real in-memory implementations, never mock
+**Fix:** Mock external systems only, use real implementations for core logic
 
 ### 5. Testing Implementation Details
 
@@ -219,7 +227,7 @@ expect(screen.getByText('Success')).toBeInTheDocument()
 Provide analysis in Chinese at runtime:
 
 ```
-📊 测试质量分析报告 (ZERO MOCK Edition)
+📊 测试质量分析报告 (Test Double Policy)
 ========================
 
 项目 TAS 分数：{score}% (等级：{grade})

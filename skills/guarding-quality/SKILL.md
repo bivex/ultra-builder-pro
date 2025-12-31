@@ -99,11 +99,15 @@ python scripts/quality_analyzer.py --summary  # Summary only
 
 | Violation | Description | Consequence |
 |-----------|-------------|-------------|
-| **Mock/Simulation** | `jest.mock()`, `vi.mock()`, any mock | Immediate rejection |
+| **Core Logic Mocking** | Mocking domain/service/state machine | Immediate rejection |
 | **Degradation** | Fallback logic, simplified implementations | Immediate rejection |
 | **Static Data** | Hardcoded fixtures, inline test data | Immediate rejection |
 | **Placeholders** | `TODO`, `FIXME`, `// demo` | Immediate rejection |
 | **MVP Mindset** | "Good enough", partial implementations | Immediate rejection |
+
+**Allowed Test Doubles** (with rationale):
+- External system mocks (APIs, email, payment gateways)
+- Repository storage: testcontainers (preferred) or SQLite (fallback)
 
 ---
 

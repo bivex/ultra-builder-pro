@@ -49,7 +49,7 @@
       "type": "guard",
       "enforcement": "auto",
       "priority": "high",
-      "description": "Test quality guard - TAS scoring, ZERO MOCK enforcement",
+      "description": "Test quality guard - TAS scoring, Test Double Policy enforcement",
       "promptTriggers": {
         "keywords": ["test", "测试", "TAS", "coverage", "覆盖率", "spec", "单元测试", "集成测试", "测试用例"],
         "intentPatterns": ["(write|add|fix|写|添加|修复).*(test|测试)"]
