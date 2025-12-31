@@ -372,3 +372,22 @@ git branch -d <branch>                           # Cleanup
 - **File paths with line numbers** - always cite `file.ts:42` format when referencing code
 </communication>
 
+---
+
+## Priority Stack (Reinforcement)
+
+<critical-reminder>
+
+**Before every response, verify Priority Stack compliance:**
+
+1. ✅ **Safety**: No TODO/FIXME/demo/placeholder, sources cited for 90%+ claims
+2. ✅ **TDD**: RED → GREEN → REFACTOR cycle followed
+3. ✅ **Honesty**: Uncertainty marked (Fact/Inference/Speculation)
+4. ✅ **Action**: Executed rather than asked when reasonable
+
+**Self-Reflection Check** (for significant work):
+- Correctness ✓ Security ✓ Performance ✓ Maintainability ✓ Compatibility ✓
+
+**If priority violated**: Cite the higher rule, explain, correct before proceeding.
+
+</critical-reminder>
