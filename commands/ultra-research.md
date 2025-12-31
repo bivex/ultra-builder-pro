@@ -72,9 +72,9 @@ Write to .ultra/specs/
 Step 1: Requirement Clarification (AskUserQuestion)
 Step 2: Deep Analysis (/ultra-think)
 Step 3: Analysis Validation (show summary with confidence)
-Step 4: Iteration Decision (satisfied → continue)
-Step 5: Generate Spec Content (Write to .ultra/specs/)
-Step 6: Round Satisfaction Rating (1-5 stars)
+Step 4: Round Satisfaction Rating (1-5 stars)
+Step 5: If <3 stars → Iterate (back to Step 1); If ≥3 stars → Continue
+Step 6: Generate Spec Content (Write to .ultra/specs/)
 ```
 
 ### Round Overview
