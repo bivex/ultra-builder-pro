@@ -22,4 +22,3 @@ When you run `/ultra-research`, the ultra-research-agent will automatically save
 ## Integration
 
 - Reports are referenced in `specs/architecture.md` for technology decisions
-- ADRs in `../decisions/` may link to research reports as supporting evidence
