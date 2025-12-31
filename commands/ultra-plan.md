@@ -117,7 +117,7 @@ Solution: Run /ultra-research first
 
 **Verification**:
 ```bash
-curl -X POST localhost:3000/api/example
+# Command to verify this task works
 ```
 
 ## Trace
