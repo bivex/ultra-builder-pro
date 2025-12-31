@@ -34,33 +34,33 @@ These are reference perspectives, not required steps. Choose what's relevant:
 - **System**: Integration, dependencies, emergent behaviors
 - **Risk**: Failure modes, mitigation, reversibility
 
-## Output Format (Chinese)
+## Output Format
 
-Use `<thinking>` for internal reasoning, then provide:
+Use `<thinking>` for internal reasoning, then provide (respond in Chinese per CLAUDE.md):
 
 ```
-## 问题
-[1-2 句: 核心决策 + 关键约束]
+## Problem
+[1-2 sentences: core decision + key constraints]
 
-## 分析
-[自主选择相关维度，深入分析]
+## Analysis
+[Choose relevant dimensions, deep analysis]
 
-## 方案对比
-| 维度 | 方案A | 方案B |
-|------|-------|-------|
-[量化对比，不只是定性描述]
+## Comparison
+| Dimension | Option A | Option B |
+|-----------|----------|----------|
+[Quantified comparison, not just qualitative]
 
-## 推荐
-- **选择**: [方案]
-- **置信度**: High/Medium/Low + 理由
-- **关键假设**: [推荐依赖的假设]
-- **风险**: [主要风险 + 缓解措施]
+## Recommendation
+- **Choice**: [option]
+- **Confidence**: High/Medium/Low + rationale
+- **Key Assumptions**: [assumptions the recommendation depends on]
+- **Risk**: [main risk + mitigation]
 
-## 验证
-[如何验证这个决策是正确的？测试标准是什么？]
+## Verification
+[How to verify this decision is correct? What are the test criteria?]
 
-## 下一步
-[具体可执行的行动]
+## Next Steps
+[Specific actionable items]
 ```
 
 ## Evidence Requirement
