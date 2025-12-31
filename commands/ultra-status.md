@@ -20,23 +20,28 @@ Real-time project status monitoring with progress tracking, risk analysis, and a
 3. Is task data valid? → Verify structure and timestamps
 4. Determine output format (quick vs full report)
 
-### Phase 1: Load Task Data
+### Phase 1: Load Project Data
 
-Read `.ultra/tasks/tasks.json` and extract:
+Read all status files:
+- `.ultra/tasks/tasks.json` - Task progress
+- `.ultra/test-report.json` - Test status
+- `.ultra/delivery-report.json` - Delivery status
+
+Extract:
 - Task statistics (total, by status, by priority)
 - Current task (in_progress) and next pending task
-- Completion percentage and velocity
-- Risk indicators and blockers
+- Test pass/fail status and run count
+- Delivery readiness
 
 ### Phase 2: Generate Progress Report
 
 Display comprehensive project status:
-- 📊 **Overview**: Progress bar, completion %, velocity, ETA
-- 📝 **Task breakdown**: By status (pending/in_progress/review/completed)
-- 🎯 **Priority**: Distribution (P0/P1/P2/P3)
-- 🔗 **Dependencies**: Status and blockers
-- ⚠️ **Risks**: Auto-detected issues and recommendations
-- 📈 **Next steps**: Optimal next task with rationale
+- 📊 **Overview**: Progress bar, completion %, task velocity
+- 📝 **Tasks**: By status (pending/in_progress/completed/blocked)
+- 🧪 **Test**: Pass/fail, run count, blocking issues
+- 📦 **Delivery**: Version, pushed status
+- ⚠️ **Risks**: Auto-detected issues
+- 📈 **Next**: Optimal next task
 
 ### Phase 3: Analyze Risks
 
@@ -55,15 +60,11 @@ Suggest next optimal task based on:
 - Complexity (balance with velocity)
 - Context (similar to recent tasks)
 
-## Command Options
+## Usage
 
 ```bash
-/ultra-status                  # Full report
-/ultra-status --quick         # One-line summary
-/ultra-status --list          # List all tasks
-/ultra-status --pending       # Pending tasks only
-/ultra-status --blockers      # Show only blocked tasks
-/ultra-status --export <path> # Export detailed markdown report
+/ultra-status          # Full project status report
+/ultra-status [task-id] # Status of specific task
 ```
 
 ## Risk Indicators
@@ -85,9 +86,12 @@ Suggest next optimal task based on:
 
 ## Integration
 
-- **Input**: `.ultra/tasks/tasks.json` (native task management)
-- **Output**: Console report or exported markdown
-- **Timing**: Run frequently (daily standup, before /ultra-dev)
+- **Input**:
+  - `.ultra/tasks/tasks.json` - Task progress
+  - `.ultra/test-report.json` - Test status
+  - `.ultra/delivery-report.json` - Delivery status
+- **Output**: Console report in Chinese
+- **Timing**: Run anytime to check project status
 
 ## Benefits
 
