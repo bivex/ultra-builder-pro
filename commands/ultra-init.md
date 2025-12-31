@@ -161,11 +161,6 @@ Create `.ultra/tasks/tasks.json`:
 - Tasks: `.ultra/tasks/tasks.json`
 - Docs: `.ultra/docs/research/`
 
-**To project root:**
-- `CLAUDE.md` - Project-level context file (Claude Code auto-reads this)
-
-**Note**: CLAUDE.md contains placeholder text until /ultra-research completes
-
 ### 5. Git Integration (Based on User Choice)
 
 **If user chose "Initialize Git repository"** or **"Reinitialize Git"**:
@@ -188,7 +183,6 @@ Show in Chinese:
 - Template files copied
 - Task system initialized (tasks.json)
 - Specification templates ready (product.md, architecture.md with [NEEDS CLARIFICATION] markers)
-- **CLAUDE.md created** (placeholder, completed after /ultra-research)
 
 **CRITICAL NEXT STEP - Research Phase (DO NOT SKIP)**:
 

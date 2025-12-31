@@ -187,30 +187,6 @@ Output comparison matrix with:
 - ✅ Overall rating ≥4 stars, no round <3 stars
 - ✅ **All recommendations have 90%+ confidence**
 - ✅ **All code examples are production-ready**
-- ✅ **Project-level CLAUDE.md generated**
-
----
-
-## Final Step: Generate Project CLAUDE.md
-
-**After all rounds complete, generate project-level CLAUDE.md:**
-
-1. **Read source files**:
-   - `.ultra/specs/product.md` → Project Overview
-   - `.ultra/specs/architecture.md` → Tech Stack, Development Rules
-   - `.ultra/docs/research/*` → Known Risks
-   - `.ultra/tasks/tasks.json` → Current Focus
-
-2. **Generate CLAUDE.md** at project root:
-   - Use CLAUDE.md template structure
-   - Limit to ~500 words
-   - Include generation timestamp
-
-3. **Verify .gitignore**:
-   - Ensure `CLAUDE.local.md` is ignored (personal config)
-   - `CLAUDE.md` should be committed (shared context)
-
-**Purpose**: Claude Code automatically reads project-level CLAUDE.md, providing consistent project context for every conversation.
 
 ---
 
@@ -222,7 +198,6 @@ Output comparison matrix with:
 | `.ultra/specs/architecture.md` | arc42 structure (Context, Strategy, Blocks, Runtime, Deployment, Quality, Risks) |
 | `.ultra/docs/research/*.md` | Round-specific analysis reports |
 | `.ultra/docs/research/metadata.json` | Quality metrics + confidence scores |
-| **`CLAUDE.md` (project root)** | Project context for Claude Code |
 
 ---
 
@@ -231,7 +206,6 @@ Output comparison matrix with:
 - **Think**: Each round invokes /ultra-think for deep analysis
 - **MCP**: Round 3 uses Context7 (docs) + Exa (code examples)
 - **Next**: Run /ultra-plan when research complete
-- **Output**: Generate project CLAUDE.md on completion
 
 ---
 

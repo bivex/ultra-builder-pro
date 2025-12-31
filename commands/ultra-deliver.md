@@ -110,13 +110,6 @@ Add:
 2. Update version: `npm version {type}`
 3. Report release readiness
 
-### Step 6: Update Project Context
-
-**Update CLAUDE.md**:
-- Add release version to project overview
-- Clear "Current Focus" (all tasks completed)
-- Update any changed development rules
-
 ---
 
 ## Deliverables Checklist
@@ -127,7 +120,6 @@ Add:
 - [ ] Documentation updated
 - [ ] Specs up-to-date (Dual-Write verified)
 - [ ] Production build successful
-- [ ] CLAUDE.md updated with release info
 
 ---
 

@@ -178,14 +178,7 @@ mkdir -p .ultra/tasks/contexts
 
 **Step 3**: Generate context file for each task
 
-### 6. Update Project Context
-
-**After tasks saved**:
-
-1. **Update CLAUDE.md**:
-   - Update "Current Focus" section with first pending task
-
-### 7. Report
+### 6. Report
 
 Output summary:
 - Total tasks generated

@@ -129,9 +129,6 @@ Execute development tasks using TDD workflow.
    git branch -d feat/task-{id}-{slug}
    ```
 
-7. **Update CLAUDE.md** (optional):
-   - Update "Current Focus" section with next pending task
-
 ### Step 6: Report
 
 Output:
@@ -172,7 +169,6 @@ Output:
 - **Output**:
   - `.ultra/tasks/tasks.json` (status update)
   - `.ultra/tasks/contexts/task-{id}.md` (updated context with change log)
-  - `CLAUDE.md` (current focus)
 - **Agents**: ultra-architect-agent (for complexity ≥7)
 - **Next**: `/ultra-test` or `/ultra-dev [next-task-id]`
 
