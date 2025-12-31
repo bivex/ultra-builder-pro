@@ -2,15 +2,15 @@
 
 <div align="center">
 
-**Version 4.4.0 (Simplified Edition)**
+**Version 4.4.1 (Command Refinement)**
 
 *Production-Grade AI-Powered Development System for Claude Code*
 
 ---
 
-[![Version](https://img.shields.io/badge/version-4.4.0-blue)](README.md#version-history)
+[![Version](https://img.shields.io/badge/version-4.4.1-blue)](README.md#version-history)
 [![Status](https://img.shields.io/badge/status-production--ready-green)](README.md)
-[![Skills](https://img.shields.io/badge/skills-6-orange)](skills/)
+[![Skills](https://img.shields.io/badge/skills-4-orange)](skills/)
 [![Official Compliance](https://img.shields.io/badge/official-100%25%20native-brightgreen)](https://docs.claude.com/claude-code)
 
 </div>
@@ -63,14 +63,14 @@ If ANY component is fake/mocked/simulated → Quality = 0
 
 | Command | Purpose |
 |---------|---------|
-| `/ultra-init` | Initialize project with specs |
-| `/ultra-research` | Technical investigation with 6D analysis |
-| `/ultra-plan` | Task planning and breakdown |
+| `/ultra-init` | Initialize project with native task management |
+| `/ultra-research` | Think-Driven Interactive Discovery |
+| `/ultra-plan` | Task planning with dependency analysis |
 | `/ultra-dev` | TDD development (RED→GREEN→REFACTOR) |
-| `/ultra-test` | Quality validation with TAS scoring |
-| `/ultra-deliver` | Deployment preparation |
-| `/ultra-status` | Progress report |
-| `/ultra-think` | Deep multi-dimensional analysis |
+| `/ultra-test` | Pre-delivery quality audit (Anti-Pattern + Coverage + E2E + Perf + Security) |
+| `/ultra-deliver` | Release preparation (docs + build + version + publish) |
+| `/ultra-status` | Real-time progress + risk analysis |
+| `/ultra-think` | Deep analysis with structured reasoning |
 
 **Workflow**: init → research → plan → dev → test → deliver
 
@@ -78,30 +78,26 @@ If ANY component is fake/mocked/simulated → Quality = 0
 
 ## Skills (4 Total)
 
-### Domain Skills
-
 | Skill | Function |
 |-------|----------|
-| frontend | React/Vue/Next.js patterns |
-| backend | API/database/security |
-| smart-contract | EVM/Solana/security audit |
-
-### Utility Skills
-
-| Skill | Function |
-|-------|----------|
-| ultra-think | Deep 6D analysis |
+| frontend | React/Vue/Next.js patterns, Core Web Vitals |
+| backend | API/database/security patterns |
+| smart-contract | EVM/Solana security audit |
 | skill-creator | Creating new skills |
 
 ---
 
 ## Quality Standards
 
-### Test Authenticity Score (TAS)
+### Pre-Delivery Quality Gates (`/ultra-test`)
 
-- TAS ≥ 70% required
-- ZERO MOCK policy (no jest.mock, vi.mock)
-- 6D coverage: Functional, Boundary, Exception, Performance, Security, Compatibility
+| Gate | Requirement |
+|------|-------------|
+| Anti-Pattern | No tautology, empty tests, core logic mocks |
+| Coverage Gaps | No HIGH priority untested functions |
+| E2E | All critical flows pass (Chrome MCP) |
+| Performance | Core Web Vitals pass (if frontend) |
+| Security | No critical/high vulnerabilities |
 
 ### Code Limits
 
@@ -127,8 +123,8 @@ If ANY component is fake/mocked/simulated → Quality = 0
 ~/.claude/
 ├── CLAUDE.md                 # Main configuration
 ├── settings.json             # Claude Code settings
-├── skills/                   # 4 Automated Skills
-│   ├── skill-rules.json      # Skill trigger rules
+├── .ultra-template/          # Project initialization templates
+├── skills/                   # Domain skills
 │   ├── frontend/
 │   ├── backend/
 │   ├── smart-contract/
@@ -148,21 +144,26 @@ If ANY component is fake/mocked/simulated → Quality = 0
 
 ## Version History
 
+### v4.4.1 (2026-01-01) - Command Refinement
+
+- **Refactored**: `/ultra-test` TAS scoring → Anti-Pattern Detection (executable)
+- **Refactored**: `/ultra-dev` git branch logic with decision tree
+- **Added**: AskUserQuestion to all commands (except status)
+- **Added**: `.ultra-template/` for project initialization
+- **Removed**: `skill-rules.json` (not used by Claude Code)
+- **Removed**: `agents/` (ultra-architect-agent, ultra-performance-agent)
+- **Fixed**: allowed-tools optimization for security
+
 ### v4.4.0 (2025-12-31) - Simplified Edition
 
 - **Removed**: Hooks system (SessionStart, PreToolUse, PostToolUse, Stop)
 - **Removed**: Codex integration (4 codex-* skills)
-- **Reason**: PostToolUse/PreToolUse hook stdout doesn't inject to AI context
-- **Result**: 14 → 10 skills, cleaner architecture
+- **Result**: Cleaner architecture, 4 domain skills
 
 ### v4.3.4 (2025-12-31) - Production Absolutism
 
 - Production Absolutism enforcement
 - ZERO MOCK policy
-
-### v4.3.3 (2025-12-30) - Pre-Hooks Stable
-
-- Stable version before hooks experiment
 
 ---
 
