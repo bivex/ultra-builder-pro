@@ -19,7 +19,7 @@ Initialize Ultra Builder Pro 4.4 project structure with native task management.
 
 ## Pre-Execution Checks
 
-**Phase 0: Project State Detection** (NEW in 4.2)
+**Phase 0: Project State Detection**
 
 Detect project context before initialization:
 
@@ -85,12 +85,12 @@ Detect project context before initialization:
 
 **Git initialization**: $4 = "git"
 
-### 1.5. Interactive Confirmation (NEW in 4.2)
+### 1.5. Interactive Confirmation
 
 **Triggers for**:
 - Existing projects with code files
 - Re-initialization (`.ultra/` already exists)
-- Optional: `--interactive` flag for new projects
+- Optional: `--interactive` flag
 
 **Process**:
 
@@ -148,7 +148,6 @@ Create `.ultra/` by copying from template (`~/.claude/.ultra-template/`):
 
 **Template Source**: All files copied from `~/.claude/.ultra-template/`
 
-**Note**: Old projects using `docs/prd.md` and `docs/tech.md` are supported via fallback mechanism in commands
 
 ### 3. Initialize Task System
 
@@ -220,7 +219,7 @@ Show in Chinese:
 
 **Then Run**: `/ultra-plan` to generate task breakdown from complete specs
 
-**Important**: .ultra/specs/product.md is the source of truth (legacy projects may use docs/prd.md + docs/tech.md for compatibility)
+**Important**: .ultra/specs/product.md is the source of truth
 
 ## Usage Examples
 

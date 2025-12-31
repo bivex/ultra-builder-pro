@@ -28,8 +28,8 @@ Use AskUserQuestion to determine research scope:
 
 | Type | Rounds | Focus |
 |------|--------|-------|
-| New Project | Round 1-4 | Full product + architecture |
-| New Feature | Round 1-2 | User scenarios + feature definition |
+| Full Project | Round 1-4 | Full product + architecture |
+| Feature Only | Round 1-2 | User scenarios + feature definition |
 | Architecture Change | Round 3-4 | Architecture + deployment |
 | Custom | User selects | Specific rounds |
 
@@ -187,7 +187,7 @@ Output comparison matrix with:
 - ✅ Overall rating ≥4 stars, no round <3 stars
 - ✅ **All recommendations have 90%+ confidence**
 - ✅ **All code examples are production-ready**
-- ✅ **Project-level CLAUDE.md generated** (NEW)
+- ✅ **Project-level CLAUDE.md generated**
 
 ---
 

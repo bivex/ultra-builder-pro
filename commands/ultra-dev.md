@@ -76,11 +76,9 @@ If ANY component is fake/mocked/simulated → Quality = 0
 
 1. Read `.ultra/tasks/tasks.json`
 2. If task ID provided, select that task; otherwise select first task with `status: "pending"`
-3. **Read context file** (split architecture):
-   - If `context_file` exists: Read `.ultra/tasks/{context_file}` (e.g., `contexts/task-1.md`)
-   - Fallback: Read from `trace_to` spec file (backward compatibility)
+3. **Read context file**: `.ultra/tasks/{context_file}` (e.g., `contexts/task-1.md`)
 
-4. **Display task context** (from MD file):
+4. **Display task context**:
 
 ```
 📋 Task #{id}: {title}
