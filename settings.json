@@ -3,7 +3,10 @@
   "env": {
     "MAX_THINKING_TOKENS": "31999"
   },
-  "includeCoAuthoredBy": true,
+  "attribution": {
+    "commit": "🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>",
+    "pr": "🤖 Generated with [Claude Code](https://claude.com/claude-code)"
+  },
   "permissions": {
     "allow": [
       "Bash",
@@ -63,5 +66,5 @@
     "_comment": "Set to true for sandboxed bash execution with file system and network isolation"
   },
   "_comment_project": "Ultra Builder Pro 4.4.0",
-  "_comment_version": "4.4.0 - Simplified (No Hooks, No Codex)"
+  "_comment_version": "4.4.0"
 }
