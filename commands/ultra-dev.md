@@ -29,11 +29,12 @@ Execute development tasks using TDD workflow.
 
 ### Step 2: Environment Setup
 
-**Check git branch**:
+**Create task workspace**:
 ```bash
-current_branch=$(git branch --show-current)
+mkdir -p .ultra/changes/task-{id}
 ```
 
+**Check git branch**:
 - If on `main` or `master` → Create feature branch:
   ```bash
   git checkout main && git pull origin main
@@ -126,20 +127,51 @@ Output:
 
 ---
 
-## Context Update
+## Dual-Write Mode
 
 **When requirements change during development**:
 
-1. Update context file (`.ultra/tasks/contexts/task-{id}.md`)
-2. Add entry to Change Log table
-3. If affects other tasks → Update specs too
+1. **Update specs immediately** (`.ultra/specs/product.md` or `architecture.md`)
+   - Keep specifications current for parallel tasks
+
+2. **Record change in proposal.md** (`.ultra/changes/task-{id}/proposal.md`):
+   ```markdown
+   ## Change History
+
+   ### {date}: {change title}
+   - **Original**: {original approach}
+   - **Changed to**: {new approach}
+   - **Reason**: {why the change}
+   - **Updated**: specs/{file} §{section}
+   ```
+
+3. **Update context file** (`.ultra/tasks/contexts/task-{id}.md`)
+   - Keep implementation guidance current
+
+**On task completion**, add to proposal.md:
+```markdown
+## Status: Completed
+
+- **Date**: {date}
+- **Commit**: {hash}
+- **Summary**: {brief description}
+```
+
+**Key principle**: `specs/` is source of truth, `changes/` is audit trail.
 
 ---
 
 ## Integration
 
-- **Input**: `.ultra/tasks/tasks.json`, `.ultra/tasks/contexts/task-{id}.md`
-- **Output**: Updated tasks.json, context file, feature-status.json, CLAUDE.md
+- **Input**:
+  - `.ultra/tasks/tasks.json` (task registry)
+  - `.ultra/tasks/contexts/task-{id}.md` (implementation context)
+- **Output**:
+  - `.ultra/tasks/tasks.json` (status update)
+  - `.ultra/tasks/contexts/task-{id}.md` (updated context)
+  - `.ultra/changes/task-{id}/proposal.md` (change history)
+  - `.ultra/docs/feature-status.json` (tracking)
+  - `CLAUDE.md` (current focus)
 - **Skills**: syncing-docs, syncing-status
 - **Agents**: ultra-architect-agent (for complexity ≥7)
 - **Next**: `/ultra-test` or `/ultra-dev [next-task-id]`
