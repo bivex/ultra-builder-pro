@@ -92,6 +92,8 @@ When auditing, check each category from `references/vulnerabilities.md`:
 
 ## Output Format
 
+> Claude responds in Chinese per CLAUDE.md.
+
 ### Audit Report Structure
 
 ```markdown

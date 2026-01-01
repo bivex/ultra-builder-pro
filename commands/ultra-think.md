@@ -35,7 +35,9 @@ These are reference perspectives, not required steps. Choose what's relevant:
 - **System**: Integration, dependencies, emergent behaviors
 - **Risk**: Failure modes, mitigation, reversibility
 
-## Output Format (Chinese)
+## Output Format
+
+> Claude responds in Chinese per CLAUDE.md.
 
 Use `<thinking>` for internal reasoning, then provide:
 

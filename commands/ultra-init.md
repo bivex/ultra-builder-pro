@@ -256,4 +256,6 @@ TDD workflow with quality gates and automatic git integration.
 
 ## Output Format
 
+> Claude responds in Chinese per CLAUDE.md.
+
 **Command icon**: 🏗️

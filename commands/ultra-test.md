@@ -192,10 +192,10 @@ Loop (max 5 attempts):
 
 ### 2. Display Report
 
-Display Quality Audit Report in Chinese.
-
 ---
 
 ## Output Format
+
+> Claude responds in Chinese per CLAUDE.md.
 
 **Command icon**: 🧪

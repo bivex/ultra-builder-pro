@@ -120,6 +120,6 @@ Update `.ultra/delivery-report.json` with actual values:
 
 ## Output Format
 
-Display delivery report in Chinese.
+> Claude responds in Chinese per CLAUDE.md.
 
 **Command icon**: 📦

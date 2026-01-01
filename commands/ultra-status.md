@@ -103,4 +103,6 @@ Suggest next optimal task based on:
 
 ## Output Format
 
+> Claude responds in Chinese per CLAUDE.md.
+
 **Command icon**: 📊
