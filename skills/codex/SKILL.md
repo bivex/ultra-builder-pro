@@ -22,8 +22,8 @@ allowed-tools: Bash, Read, Glob, Grep
 **Mode 2: Regular invocation** (user requests codex directly)
 1. Display current defaults
 2. Use `AskUserQuestion`:
-   - Option A: "使用默认配置" (Recommended) - gpt-5.2-codex, medium, workspace-write
-   - Option B: "自定义配置" - then ask model/effort/sandbox separately
+   - Option A: "Use default config" (Recommended) - gpt-5.2-codex, medium, workspace-write
+   - Option B: "Custom config" - then ask model/effort/sandbox separately
 3. Execute with chosen config
 
 ### Configuration Options

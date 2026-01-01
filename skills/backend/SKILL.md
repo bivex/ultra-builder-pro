@@ -208,26 +208,26 @@ src/
 
 ## Output Format
 
-Provide backend guidance in Chinese at runtime:
+Output format (Claude will respond in Chinese per CLAUDE.md):
 
 ```
-后端分析报告
+Backend Analysis Report
 ========================
 
-模块: {module_name}
-框架: {Express/FastAPI/Gin}
+Module: {module_name}
+Framework: {Express/FastAPI/Gin}
 
-发现问题:
-- {具体问题描述}
+Issues Found:
+- {specific issue description}
 
-优化建议:
-1. {建议1}
-2. {建议2}
+Optimization Suggestions:
+1. {suggestion 1}
+2. {suggestion 2}
 
-安全评估:
-- 认证: {状态}
-- 授权: {状态}
-- 输入验证: {状态}
+Security Assessment:
+- Authentication: {status}
+- Authorization: {status}
+- Input Validation: {status}
 
 ========================
 ```

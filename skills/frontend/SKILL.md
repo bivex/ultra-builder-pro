@@ -197,25 +197,25 @@ When reviewing frontend code:
 
 ## Output Format
 
-Provide frontend guidance in Chinese at runtime:
+Output format (Claude will respond in Chinese per CLAUDE.md):
 
 ```
-前端分析报告
+Frontend Analysis Report
 ========================
 
-组件: {component_name}
-框架: {React/Vue/Next.js}
+Component: {component_name}
+Framework: {React/Vue/Next.js}
 
-发现问题:
-- {具体问题描述}
+Issues Found:
+- {specific issue description}
 
-优化建议:
-1. {建议1}
-2. {建议2}
+Optimization Suggestions:
+1. {suggestion 1}
+2. {suggestion 2}
 
-性能影响:
-- LCP: {预估影响}
-- INP: {预估影响}
+Performance Impact:
+- LCP: {estimated impact}
+- INP: {estimated impact}
 
 ========================
 ```

@@ -36,8 +36,8 @@ allowed-tools: Bash, Read, Glob, Grep, Write
 **Mode 2: Regular invocation** (user requests gemini directly)
 1. Display current defaults
 2. Use `AskUserQuestion`:
-   - Option A: "使用默认配置" (Recommended) - gemini-3-flash-preview, suggest mode
-   - Option B: "自定义配置" - then ask model/approval mode/output format
+   - Option A: "Use default config" (Recommended) - gemini-3-flash-preview, suggest mode
+   - Option B: "Custom config" - then ask model/approval mode/output format
 3. Execute with chosen config
 
 ### Configuration Options

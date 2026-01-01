@@ -44,13 +44,13 @@ Execute development tasks using TDD workflow.
   git checkout -b feat/task-{id}-{slug}
   ```
 
-- **If on `feat/task-{当前id}-*`** (current task's branch):
-  → Continue (断点续作)
+- **If on `feat/task-{current-id}-*`** (current task's branch):
+  → Continue (resume from checkpoint)
 
 - **If on any other branch**:
   → Use AskUserQuestion:
-    - "切换到 main 并创建新分支"（推荐）
-    - "在当前分支继续"
+    - "Switch to main and create new branch" (Recommended)
+    - "Continue on current branch"
 
 **Check dependencies** (soft validation):
 - If dependency tasks incomplete → Warn but continue
