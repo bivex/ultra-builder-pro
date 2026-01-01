@@ -1,41 +1,56 @@
 ---
 name: gemini
-description: Use when the user asks to run Gemini CLI (gemini -p, gemini command) or references Google Gemini for code analysis, refactoring, or AI-assisted development
-allowed-tools: Bash, Read, Glob, Grep
+description: Use when the user needs technical research, architecture validation, documentation generation, or read-only code review. Gemini does NOT modify code - use codex for code changes.
+allowed-tools: Bash, Read, Glob, Grep, Write
 ---
 
 # Gemini Skill Guide
 
+> **Core Principle**: Gemini is for research, validation, and documentation. It does NOT modify code.
+> For code changes, use the `codex` skill instead.
+
+## Use Cases
+
+| Task | Use Gemini | Use Codex |
+|------|------------|-----------|
+| Technical research | ✅ | ❌ |
+| Architecture validation | ✅ | ❌ |
+| Documentation generation | ✅ | ❌ |
+| Code review (read-only) | ✅ | ❌ |
+| Code refactoring | ❌ | ✅ |
+| Bug fixing | ❌ | ✅ |
+| Code optimization | ❌ | ✅ |
+
 ## Running a Task
 
 ### Defaults
-- **Model**: `gemini-2.5-flash`
-- **Approval mode**: `suggest` (requires confirmation)
+- **Model**: `gemini-3-flash`
+- **Mode**: Read-only (no `--yolo`)
 - **Output format**: `text`
 
 ### Invocation Modes
 
-**Mode 1: Template invocation** (from commands like `/ultra-dev`, `/ultra-test`)
+**Mode 1: Template invocation** (from commands like `/ultra-research`)
 - Use template config directly, NO user interaction
-- Templates define model/approval/prompt
+- Templates define model/context/prompt
 
 **Mode 2: Regular invocation** (user requests gemini directly)
 1. Display current defaults
 2. Use `AskUserQuestion`:
-   - Option A: "使用默认配置" (Recommended) - gemini-2.5-flash, suggest mode
-   - Option B: "自定义配置" - then ask model/approval mode separately
+   - Option A: "使用默认配置" (Recommended) - gemini-3-flash, read-only
+   - Option B: "自定义配置" - then ask model/output format
 3. Execute with chosen config
 
 ### Configuration Options
 
 **Models**:
-- `gemini-2.5-flash` (default, fast and capable)
-- `gemini-2.5-pro` (more powerful, 1M context)
-- `gemini-3-flash` (latest, experimental)
+- `gemini-3-flash` (default, latest and fastest)
+- `gemini-2.5-pro` (1M context, deep reasoning)
+- `gemini-2.5-flash` (balanced)
 
-**Approval modes**:
-- `suggest` (default) - requires user confirmation for actions
-- `yolo` (`-y`) - auto-approve all actions (use with caution)
+**Output formats**:
+- `text` (default) - human-readable
+- `json` - structured output for automation
 
 **Context options**:
 - `@./path` - inject file content into prompt
@@ -45,170 +60,239 @@ allowed-tools: Bash, Read, Glob, Grep
 ### Command template
 ```bash
 gemini \
-  -m gemini-2.5-flash \
+  -m gemini-3-flash \
   -p "prompt here"
 ```
 
 ### With file context
 ```bash
-gemini -p "Review this code @./src/main.ts"
+gemini -p "Analyze the architecture of this codebase @./src/"
 ```
 
-### With auto-approve (YOLO mode)
+### With directory context
 ```bash
-gemini -y -p "Fix the bug in this file @./buggy.ts"
+gemini --include-directories src docs -p "Review the documentation coverage"
 ```
 
 ### Execution rules
+- **NEVER use `-y` (yolo mode)** - Gemini is read-only
 - Run the command and show complete output to user
-- For JSON output: add `--output-format json`
-- After completion: inform user they can continue in interactive mode with `gemini`
+- After completion: summarize findings and suggest next steps
 
 ## Quick Reference
 
 | Use case | Command |
 |----------|---------|
-| Analysis | `gemini -p "analyze this code @./file.ts"` |
-| With edits | `gemini -y -p "fix the bug @./file.ts"` |
-| Directory context | `gemini --include-directories src -p "summarize"` |
-| JSON output | `gemini -p "query" --output-format json` |
-| Interactive | `gemini` (starts REPL) |
+| Tech research | `gemini -p "Research best practices for X"` |
+| Architecture review | `gemini --include-directories src -p "Review architecture"` |
+| Documentation | `gemini -p "Generate API documentation for @./src/api/"` |
+| Code review | `gemini -p "Review this code for issues @./file.ts"` |
+| Validation | `gemini -p "Validate this design against requirements @./spec.md"` |
 
 ## Following Up
 
-- After every `gemini` command, use `AskUserQuestion` to confirm next steps.
-- For continued work, user can start interactive mode with `gemini`.
+- After every `gemini` command, summarize key findings
+- Use `AskUserQuestion` to confirm next steps
+- If code changes needed, suggest using `codex` skill
 
 ## Error Handling
 
-- If `gemini` exits non-zero, show the error and ask user for direction.
-- `-y` (yolo mode) requires explicit confirmation in Mode 2 custom config flow.
-- If output shows warnings, summarize and ask how to proceed.
+- If `gemini` exits non-zero, show the error and ask user for direction
+- If output shows concerns, summarize and recommend actions
 
 ---
 
-## Review Templates
+## Templates
 
 Use these predefined templates when commands reference `gemini skill with template: <name>`.
 
-### research-review
+### tech-research
 
 | Config | Value |
 |--------|-------|
 | Model | gemini-2.5-pro |
-| Approval | suggest |
-| Context | include research outputs |
+| Context | project files + web search |
+
+**Purpose**: Deep technical research with evidence gathering
 
 **Prompt**:
 ```
-Review this technical research output against these rules:
+Conduct technical research on the specified topic:
 
-[Evidence-First]
-- Every claim must have verifiable source (official docs, benchmarks)
-- Unverified claims must be marked as "Speculation"
-- Priority: 1) Official docs 2) Community practices 3) Inference
+[Research Protocol]
+1. Search for official documentation and authoritative sources
+2. Gather community best practices and real-world examples
+3. Identify potential risks and trade-offs
+4. Compare alternatives with evidence
 
-[Honesty & Challenge]
-- Detect risk underestimation or wishful thinking
-- Point out logical gaps explicitly
-- No overly optimistic assumptions without evidence
+[Evidence Requirements]
+- Every claim must have verifiable source
+- Priority: 1) Official docs 2) Benchmarks 3) Community practices
+- Label findings: Fact | Inference | Speculation
 
-[Architecture Decisions]
-- Critical state requirements addressed?
-- Migration/rollback plan for breaking changes?
-- Persistence/recovery/observability considered?
+[Output Format]
+1. Executive Summary (2-3 sentences)
+2. Key Findings (with sources)
+3. Comparison Matrix (if alternatives exist)
+4. Risks & Trade-offs
+5. Recommendation (with confidence %)
 
-[Completeness]
-- Missing risks or edge cases not considered
-- Contradictions between sections
-
-Provide specific issues with file:line references.
-Label each finding: Fact | Inference | Speculation
-If no critical issues found, respond with "PASS: No blocking issues".
+Minimum 90% confidence required for recommendations.
 ```
 
 ---
 
-### code-review
+### architecture-review
 
 | Config | Value |
 |--------|-------|
 | Model | gemini-2.5-pro |
-| Approval | suggest |
-| Context | include changed files |
+| Context | include source directories |
+
+**Purpose**: Validate architecture decisions against best practices
 
 **Prompt**:
 ```
-Review this code diff against these rules:
+Review this architecture against these criteria:
 
-[Code Quality]
-- No TODO/FIXME/placeholder in code
-- Modular structure, avoid deep nesting (max 3 levels)
-- No hardcoded secrets or credentials
+[Critical State Management]
+- Is critical state (funds/permissions/external API) persistable?
+- Is recovery/replay mechanism in place?
+- Is observability (logging/metrics/tracing) adequate?
+
+[Modularity & Boundaries]
+- Are module boundaries clear and well-defined?
+- Is coupling between modules appropriate?
+- Are interfaces stable and versioned?
+
+[Scalability & Performance]
+- Are there obvious bottlenecks?
+- Is horizontal scaling possible?
+- Are resource limits defined?
 
 [Security]
-- No injection vulnerabilities (SQL, XSS, CSRF, command injection)
-- No auth bypass or secrets exposure
-- Input validation at system boundaries
+- Are authentication/authorization properly separated?
+- Is input validation at system boundaries?
+- Are secrets properly managed?
 
-[Architecture]
-- Critical state (funds/permissions/external API) must be persistable/recoverable
-- No in-memory-only storage for critical data
-- Breaking API changes require migration plan
+[Maintainability]
+- Is the codebase navigable?
+- Are patterns consistent?
+- Is technical debt visible and managed?
 
-[Logic]
-- No race conditions or incorrect state handling
-- No N+1 queries or memory leaks
-- Spec compliance - implementation matches acceptance criteria
-- Edge cases handled (boundary values, null, empty, error paths)
-
-[Testing in Code]
-- No mocks on core logic (domain/service/state paths must use real deps)
-- Test files included should follow Core Logic NO MOCKING rule
-
-Provide specific issues with file:line references and severity (Critical/High/Medium/Low).
-If no critical/high issues found, respond with "PASS: No blocking issues".
+Provide findings with file:line references.
+Rate each area: Good | Needs Improvement | Critical Issue
 ```
 
 ---
 
-### test-review
+### documentation-gen
 
 | Config | Value |
 |--------|-------|
-| Model | gemini-2.5-flash |
-| Approval | suggest |
-| Context | include test files |
+| Model | gemini-3-flash |
+| Context | include source files |
+
+**Purpose**: Generate or review documentation
 
 **Prompt**:
 ```
-Review this test suite against these rules:
+Generate/review documentation for the specified code:
 
-[Core Logic Testing - NO MOCKING ALLOWED]
-Core Logic = Domain/service/state machine/funds-permission paths
-- These paths MUST use real implementations, not mocks
-- Repository interfaces: prefer testcontainers with production DB
-- Fallback: SQLite/in-memory only when testcontainers unavailable
+[Documentation Standards]
+- Clear purpose statement
+- Usage examples (production-ready, no TODO/placeholder)
+- Parameter descriptions with types
+- Return value documentation
+- Error handling documentation
+- Edge cases noted
 
-[External Systems - Test Doubles ALLOWED]
-- External APIs, third-party services → testcontainers/sandbox/stub OK
-- Must document rationale for each test double
+[Quality Criteria]
+- Accurate (matches actual implementation)
+- Complete (all public APIs documented)
+- Concise (no redundant information)
+- Current (reflects latest code)
 
-[Coverage]
-- Missing edge cases (null, empty, boundary values, error paths)
-- Untested critical paths (auth flows, payment, data mutations, deletions)
+Output format: Markdown
+Include code examples where helpful.
+```
 
-[Anti-Patterns]
-- Flaky tests (time-dependent, order-dependent)
-- Tautology assertions (expect(true).toBe(true))
-- Empty test bodies
-- False confidence - tests that pass but don't verify behavior
+---
 
-[Security Testing]
-- Auth/permission tests exist for protected endpoints
-- Input validation tests for injection vectors
-- Sensitive data handling tests (no plaintext secrets in logs/responses)
+### spec-validation
 
-Provide specific issues with file:line references.
-If no critical issues found, respond with "PASS: No blocking issues".
+| Config | Value |
+|--------|-------|
+| Model | gemini-2.5-pro |
+| Context | include specs and implementation |
+
+**Purpose**: Validate implementation against specifications
+
+**Prompt**:
+```
+Validate the implementation against the specification:
+
+[Compliance Check]
+- Does implementation match spec requirements?
+- Are all acceptance criteria covered?
+- Are edge cases from spec handled?
+
+[Gap Analysis]
+- What spec requirements are NOT implemented?
+- What implementation exists that's NOT in spec?
+- Are there implicit assumptions not documented?
+
+[Risk Assessment]
+- What could break if spec changes?
+- What's the impact of each gap?
+
+Output:
+1. Compliance Score (%)
+2. Gaps List (with severity)
+3. Recommendations
+```
+
+---
+
+### code-review (read-only)
+
+| Config | Value |
+|--------|-------|
+| Model | gemini-2.5-pro |
+| Context | include changed files |
+
+**Purpose**: Review code for issues WITHOUT making changes
+
+**Prompt**:
+```
+Review this code (READ-ONLY - do not suggest exact code changes):
+
+[Code Quality]
+- TODO/FIXME/placeholder present?
+- Deep nesting issues (>3 levels)?
+- Hardcoded secrets or credentials?
+
+[Security Concerns]
+- Injection vulnerabilities?
+- Auth bypass risks?
+- Input validation gaps?
+
+[Architecture Issues]
+- Critical state not persisted?
+- In-memory-only storage for important data?
+- Breaking API changes without migration?
+
+[Logic Problems]
+- Race conditions?
+- Resource leaks?
+- Edge cases not handled?
+
+[Testing Gaps]
+- Core logic mocked inappropriately?
+- Missing test coverage for critical paths?
+
+Provide findings with file:line references.
+Severity: Critical | High | Medium | Low
+DO NOT provide code fixes - only identify issues.
+If code changes needed, recommend using codex skill.
 ```
