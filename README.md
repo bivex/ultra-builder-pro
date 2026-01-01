@@ -2,24 +2,20 @@
 
 <div align="center">
 
-**Version 4.4.1 (Command Refinement)**
-
-*Production-Grade AI-Powered Development System for Claude Code*
+**Production-Grade AI-Powered Development System for Claude Code**
 
 ---
 
-[![Version](https://img.shields.io/badge/version-4.4.1-blue)](README.md#version-history)
+[![Version](https://img.shields.io/badge/version-4.4.0-blue)](README.md#version-history)
 [![Status](https://img.shields.io/badge/status-production--ready-green)](README.md)
+[![Commands](https://img.shields.io/badge/commands-8-purple)](commands/)
 [![Skills](https://img.shields.io/badge/skills-6-orange)](skills/)
-[![Official Compliance](https://img.shields.io/badge/official-100%25%20native-brightgreen)](https://docs.claude.com/claude-code)
 
 </div>
 
 ---
 
 ## Quick Start
-
-### One-Command Install
 
 ```bash
 # Clone the repository
@@ -33,41 +29,28 @@ cp -r ./* ~/.claude/
 claude
 ```
 
-**Installation Time**: < 1 minute
-
 ---
 
-## What's New in 4.4.1
+## Core Philosophy
 
-### Command Refinement
+### Priority Stack (CLAUDE.md)
 
-- Refactored `/ultra-test` TAS scoring → Anti-Pattern Detection (executable)
-- Refactored `/ultra-dev` git branch logic with decision tree
-- Added AskUserQuestion to all commands (except status)
-- Added `.ultra-template/` for project initialization
+| Priority | Rule |
+|----------|------|
+| 1 | **Role + Safety**: Deployable code, KISS/YAGNI, think in English, respond in Chinese |
+| 2 | **Context Blocks**: Honor XML blocks exactly as written |
+| 3 | **Evidence-First**: External facts require verification (Context7/Exa MCP) |
+| 4 | **Honesty & Challenge**: Challenge user assumptions, name logical gaps |
+| 5 | **Architecture**: Critical state must be persistable/recoverable/observable |
+| 6 | **Code Quality**: No TODO/FIXME/placeholder, modular, avoid deep nesting |
+| 7 | **Testing**: No mocking core logic, external deps allow test doubles |
+| 8 | **Action Bias**: Default to progress, high-risk must brake and ask |
 
-### Codex Integration
-
-- Added `codex` skill with review templates (research/code/test)
-- Mandatory Codex review at key checkpoints:
-  - `/ultra-research` → after all rounds complete
-  - `/ultra-dev` → after Quality Gates pass
-  - `/ultra-test` → after all gates pass
-- Templates aligned with CLAUDE.md rules
-
-### Gemini Integration
-
-- Added `gemini` skill for research, validation, and documentation
-- **Gemini does NOT modify code** - use codex for code changes
-- Models: gemini-3-flash-preview (default), gemini-3-pro-preview, gemini-2.5-pro
-- Templates: tech-research, architecture-review, documentation-gen, spec-validation, code-review (read-only)
-
-### Production Absolutism (Preserved)
+### Production Absolutism
 
 > "There is no test code. There is no demo. There is no MVP.
 > Every line is production code. Every test is production verification."
 
-**Core Formula:**
 ```
 Code Quality = Real Implementation × Real Tests × Real Dependencies
 If ANY component is fake/mocked/simulated → Quality = 0
@@ -75,48 +58,116 @@ If ANY component is fake/mocked/simulated → Quality = 0
 
 ---
 
-## Commands
+## Workflow
 
-| Command | Purpose |
-|---------|---------|
-| `/ultra-init` | Initialize project with native task management |
-| `/ultra-research` | Think-Driven Interactive Discovery |
-| `/ultra-plan` | Task planning with dependency analysis |
-| `/ultra-dev` | TDD development (RED→GREEN→REFACTOR) |
-| `/ultra-test` | Pre-delivery quality audit (Anti-Pattern + Coverage + E2E + Perf + Security) |
-| `/ultra-deliver` | Release preparation (docs + build + version + publish) |
-| `/ultra-status` | Real-time progress + risk analysis |
-| `/ultra-think` | Deep analysis with structured reasoning |
-
-**Workflow**: init → research → plan → dev → test → deliver
+```
+/ultra-init → /ultra-research → /ultra-plan → /ultra-dev → /ultra-test → /ultra-deliver
+     ↓              ↓                ↓              ↓             ↓             ↓
+  Project       4-Round          Task         TDD Cycle      Quality       Release
+  Setup        Discovery       Breakdown      RED→GREEN      Audit        & Deploy
+```
 
 ---
 
-## Skills (6 Total)
+## Commands (8)
 
-| Skill | Function |
-|-------|----------|
-| codex | OpenAI Codex CLI (code analysis, refactoring, **can modify code**) |
-| gemini | Google Gemini CLI (research, validation, docs, **read-only**) |
-| frontend | React/Vue/Next.js patterns, Core Web Vitals |
-| backend | API/database/security patterns |
-| smart-contract | EVM/Solana security audit |
-| skill-creator | Creating new skills |
+| Command | Purpose | Key Features |
+|---------|---------|--------------|
+| `/ultra-init` | Initialize project | Auto-detect type/stack, copy templates, git setup |
+| `/ultra-research` | Interactive discovery | 4 rounds (User→Feature→Architecture→Quality), 90%+ confidence |
+| `/ultra-plan` | Task planning | Dependency analysis, complexity assessment, context files |
+| `/ultra-dev` | TDD development | RED→GREEN→REFACTOR, Codex review, auto git flow |
+| `/ultra-test` | Quality audit | Anti-Pattern detection, Coverage gaps, E2E, Performance, Security |
+| `/ultra-deliver` | Release preparation | CHANGELOG, build, version bump, tag, push |
+| `/ultra-status` | Progress monitoring | Real-time stats, risk analysis, recommendations |
+| `/ultra-think` | Deep analysis | Structured reasoning, multi-dimension comparison |
+
+### Command Details
+
+#### /ultra-init
+- Auto-detects project type (web/api/cli/fullstack)
+- Auto-detects tech stack from dependencies
+- Creates `.ultra/` structure with specs and tasks
+- Interactive confirmation for existing projects
+
+#### /ultra-research
+- **Round 1**: User & Scenario (Personas, User Scenarios)
+- **Round 2**: Feature Definition (User Stories, Features, Metrics)
+- **Round 3**: Architecture Design (arc42 §1-6)
+- **Round 4**: Quality & Deployment (arc42 §7-12)
+- Each round: 6-step cycle with satisfaction rating (≥4 stars to continue)
+
+#### /ultra-dev
+- TDD workflow: RED (failing tests) → GREEN (pass) → REFACTOR
+- Git branch management with decision tree
+- Mandatory Codex review before commit
+- Dual-write mode: update specs when implementation reveals gaps
+
+#### /ultra-test
+- **Anti-Pattern Detection**: Tautology, empty tests, core logic mocks
+- **Coverage Gap Analysis**: Find untested exported functions
+- **E2E Testing**: Chrome MCP for web UI
+- **Performance**: Core Web Vitals (LCP <2.5s, INP <200ms, CLS <0.1)
+- **Security**: Dependency vulnerability scan
+- Auto-fix loop (max 5 attempts)
+
+---
+
+## Skills (6)
+
+| Skill | Purpose | Modes |
+|-------|---------|-------|
+| `codex` | OpenAI Codex CLI | Code analysis, refactoring, **can modify code** |
+| `gemini` | Google Gemini CLI | Research, validation, docs; `-y` for code changes |
+| `frontend` | Frontend development | React/Vue/Next.js, Core Web Vitals, a11y |
+| `backend` | Backend development | Node.js/Python/Go, API design, security |
+| `smart-contract` | Smart contract dev | EVM/Solana, security audit, Foundry tests |
+| `skill-creator` | Create new skills | Workflow guidance, packaging |
+
+### Codex Skill
+
+**Templates**:
+- `research-review`: Validate research output (read-only)
+- `code-review`: Review code diff (read-only, high effort)
+- `test-review`: Audit test suite (workspace-write)
+
+**Config**: Model `gpt-5.2-codex`, Effort `medium`, Sandbox `workspace-write`
+
+### Gemini Skill
+
+**Templates**:
+- `tech-research`: Deep research with evidence
+- `architecture-review`: Validate architecture decisions
+- `documentation-gen`: Generate/review documentation
+- `spec-validation`: Validate implementation vs spec
+- `code-review`: Review code (read-only by default)
+
+**Config**: Model `gemini-3-flash-preview`, Mode `suggest` (read-only default)
+
+**Note**: Use `-y` flag for auto-approve when code changes needed
+
+### Domain Skills
+
+| Skill | Resources |
+|-------|-----------|
+| `frontend` | React/Vue/Next.js patterns, performance scripts, component templates |
+| `backend` | API design, Node/Python/Go patterns, security audit scripts |
+| `smart-contract` | ERC20/721/1155/esToken templates, vulnerability checklist, Foundry patterns |
 
 ---
 
 ## Quality Standards
 
-### Pre-Delivery Quality Gates (`/ultra-test`)
+### Pre-Delivery Quality Gates
 
 | Gate | Requirement |
 |------|-------------|
 | Anti-Pattern | No tautology, empty tests, core logic mocks |
 | Coverage Gaps | No HIGH priority untested functions |
-| E2E | All critical flows pass (Chrome MCP) |
-| Performance | Core Web Vitals pass (if frontend) |
+| E2E | All critical flows pass |
+| Performance | Core Web Vitals pass (frontend) |
 | Security | No critical/high vulnerabilities |
-| Codex Review | No critical issues from Codex audit |
+| Codex Review | No critical issues |
 
 ### Code Limits
 
@@ -126,13 +177,14 @@ If ANY component is fake/mocked/simulated → Quality = 0
 | Nesting depth | ≤ 3 |
 | Cyclomatic complexity | ≤ 10 |
 
-### Frontend (Core Web Vitals)
+### Testing Policy
 
-| Metric | Target |
-|--------|--------|
-| LCP | < 2.5s |
-| INP | < 200ms |
-| CLS | < 0.1 |
+| Type | Mock Allowed? |
+|------|---------------|
+| Core Logic (domain/service/state) | **NO** |
+| Repository interfaces | **NO** (use testcontainers) |
+| External APIs | Yes (testcontainers/sandbox/stub) |
+| Third-party services | Yes (with rationale) |
 
 ---
 
@@ -140,72 +192,81 @@ If ANY component is fake/mocked/simulated → Quality = 0
 
 ```
 ~/.claude/
-├── CLAUDE.md                 # Main configuration
+├── CLAUDE.md                 # Main configuration (Priority Stack)
+├── README.md                 # This file
 ├── settings.json             # Claude Code settings
-├── .ultra-template/          # Project initialization templates
-├── skills/                   # Domain skills
-│   ├── codex/
-│   ├── gemini/
-│   ├── frontend/
-│   ├── backend/
-│   ├── smart-contract/
-│   └── skill-creator/
-└── commands/                 # /ultra-* commands
-    ├── ultra-init.md
-    ├── ultra-research.md
-    ├── ultra-plan.md
-    ├── ultra-dev.md
-    ├── ultra-test.md
-    ├── ultra-deliver.md
-    ├── ultra-status.md
-    └── ultra-think.md
+│
+├── commands/                 # /ultra-* commands (8)
+│   ├── ultra-init.md
+│   ├── ultra-research.md
+│   ├── ultra-plan.md
+│   ├── ultra-dev.md
+│   ├── ultra-test.md
+│   ├── ultra-deliver.md
+│   ├── ultra-status.md
+│   └── ultra-think.md
+│
+├── skills/                   # Domain skills (6)
+│   ├── codex/                # OpenAI Codex CLI
+│   ├── gemini/               # Google Gemini CLI
+│   ├── frontend/             # React/Vue/Next.js
+│   ├── backend/              # Node.js/Python/Go
+│   ├── smart-contract/       # EVM/Solana
+│   └── skill-creator/        # Create new skills
+│
+└── .ultra-template/          # Project initialization templates
+    ├── specs/
+    │   ├── product.md        # Product specification template
+    │   └── architecture.md   # arc42 architecture template
+    ├── tasks/
+    │   ├── tasks.json        # Task registry
+    │   └── contexts/         # Task context files
+    └── docs/
+        └── research/         # Research reports
 ```
 
 ---
 
 ## Version History
 
-### v4.4.1 (2026-01-01) - Command Refinement + Codex/Gemini Integration
+### v4.4.0 (2026-01-01) - Streamlined Edition
 
-- **Added**: `codex` skill with 3 review templates (research/code/test)
-- **Added**: `gemini` skill with 5 templates (tech-research, architecture-review, documentation-gen, spec-validation, code-review)
-- **Added**: Mandatory Codex review in `/ultra-research`, `/ultra-dev`, `/ultra-test`
-- **Added**: Git operation safety (AskUserQuestion before commit/merge/push)
-- **Refactored**: `/ultra-test` TAS scoring → Anti-Pattern Detection
-- **Refactored**: `/ultra-dev` git branch logic with decision tree
-- **Refactored**: `/ultra-deliver` build detection with priority list
-- **Added**: `.ultra-template/` for project initialization
-- **Removed**: `skill-rules.json`, `agents/`
-- **Fixed**: Review templates aligned with CLAUDE.md rules
-- **Separation**: Codex = code changes, Gemini = research/docs (read-only)
+**Core Changes**:
+- Unified Priority Stack in CLAUDE.md
+- Removed agents directory (empty)
+- Removed hooks system
+- Removed install.sh, execution_config.json
+- Removed plans/, plugins/, chrome/, telemetry/
 
-### v4.4.0 (2025-12-31) - Simplified Edition
+**Codex Integration**:
+- Added `codex` skill with 3 review templates
+- Mandatory Codex review in `/ultra-dev`, `/ultra-test`, `/ultra-research`
 
-- **Removed**: Hooks system (SessionStart, PreToolUse, PostToolUse, Stop)
-- **Removed**: Codex integration (4 codex-* skills)
-- **Result**: Cleaner architecture, 4 skills
+**Gemini Integration**:
+- Added `gemini` skill with 5 templates
+- Default read-only mode, `-y` for code changes
 
-### v4.3.4 (2025-12-31) - Production Absolutism
+**Command Refinements**:
+- `/ultra-test`: Anti-Pattern Detection (replaced TAS scoring)
+- `/ultra-dev`: Git branch decision tree
+- `/ultra-research`: 4-round interactive discovery with satisfaction rating
+
+### v4.3.x (2025-12)
 
 - Production Absolutism enforcement
-- ZERO MOCK policy
+- ZERO MOCK policy for core logic
 
 ---
 
-## Philosophy
+## MCP Services
 
-### Priority Stack
+Ultra Builder Pro integrates with these MCP services:
 
-1. **Safety & Production**: No TODO/FIXME/demo/placeholder
-2. **TDD Mandatory**: RED → GREEN → REFACTOR
-3. **Intellectual Honesty**: Mark uncertainty (Fact/Inference/Speculation)
-4. **Action Bias**: Execute rather than ask
-
-### Communication
-
-- Think in English, respond in Chinese
-- Lead with findings, then summarize
-- File paths with line numbers (`file.ts:42`)
+| Service | Purpose |
+|---------|---------|
+| Context7 | Official documentation lookup |
+| Exa | Code examples and community practices |
+| Chrome | E2E testing and web automation |
 
 ---
 
