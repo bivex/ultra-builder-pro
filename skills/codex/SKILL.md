@@ -8,23 +8,40 @@ allowed-tools: Bash, Read, Glob, Grep
 
 ## Running a Task
 
-### Defaults (use unless user specifies otherwise)
+### Defaults
 - **Model**: `gpt-5.2-codex`
 - **Reasoning effort**: `medium`
 - **Sandbox**: `workspace-write`
 
-### When to ask user
-Only use `AskUserQuestion` if:
-- User explicitly asks to choose model/effort
-- Task is high-risk (e.g., `--full-auto` with edits)
-- Previous codex call failed
+### Invocation Modes
 
-Otherwise, **proceed with defaults automatically**.
+**Mode 1: Template invocation** (from commands like `/ultra-dev`, `/ultra-test`)
+- Use template config directly, NO user interaction
+- Templates define model/effort/sandbox/prompt
 
-### Sandbox mode selection:
-   - `workspace-write` (default) - allows codex to run git/ls commands for context
-   - `read-only` - only if user explicitly requests no file access
-   - `danger-full-access` - only with explicit user permission
+**Mode 2: Regular invocation** (user requests codex directly)
+1. Display current defaults
+2. Use `AskUserQuestion`:
+   - Option A: "使用默认配置" (Recommended) - gpt-5.2-codex, medium, workspace-write
+   - Option B: "自定义配置" - then ask model/effort/sandbox separately
+3. Execute with chosen config
+
+### Configuration Options
+
+**Models**:
+- `gpt-5.2-codex` (default, optimized for code)
+- `gpt-5.2` (general purpose)
+
+**Reasoning effort**:
+- `low` - fast, simple tasks
+- `medium` (default) - balanced
+- `high` - complex analysis
+- `xhigh` - maximum reasoning
+
+**Sandbox**:
+- `workspace-write` (default) - can run git/ls for context
+- `read-only` - analysis only, no file access
+- `danger-full-access` - requires explicit user permission
 
 ### Command template
 ```bash
@@ -71,7 +88,8 @@ codex exec -m gpt-5.2-codex resume --last "prompt"
 ## Error Handling
 
 - If `codex exec` exits non-zero, show the error and ask user for direction.
-- Before using `--full-auto` or `--sandbox danger-full-access`, ask user permission via `AskUserQuestion`.
+- `--full-auto` requires explicit confirmation in Mode 2 custom config flow.
+- `--sandbox danger-full-access` requires explicit user permission (separate confirmation).
 - If output shows warnings, summarize and ask how to proceed.
 
 ---
