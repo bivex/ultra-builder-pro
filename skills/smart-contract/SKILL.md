@@ -92,7 +92,7 @@ When auditing, check each category from `references/vulnerabilities.md`:
 
 ## Output Format
 
-> Claude responds in Chinese per CLAUDE.md.
+> Claude responds in English per CLAUDE.md.
 
 ### Audit Report Structure
 

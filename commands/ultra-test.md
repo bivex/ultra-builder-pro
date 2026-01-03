@@ -196,6 +196,6 @@ Loop (max 5 attempts):
 
 ## Output Format
 
-> Claude responds in Chinese per CLAUDE.md.
+> Claude responds in English per CLAUDE.md.
 
 **Command icon**: 🧪

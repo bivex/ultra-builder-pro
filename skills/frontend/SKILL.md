@@ -197,7 +197,7 @@ When reviewing frontend code:
 
 ## Output Format
 
-> Claude responds in Chinese per CLAUDE.md.
+> Claude responds in English per CLAUDE.md.
 
 ```
 Frontend Analysis Report

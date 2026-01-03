@@ -111,9 +111,9 @@ Detect project context before initialization:
    - Keep existing (update missing files only)
    - Cancel
 
-**Implementation Note**: Use AskUserQuestion tool with Chinese prompts generated at runtime.
+**Implementation Note**: Use AskUserQuestion tool with English prompts generated at runtime.
 
-**Output Language**: All prompts in Chinese at runtime (not hardcoded in this file)
+**Output Language**: All prompts in English at runtime (not hardcoded in this file)
 
 ### 2. Create Project Structure
 
@@ -165,7 +165,7 @@ Create `.ultra/tasks/tasks.json`:
 
 ### 6. Display Success Summary
 
-Show in Chinese:
+Show in English:
 - Directories created (.ultra/specs/, .ultra/tasks/, .ultra/docs/)
 - Template files copied
 - Task system initialized (tasks.json)
@@ -256,6 +256,6 @@ TDD workflow with quality gates and automatic git integration.
 
 ## Output Format
 
-> Claude responds in Chinese per CLAUDE.md.
+> Claude responds in English per CLAUDE.md.
 
 **Command icon**: 🏗️

@@ -41,35 +41,35 @@ class PerformanceAuditor:
     REACT_PATTERNS = [
         # Inline object/array props
         (
-            r'<\w+[^>]*\s(style|className)=\{[^}]*\{[^}]+\}[^}]*\}',
+            r"<\w+[^>]*\s(style|className)=\{[^}]*\{[^}]+\}[^}]*\}",
             Severity.MEDIUM,
             "Inline object in JSX props",
             "Move to useMemo or define outside component",
         ),
         # Missing useCallback for handlers
         (
-            r'on\w+=\{\s*\([^)]*\)\s*=>\s*\{',
+            r"on\w+=\{\s*\([^)]*\)\s*=>\s*\{",
             Severity.LOW,
             "Inline arrow function in event handler",
             "Consider useCallback for stable reference",
         ),
         # Array.map without key
         (
-            r'\.map\([^)]+\)\s*=>\s*[^{]*<[^>]+(?!key=)',
+            r"\.map\([^)]+\)\s*=>\s*[^{]*<[^>]+(?!key=)",
             Severity.HIGH,
             "Possible missing key in map",
             "Add unique key prop to mapped elements",
         ),
         # useEffect with empty deps but using state
         (
-            r'useEffect\(\s*\(\)\s*=>\s*\{[^}]*set\w+[^}]*\}\s*,\s*\[\s*\]\s*\)',
+            r"useEffect\(\s*\(\)\s*=>\s*\{[^}]*set\w+[^}]*\}\s*,\s*\[\s*\]\s*\)",
             Severity.MEDIUM,
             "useEffect with empty deps may have stale closure",
             "Review dependencies or use functional update",
         ),
         # Large component without memo
         (
-            r'export\s+(?:default\s+)?function\s+\w+',
+            r"export\s+(?:default\s+)?function\s+\w+",
             Severity.LOW,
             "Component may benefit from React.memo",
             "Consider memo() for expensive components",
@@ -80,14 +80,14 @@ class PerformanceAuditor:
     VUE_PATTERNS = [
         # Deep watcher on large objects
         (
-            r'watch\([^,]+,\s*[^,]+,\s*\{[^}]*deep:\s*true',
+            r"watch\([^,]+,\s*[^,]+,\s*\{[^}]*deep:\s*true",
             Severity.MEDIUM,
             "Deep watcher may cause performance issues",
             "Use shallowRef or watch specific paths",
         ),
         # v-if with v-for
         (
-            r'v-for=[^>]+v-if=|v-if=[^>]+v-for=',
+            r"v-for=[^>]+v-if=|v-if=[^>]+v-for=",
             Severity.HIGH,
             "v-if used with v-for on same element",
             "Move v-if to wrapper element or use computed",
@@ -119,14 +119,14 @@ class PerformanceAuditor:
         ),
         # Console.log in production
         (
-            r'console\.(log|debug|info)\(',
+            r"console\.(log|debug|info)\(",
             Severity.LOW,
             "Console statement found",
             "Remove or use conditional logging",
         ),
         # Inline styles
         (
-            r'style=\{?\{[^}]+\}',
+            r"style=\{?\{[^}]+\}",
             Severity.LOW,
             "Inline styles may prevent optimization",
             "Consider CSS modules or styled-components",
@@ -137,21 +137,21 @@ class PerformanceAuditor:
     IMAGE_PATTERNS = [
         # img without dimensions
         (
-            r'<img[^>]+src=[^>]+(?!width=|height=|style=)',
+            r"<img[^>]+src=[^>]+(?!width=|height=|style=)",
             Severity.MEDIUM,
             "Image without explicit dimensions (may cause CLS)",
             "Add width and height attributes",
         ),
         # img without lazy loading
         (
-            r'<img[^>]+(?!loading=)',
+            r"<img[^>]+(?!loading=)",
             Severity.LOW,
             "Image without lazy loading",
-            "Add loading=\"lazy\" for below-fold images",
+            'Add loading="lazy" for below-fold images',
         ),
         # Using img instead of next/image
         (
-            r'<img\s+src=',
+            r"<img\s+src=",
             Severity.LOW,
             "Using native img instead of optimized component",
             "Use next/image or responsive images",
@@ -166,13 +166,13 @@ class PerformanceAuditor:
         issues = []
 
         try:
-            content = file_path.read_text(encoding='utf-8')
-            lines = content.split('\n')
+            content = file_path.read_text(encoding="utf-8")
+            lines = content.split("\n")
 
             # Determine file type
             suffix = file_path.suffix.lower()
-            is_react = suffix in ['.tsx', '.jsx'] or 'react' in content.lower()
-            is_vue = suffix == '.vue'
+            is_react = suffix in [".tsx", ".jsx"] or "react" in content.lower()
+            is_vue = suffix == ".vue"
 
             # Apply patterns based on file type
             patterns = self.GENERAL_PATTERNS + self.IMAGE_PATTERNS
@@ -185,24 +185,28 @@ class PerformanceAuditor:
             for pattern, severity, message, suggestion in patterns:
                 for i, line in enumerate(lines, 1):
                     if re.search(pattern, line, re.IGNORECASE):
-                        issues.append(Issue(
-                            severity=severity,
-                            category="Performance",
-                            message=message,
-                            file=str(file_path),
-                            line=i,
-                            suggestion=suggestion,
-                        ))
+                        issues.append(
+                            Issue(
+                                severity=severity,
+                                category="Performance",
+                                message=message,
+                                file=str(file_path),
+                                line=i,
+                                suggestion=suggestion,
+                            )
+                        )
 
             # Check file size
             if len(content) > 500 * 80:  # ~500 lines
-                issues.append(Issue(
-                    severity=Severity.MEDIUM,
-                    category="Maintainability",
-                    message=f"Large file ({len(lines)} lines)",
-                    file=str(file_path),
-                    suggestion="Consider splitting into smaller components",
-                ))
+                issues.append(
+                    Issue(
+                        severity=Severity.MEDIUM,
+                        category="Maintainability",
+                        message=f"Large file ({len(lines)} lines)",
+                        file=str(file_path),
+                        suggestion="Consider splitting into smaller components",
+                    )
+                )
 
         except Exception as e:
             print(f"Error reading {file_path}: {e}", file=sys.stderr)
@@ -212,12 +216,12 @@ class PerformanceAuditor:
     def audit_directory(self, dir_path: Path) -> List[Issue]:
         """Audit all frontend files in a directory."""
         issues = []
-        extensions = ['.tsx', '.jsx', '.ts', '.js', '.vue']
+        extensions = [".tsx", ".jsx", ".ts", ".js", ".vue"]
 
         for ext in extensions:
-            for file_path in dir_path.rglob(f'*{ext}'):
+            for file_path in dir_path.rglob(f"*{ext}"):
                 # Skip node_modules and build directories
-                if 'node_modules' in str(file_path) or 'dist' in str(file_path):
+                if "node_modules" in str(file_path) or "dist" in str(file_path):
                     continue
                 issues.extend(self.audit_file(file_path))
 
@@ -249,13 +253,13 @@ def format_report(issues: List[Issue]) -> str:
     lines = [
         "",
         "=" * 60,
-        "前端性能审计报告 (Frontend Performance Audit)",
+        "Frontend Performance Audit Report",
         "=" * 60,
         "",
-        f"发现问题: {len(issues)} 个",
-        f"  🔴 高优先级: {len(high)}",
-        f"  🟡 中优先级: {len(medium)}",
-        f"  🟢 低优先级: {len(low)}",
+        f"Issues found: {len(issues)}",
+        f"  🔴 High priority: {len(high)}",
+        f"  🟡 Medium priority: {len(medium)}",
+        f"  🟢 Low priority: {len(low)}",
         "",
     ]
 
@@ -263,27 +267,29 @@ def format_report(issues: List[Issue]) -> str:
         result = []
         for issue in issues:
             result.append(f"{icon} [{issue.category}] {issue.message}")
-            result.append(f"   文件: {issue.file}" + (f":{issue.line}" if issue.line else ""))
+            result.append(
+                f"   File: {issue.file}" + (f":{issue.line}" if issue.line else "")
+            )
             if issue.suggestion:
-                result.append(f"   建议: {issue.suggestion}")
+                result.append(f"   Suggestion: {issue.suggestion}")
             result.append("")
         return result
 
     if high:
         lines.append("-" * 60)
-        lines.append("🔴 高优先级问题:")
+        lines.append("🔴 High Priority Issues:")
         lines.append("-" * 60)
         lines.extend(format_issues(high, "🔴"))
 
     if medium:
         lines.append("-" * 60)
-        lines.append("🟡 中优先级问题:")
+        lines.append("🟡 Medium Priority Issues:")
         lines.append("-" * 60)
         lines.extend(format_issues(medium, "🟡"))
 
     if low:
         lines.append("-" * 60)
-        lines.append("🟢 低优先级问题:")
+        lines.append("🟢 Low Priority Issues:")
         lines.append("-" * 60)
         lines.extend(format_issues(low, "🟢"))
 

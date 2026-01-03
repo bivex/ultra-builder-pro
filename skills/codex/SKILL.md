@@ -9,7 +9,7 @@ allowed-tools: Bash, Read, Glob, Grep
 ## Running a Task
 
 ### Defaults
-- **Model**: `gpt-5.2-codex`
+- **Model**: `default`
 - **Reasoning effort**: `medium`
 - **Sandbox**: `workspace-write`
 
@@ -22,14 +22,14 @@ allowed-tools: Bash, Read, Glob, Grep
 **Mode 2: Regular invocation** (user requests codex directly)
 1. Display current defaults
 2. Use `AskUserQuestion`:
-   - Option A: "Use default config" (Recommended) - gpt-5.2-codex, medium, workspace-write
+   - Option A: "Use default config" (Recommended) - default, medium, workspace-write
    - Option B: "Custom config" - then ask model/effort/sandbox separately
 3. Execute with chosen config
 
 ### Configuration Options
 
 **Models**:
-- `gpt-5.2-codex` (default, optimized for code)
+- `default` (default, optimized for code)
 - `gpt-5.2` (general purpose)
 
 **Reasoning effort**:
@@ -46,7 +46,7 @@ allowed-tools: Bash, Read, Glob, Grep
 ### Command template
 ```bash
 codex exec \
-  -m gpt-5.2-codex \
+  -m default \
   -c model_reasoning_effort="medium" \
   --sandbox workspace-write \
   --skip-git-repo-check \
@@ -68,15 +68,15 @@ codex exec resume --last "new prompt here"
 echo "new prompt" | codex exec resume --last -
 
 # Resume with config overrides (flags BEFORE resume)
-codex exec -m gpt-5.2-codex resume --last "prompt"
+codex exec -m default resume --last "prompt"
 ```
 
 ## Quick Reference
 
 | Use case | Command |
 |----------|---------|
-| Analysis | `codex exec -m gpt-5.2-codex --sandbox workspace-write --skip-git-repo-check "prompt"` |
-| With edits | `codex exec -m gpt-5.2-codex --sandbox workspace-write --full-auto --skip-git-repo-check "prompt"` |
+| Analysis | `codex exec -m default --sandbox workspace-write --skip-git-repo-check "prompt"` |
+| With edits | `codex exec -m default --sandbox workspace-write --full-auto --skip-git-repo-check "prompt"` |
 | Resume | `codex exec resume --last "continue with..."` |
 | Code review | `codex exec review` (built-in subcommand) |
 
@@ -102,7 +102,7 @@ Use these predefined templates when commands reference `codex skill with templat
 
 | Config | Value |
 |--------|-------|
-| Model | gpt-5.2-codex |
+| Model | default |
 | Effort | medium |
 | Sandbox | read-only |
 
@@ -140,7 +140,7 @@ If no critical issues found, respond with "PASS: No blocking issues".
 
 | Config | Value |
 |--------|-------|
-| Model | gpt-5.2-codex |
+| Model | default |
 | Effort | **high** |
 | Sandbox | read-only |
 
@@ -183,7 +183,7 @@ If no critical/high issues found, respond with "PASS: No blocking issues".
 
 | Config | Value |
 |--------|-------|
-| Model | gpt-5.2-codex |
+| Model | default |
 | Effort | medium |
 | Sandbox | workspace-write |
 

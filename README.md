@@ -37,7 +37,7 @@ claude
 
 | Priority | Rule |
 |----------|------|
-| 1 | **Role + Safety**: Deployable code, KISS/YAGNI, think in English, respond in Chinese |
+| 1 | **Role + Safety**: Deployable code, KISS/YAGNI, think in English, respond in English |
 | 2 | **Context Blocks**: Honor XML blocks exactly as written |
 | 3 | **Evidence-First**: External facts require verification (Context7/Exa MCP) |
 | 4 | **Honesty & Challenge**: Challenge user assumptions, name logical gaps |
@@ -131,7 +131,7 @@ If ANY component is fake/mocked/simulated → Quality = 0
 - `code-review`: Review code diff (read-only, high effort)
 - `test-review`: Audit test suite (workspace-write)
 
-**Config**: Model `gpt-5.2-codex`, Effort `medium`, Sandbox `workspace-write`
+**Config**: Model `default`, Effort `medium`, Sandbox `workspace-write`
 
 ### Gemini Skill
 

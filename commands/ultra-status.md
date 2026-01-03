@@ -15,8 +15,8 @@ Real-time project status monitoring with progress tracking, risk analysis, and a
 ### Phase 0: Validation
 
 **Check environment before displaying status:**
-1. Does `.ultra/tasks/tasks.json` exist? → If not: Suggest `/ultra-init` (Chinese)
-2. Are there tasks in the system? → If not: Suggest `/ultra-plan` (Chinese)
+1. Does `.ultra/tasks/tasks.json` exist? → If not: Suggest `/ultra-init` (English)
+2. Are there tasks in the system? → If not: Suggest `/ultra-plan` (English)
 3. Is task data valid? → Verify structure and timestamps
 4. Determine output format (quick vs full report)
 
@@ -90,7 +90,7 @@ Suggest next optimal task based on:
   - `.ultra/tasks/tasks.json` - Task progress
   - `.ultra/test-report.json` - Test status
   - `.ultra/delivery-report.json` - Delivery status
-- **Output**: Console report in Chinese
+- **Output**: Console report in English
 - **Timing**: Run anytime to check project status
 
 ## Benefits
@@ -103,6 +103,6 @@ Suggest next optimal task based on:
 
 ## Output Format
 
-> Claude responds in Chinese per CLAUDE.md.
+> Claude responds in English per CLAUDE.md.
 
 **Command icon**: 📊

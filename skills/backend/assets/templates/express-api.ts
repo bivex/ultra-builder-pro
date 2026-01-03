@@ -1,4 +1,19 @@
 /**
+ * Copyright (c) 2026 Bivex
+ *
+ * Author: Bivex
+ * Available for contact via email: support@b-b.top
+ * For up-to-date contact information:
+ * https://github.com/bivex
+ *
+ * Created: 2026-01-03T01:15:16
+ * Last Updated: 2026-01-03T01:15:19
+ *
+ * Licensed under the MIT License.
+ * Commercial licensing available upon request.
+ */
+
+/**
  * Express.js API Template
  *
  * Production-ready Express router with:

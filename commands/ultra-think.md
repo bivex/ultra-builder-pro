@@ -37,7 +37,7 @@ These are reference perspectives, not required steps. Choose what's relevant:
 
 ## Output Format
 
-> Claude responds in Chinese per CLAUDE.md.
+> Claude responds in English per CLAUDE.md.
 
 Use `<thinking>` for internal reasoning, then provide:
 

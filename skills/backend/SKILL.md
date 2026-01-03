@@ -208,7 +208,7 @@ src/
 
 ## Output Format
 
-> Claude responds in Chinese per CLAUDE.md.
+> Claude responds in English per CLAUDE.md.
 
 ```
 Backend Analysis Report
