@@ -19,7 +19,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/rocky2431/ultra-builder-pro.git
+git clone https://github.com/bivex/ultra-builder-pro.git
 cd ultra-builder-pro
 
 # Copy to Claude Code config directory

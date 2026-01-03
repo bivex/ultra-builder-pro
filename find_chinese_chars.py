@@ -1,4 +1,16 @@
-#!/usr/bin/env python3
+
+# Copyright (c) 2026 Bivex
+#
+# Author: Bivex
+# Available for contact via email: support@b-b.top
+# For up-to-date contact information:
+# https://github.com/bivex
+#
+# Created: 2026-01-03T01:29:10
+# Last Updated: 2026-01-03T01:29:10
+#
+# Licensed under the MIT License.
+# Commercial licensing available upon request.
 """
 Рекурсивный поиск китайских символов в файлах.
 Выводит файлы и конкретные строки с китайскими символами.
